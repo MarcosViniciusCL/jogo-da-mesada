@@ -5,13 +5,9 @@
  */
 package pbl.main;
 
-import com.sun.prism.paint.Color;
-import java.util.ArrayList;
-import java.util.List;
-import pbl.model.CartasCorreios;
-import pbl.model.Dado;
-import pbl.model.Tabuleiro;
-import pbl.model.*;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+import pbl.controller.ControllerConexao;
 /**
  *
  * @author marcos
@@ -20,26 +16,13 @@ public class PBL2 {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
-        Peao peao = new Peao(Color.RED);
-        Jogador jogador = new Jogador("Marcos Vinicius", peao);
-        ArrayList listaJogadores = new ArrayList();
-        listaJogadores.add(jogador);
-        Tabuleiro tabuleiro = new Tabuleiro(30, listaJogadores);
-        List<Peao> list = tabuleiro.getTabuleiro();
-        exibirTabuleiro(list);
-        jogador.getPeao().andarCasas(3);
-        tabuleiro.atualizarTabuleiro();
-        list = tabuleiro.getTabuleiro();
-        exibirTabuleiro(list);
-        
-    }
-
-    private static void exibirTabuleiro(List<Peao> list) {
-        for (int i=0; i<list.size(); i++) {
-            System.out.println(list.get(i).getNome());
-        }
+    public static void main(String[] args) throws IOException {
+        ControllerConexao controlCon = ControllerConexao.getInstance();
+        controlCon.assinarGrupoMult("239.0.0.1", 12347);
+        controlCon.enviarMensagemGRP(JOptionPane.showInputDialog("Mensagem:"));
+        JOptionPane.showMessageDialog(null, controlCon.receberMensagemGRP());
     }
 
 }
