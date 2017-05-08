@@ -28,12 +28,7 @@ public class ControllerJogo {
         this.dado = new Dado();
     }
 
-    public static ControllerJogo getInstance() {
-        if (controllerJogo == null) {
-            controllerJogo = new ControllerJogo();
-        }
-        return controllerJogo;
-    }
+
     //****************************************** METODOS RESPONSAVEIS PELA AÇÃO DO JOGO ************************************
 
     /**
@@ -45,9 +40,9 @@ public class ControllerJogo {
     public int jogarDado() throws AguadarVezException {
         int valor;
         if (minhaVez) {
-            valor = dado.jogarDado();
+            valor = dado.jogarDado(); //Joga o dado e aguarda o valor sorteado.
         } else {
-            throw new AguadarVezException();
+            throw new AguadarVezException(); //Caso não seja a vez  do jogador lança a exception
         }
         return valor;
     }
@@ -66,6 +61,16 @@ public class ControllerJogo {
      */
     public void reenviarUltMensGRP() throws IOException {
         controllerConexao.enviarMensagemGRP(ultimaMens);
+    }
+    
+    
+    
+    
+    public static ControllerJogo getInstance() {
+        if (controllerJogo == null) {
+            controllerJogo = new ControllerJogo();
+        }
+        return controllerJogo;
     }
 
 }
