@@ -19,13 +19,20 @@ import java.net.SocketException;
  */
 public class ControllerConexao {
 
-    private static ControllerConexao controlConexao;
-
+    private static ControllerConexao controlConexao; //Instancia da propria classe.
+    private final ControllerJogo controllerJogo; //Instancia do controller do jogo.
+    
+    //ATRIBUTOS PARA CONEXÃO
     private MulticastSocket grupoMulticast; //Grupo que o cliente pertence no multicast;
+    private String endGrupo; //Endereco do grupo que o cliente pertece;
     private int porta; //Porta do grupo multcast;
     private Socket servidor; //Servidor do jogo;
+    
+    
 
-    private ControllerConexao() {}
+    private ControllerConexao() {
+        this.controllerJogo = ControllerJogo.getInstance(); 
+    }
 
     /**
      * Conecta ao servidor que irá criar a partida.
@@ -45,6 +52,8 @@ public class ControllerConexao {
      * @throws IOException
      */
     public void assinarGrupoMult(String endGrupo, int porta) throws IOException {
+        this.porta = porta;
+        this.endGrupo = endGrupo;
         this.grupoMulticast = new MulticastSocket(porta); //Criando instância de grupo. 
         grupoMulticast.joinGroup(InetAddress.getByName(endGrupo)); //Entrando no grupo de multicast
     }
@@ -55,7 +64,7 @@ public class ControllerConexao {
      */
     public void sairGrupoMult() throws IOException {
         if (grupoMulticast != null) {
-            this.grupoMulticast.leaveGroup(grupoMulticast.getInetAddress()); //Saindo do grupo multicast;
+            this.grupoMulticast.leaveGroup(InetAddress.getByName(endGrupo)); //Saindo do grupo multicast;
         }
     }
 
@@ -66,8 +75,8 @@ public class ControllerConexao {
      * @throws java.net.SocketException
      */
     public void enviarMensagemGRP(String mens) throws SocketException, IOException {
-        byte[] b = mens.getBytes();
-        new DatagramSocket().send(new DatagramPacket(b, b.length, this.grupoMulticast.getInetAddress(), 12347));
+        DatagramPacket env = new DatagramPacket(mens.getBytes(), mens.length(), InetAddress.getByName(this.endGrupo), this.porta); 
+        grupoMulticast.send(env);
     }
 
     /**
@@ -78,8 +87,8 @@ public class ControllerConexao {
      */
     public String receberMensagemGRP() throws IOException {
         if (grupoMulticast != null) {
-            byte rec[] = new byte[256];
-            DatagramPacket mens = new DatagramPacket(rec, rec.length);
+            byte buff[] = new byte[1024];
+            DatagramPacket mens = new DatagramPacket(buff, buff.length);
             grupoMulticast.receive(mens);
             return new String(mens.getData());
         }
