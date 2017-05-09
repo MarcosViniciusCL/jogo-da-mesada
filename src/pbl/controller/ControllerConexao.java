@@ -12,6 +12,8 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,18 +22,16 @@ import java.net.SocketException;
 public class ControllerConexao {
 
     private static ControllerConexao controlConexao; //Instancia da propria classe.
-    private final ControllerJogo controllerJogo; //Instancia do controller do jogo.
-    
+    private static ControllerJogo controllerJogo; //Instancia do controller do jogo.
+
     //ATRIBUTOS PARA CONEXÃO
     private MulticastSocket grupoMulticast; //Grupo que o cliente pertence no multicast;
     private String endGrupo; //Endereco do grupo que o cliente pertece;
     private int porta; //Porta do grupo multcast;
     private Socket servidor; //Servidor do jogo;
-    
-    
 
     private ControllerConexao() {
-        this.controllerJogo = ControllerJogo.getInstance(); 
+        ControllerConexao.controllerJogo = null; //ControllerJogo.getInstance();
     }
 
     /**
@@ -60,7 +60,8 @@ public class ControllerConexao {
 
     /**
      * Sair do grupo multcast que o cliente está conectado no momento.
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     public void sairGrupoMult() throws IOException {
         if (grupoMulticast != null) {
@@ -75,30 +76,60 @@ public class ControllerConexao {
      * @throws java.net.SocketException
      */
     public void enviarMensagemGRP(String mens) throws SocketException, IOException {
-        DatagramPacket env = new DatagramPacket(mens.getBytes(), mens.length(), InetAddress.getByName(this.endGrupo), this.porta); 
-        grupoMulticast.send(env);
+        if (mens != null) {
+            DatagramPacket env = new DatagramPacket(mens.getBytes(), mens.length(), InetAddress.getByName(this.endGrupo), this.porta);
+            grupoMulticast.send(env);
+        }
     }
 
     /**
      * Recebe mensagens do grupo multicast.
      *
-     * @return String - Retorna a mensagem recebida.
      * @throws IOException
      */
-    public String receberMensagemGRP() throws IOException {
+    public void receberMensagemGRP() throws IOException {
         if (grupoMulticast != null) {
             byte buff[] = new byte[1024];
             DatagramPacket mens = new DatagramPacket(buff, buff.length);
             grupoMulticast.receive(mens);
-            return new String(mens.getData());
-        }
-        return null;
+            novaMensReceb(new String(mens.getData()));
 
+        }
     }
 
-    static public ControllerConexao getInstance() {
+    /**
+     * Ativa o monitoramento no grupo multcast e informa quando há uma nova
+     * mensagem.
+     */
+    public void ativarMonitorMens() {
+        if (grupoMulticast != null) {
+            new Thread() {
+                @Override
+                public void run() {
+                    byte buff[] = new byte[1024];
+                    DatagramPacket mens = new DatagramPacket(buff, buff.length);
+                    while (true) {
+                        try {
+                            grupoMulticast.receive(mens);
+                            novaMensReceb(new String(mens.getData()));
+                        } catch (IOException ex) {
+                            Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+            }.start();
+        }
+    }
+
+    //Chamada quando o monitor de mensagem recebe uma nova mensagem.
+    private void novaMensReceb(String mens) {
+        System.err.println("Nova mensagem:" + mens);
+    }
+
+    public static ControllerConexao getInstance() {
         if (controlConexao == null) {
             ControllerConexao.controlConexao = new ControllerConexao();
+            ControllerConexao.controllerJogo = ControllerJogo.getInstance();
         }
         return ControllerConexao.controlConexao;
     }
