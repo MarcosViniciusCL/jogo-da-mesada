@@ -6,8 +6,13 @@
 package pbl.main;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import javax.swing.JOptionPane;
 import pbl.controller.ControllerConexao;
+
 /**
  *
  * @author marcos
@@ -19,10 +24,14 @@ public class PBL2 {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-        ControllerConexao controlCon = ControllerConexao.getInstance();
-        controlCon.assinarGrupoMult("239.0.0.1", 12347);
-        controlCon.enviarMensagemGRP(JOptionPane.showInputDialog("Mensagem:"));
-        JOptionPane.showMessageDialog(null, controlCon.receberMensagemGRP());
+
+        ControllerConexao control = ControllerConexao.getInstance();
+        control.assinarGrupoMult("239.0.0.1", 12347);
+        control.receberMensagemGRP();
+        while (true) {
+            control.enviarMensagemGRP(JOptionPane.showInputDialog("Mensagem"));
+        }
+
     }
 
 }
