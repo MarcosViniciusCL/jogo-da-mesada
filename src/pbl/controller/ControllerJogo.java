@@ -65,6 +65,7 @@ public class ControllerJogo {
     
     
     
+    //****************************************** METODOS DO CONTROLLER ************************************
     
     public static ControllerJogo getInstance() {
         if (controllerJogo == null) {
