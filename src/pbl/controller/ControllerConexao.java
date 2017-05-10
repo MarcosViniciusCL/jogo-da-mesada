@@ -5,7 +5,11 @@
  */
 package pbl.controller;
 
+import pbl.exception.ErroComunicacaoServidorException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -14,6 +18,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,11 +34,29 @@ public class ControllerConexao {
     private String endGrupo; //Endereco do grupo que o cliente pertece;
     private int porta; //Porta do grupo multcast;
     private Socket servidor; //Servidor do jogo;
+    private PrintStream enviar; //Envio de mensagem ao servidor;
+    private BufferedReader receber; //Recebimento de mensagem do servidor;
 
     private ControllerConexao() {
         ControllerConexao.controllerJogo = null; //ControllerJogo.getInstance();
     }
 
+    //********************************* METODOS DO JOGO ******************************************************************
+    public void entraSala(int maxJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
+        if (servidor == null) {
+            conectarServidor("127.0.0.1");
+        }
+
+        enviarMensagemServidor("101;"+"MARCOS;" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
+        String resp = receberMensagemServidor();
+        if (resp != null) {
+            String[] str = resp.split(";");
+            assinarGrupoMult(str[1], Integer.parseInt(str[2])); //Assina o grupo que o servidor mandou;
+            monitorMensGRP();
+        }
+    }
+
+    //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************
     /**
      * Conecta ao servidor que irá criar a partida.
      *
@@ -41,9 +64,32 @@ public class ControllerConexao {
      * @throws IOException
      */
     public void conectarServidor(String ipServe) throws IOException {
-        this.servidor = new Socket(ipServe, 50505); //Conectando ao servidor;
+        if (servidor == null || servidor.isClosed()) {
+            servidor = new Socket(ipServe, 12345);
+            this.enviar = new PrintStream(this.servidor.getOutputStream());
+            this.receber = new BufferedReader(new InputStreamReader(this.servidor.getInputStream()));
+        }
     }
 
+    private void enviarMensagemServidor(String mens) {
+        if (enviar != null) {
+            this.enviar.println(mens);
+        }
+    }
+
+    private String receberMensagemServidor() throws ErroComunicacaoServidorException {
+        if (receber != null) {
+            try {
+                return this.receber.readLine();
+            } catch (IOException ex) {
+                throw new ErroComunicacaoServidorException();
+            }
+            //return null;
+        }
+        return null;
+    }
+
+    //********************************** COMUNICAÇÃO COM GRUPO MULTICAST **********************************
     /**
      * Assina um grupo multcast.
      *
@@ -51,7 +97,7 @@ public class ControllerConexao {
      * @param porta - Porta do grupo multcast.
      * @throws IOException
      */
-    public void assinarGrupoMult(String endGrupo, int porta) throws IOException {
+    private void assinarGrupoMult(String endGrupo, int porta) throws IOException {
         this.porta = porta;
         this.endGrupo = endGrupo;
         this.grupoMulticast = new MulticastSocket(porta); //Criando instância de grupo. 
@@ -101,7 +147,7 @@ public class ControllerConexao {
      * Ativa o monitoramento no grupo multcast e informa quando há uma nova
      * mensagem.
      */
-    public void ativarMonitorMens() {
+    private void monitorMensGRP() {
         if (grupoMulticast != null) {
             new Thread() {
                 @Override
