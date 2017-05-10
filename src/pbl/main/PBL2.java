@@ -6,12 +6,8 @@
 package pbl.main;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import javax.swing.JOptionPane;
 import pbl.controller.ControllerConexao;
+import pbl.exception.ErroComunicacaoServidorException;
 
 /**
  *
@@ -22,15 +18,12 @@ public class PBL2 {
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
+     * @throws pbl.exception.ErroComunicacaoServidorException
      */
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ErroComunicacaoServidorException {
 
         ControllerConexao control = ControllerConexao.getInstance();
-        control.assinarGrupoMult("239.0.0.1", 12347);
-        control.receberMensagemGRP();
-        while (true) {
-            control.enviarMensagemGRP(JOptionPane.showInputDialog("Mensagem"));
-        }
+        control.entraSala(2, 1);
 
     }
 
