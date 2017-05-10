@@ -7,6 +7,7 @@ package pbl.controller;
 
 import pbl.exception.AguadarVezException;
 import java.io.IOException;
+import java.util.Arrays;
 import pbl.model.Dado;
 
 /**
@@ -72,6 +73,10 @@ public class ControllerJogo {
             controllerJogo = new ControllerJogo();
         }
         return controllerJogo;
+    }
+
+    void seletorAcao(String[] mens) {
+        System.out.println(Arrays.toString(mens));
     }
 
 }
