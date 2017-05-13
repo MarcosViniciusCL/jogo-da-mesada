@@ -7,7 +7,7 @@ package pbl.controller;
 
 import pbl.exception.AguadarVezException;
 import java.io.IOException;
-import pbl.model.Dado;
+import pbl.model.jogo.Dado;
 
 /**
  *
