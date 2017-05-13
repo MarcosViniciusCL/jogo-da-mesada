@@ -6,6 +6,7 @@
 package pbl.main;
 
 import java.io.IOException;
+import javax.swing.JOptionPane;
 import pbl.controller.ControllerConexao;
 import pbl.exception.ErroComunicacaoServidorException;
 
@@ -24,6 +25,8 @@ public class PBL2 {
 
         ControllerConexao control = ControllerConexao.getInstance();
         control.entraSala(2, 1);
+     //   while(true)
+     //       control.enviarMensagemGRP(JOptionPane.showInputDialog("Mens"));
 
     }
 

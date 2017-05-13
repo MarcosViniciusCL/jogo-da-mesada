@@ -11,14 +11,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -36,9 +34,19 @@ public class ControllerConexao {
     private Socket servidor; //Servidor do jogo;
     private PrintStream enviar; //Envio de mensagem ao servidor;
     private BufferedReader receber; //Recebimento de mensagem do servidor;
+    private Thread monitorMensGRP; //Thread que monitora recebimento de mensagem multicast;
+
+    //ATRIBUTOS DA SALA DO JOGO
+    private int identificador; // Numero para identificar o cliente;
+    private boolean superNo; //Administrador do grupo.
+    private int idJogAtual; //Contém o ID do jogador que está jogando no momento;
+    private int maxJogadores; //Numero maximo de jogadores que deve ter na sala.
 
     private ControllerConexao() {
-        ControllerConexao.controllerJogo = null; //ControllerJogo.getInstance();
+        ControllerConexao.controllerJogo = null;
+        this.monitorMensGRP = null;
+        this.idJogAtual = 0;
+        this.identificador = 0;
     }
 
     //********************************* METODOS DO JOGO ******************************************************************
@@ -47,13 +55,20 @@ public class ControllerConexao {
             conectarServidor("127.0.0.1");
         }
 
-        enviarMensagemServidor("101;"+"MARCOS;" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
+        enviarMensagemServidor("101;" + "MARCOS;" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
         String resp = receberMensagemServidor();
         if (resp != null) {
             String[] str = resp.split(";");
+            //str[1] - endGrupo, str[2] - porta, str[3] - numero de identificação
+            this.identificador = Integer.parseInt(str[3]); //Identificando o cliente;
+            if (identificador == 1) {
+                this.superNo = true; //Torna o cliente super no;
+            }
             assinarGrupoMult(str[1], Integer.parseInt(str[2])); //Assina o grupo que o servidor mandou;
+            this.maxJogadores = maxJogadores;
             monitorMensGRP();
         }
+
     }
 
     //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************
@@ -122,6 +137,7 @@ public class ControllerConexao {
      * @throws java.net.SocketException
      */
     public void enviarMensagemGRP(String mens) throws SocketException, IOException {
+        mens = mens+";"+identificador;
         if (mens != null) {
             DatagramPacket env = new DatagramPacket(mens.getBytes(), mens.length(), InetAddress.getByName(this.endGrupo), this.porta);
             grupoMulticast.send(env);
@@ -133,7 +149,7 @@ public class ControllerConexao {
      *
      * @throws IOException
      */
-    public void receberMensagemGRP() throws IOException {
+    private void receberMensagemGRP() throws IOException {
         if (grupoMulticast != null) {
             byte buff[] = new byte[1024];
             DatagramPacket mens = new DatagramPacket(buff, buff.length);
@@ -149,7 +165,7 @@ public class ControllerConexao {
      */
     private void monitorMensGRP() {
         if (grupoMulticast != null) {
-            new Thread() {
+            monitorMensGRP = new Thread() {
                 @Override
                 public void run() {
                     byte buff[] = new byte[1024];
@@ -163,13 +179,18 @@ public class ControllerConexao {
                         }
                     }
                 }
-            }.start();
+            };
+            monitorMensGRP.start();
         }
     }
 
     //Chamada quando o monitor de mensagem recebe uma nova mensagem.
     private void novaMensReceb(String mens) {
-        System.err.println("Nova mensagem:" + mens);
+        String[] str = mens.split(";");
+
+        //controllerJogo.seletorAcao(str);
+        this.seletorAcao(str);
+
     }
 
     public static ControllerConexao getInstance() {
@@ -178,6 +199,38 @@ public class ControllerConexao {
             ControllerConexao.controllerJogo = ControllerJogo.getInstance();
         }
         return ControllerConexao.controlConexao;
+    }
+
+    private void seletorAcao(String[] str) {
+        switch (str[0]) {
+            case "111":
+                controllerJogo.seletorAcao("MSG;A SALA ESTÁ COMPLETA".split(";"));
+                break;
+            case "200":
+                controllerJogo.seletorAcao(str);
+                break;
+            case "201":
+                controllerJogo.seletorAcao("MSG;O JOGO VAI COMEÇAR".split(";"));
+                if (this.identificador == this.idJogAtual){ //Verifica se é a vez do jogador.
+                    controllerJogo.seletorAcao("MSG;SUA VEZ DE JOGAR".split(";"));
+                }
+                break;
+            case "203":
+                incrementarJogador(); //Incrementa a variavel que informa qual será o jogador da vez;
+                if (this.identificador == this.idJogAtual){ //Verifica se é a vez do jogador.
+                    controllerJogo.seletorAcao("MSG;SUA VEZ DE JOGAR".split(";"));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void incrementarJogador() {
+        this.idJogAtual++;
+        if (this.idJogAtual > this.maxJogadores) {
+            this.idJogAtual = 1;
+        }
     }
 
 }
