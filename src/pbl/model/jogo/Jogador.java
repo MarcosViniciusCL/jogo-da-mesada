@@ -7,6 +7,7 @@ package pbl.model.jogo;
 
 import java.util.ArrayList;
 import java.util.List;
+import pbl.model.banco.Conta;
 
 /**
  *
@@ -17,12 +18,14 @@ public class Jogador {
     private final String nome;
     private List<String> cartasCorreios;
     private List<String> cartasCompEntret;
+    private Conta conta;
 
     public Jogador(String nome, Peao peao) {
         this.nome = nome;
         this.peao = peao;
         this.cartasCorreios = new ArrayList();
         this.cartasCompEntret = new ArrayList();
+        conta = new Conta(3000.0);
     }
     
     public void addCartaCorreio(String carta){
