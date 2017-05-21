@@ -6,9 +6,11 @@
 package pbl.main;
 
 import java.io.IOException;
+import java.util.Scanner;
 import javax.swing.JOptionPane;
 import pbl.controller.ControllerConexao;
 import pbl.exception.ErroComunicacaoServidorException;
+import pbl.view.Tabuleiro;
 
 /**
  *
@@ -22,12 +24,13 @@ public class PBL2 {
      * @throws pbl.exception.ErroComunicacaoServidorException
      */
     public static void main(String[] args) throws IOException, ErroComunicacaoServidorException {
-
-        ControllerConexao control = ControllerConexao.getInstance();
+        new Tabuleiro().setVisible(true);
+        Scanner.class.getCanonicalName();
+        /*ControllerConexao control = ControllerConexao.getInstance();
         control.entraSala(2, 1);
      //   while(true)
      //       control.enviarMensagemGRP(JOptionPane.showInputDialog("Mens"));
-
+*/
     }
 
 }

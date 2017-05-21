@@ -10,7 +10,7 @@ package pbl.model.jogo;
  * @author marcos
  */
 public class Cliente {
-    private int identificacao;
+    private Jogador jogador;
     private String ultimaMensagem;
     private int contadorUltMens;
 }

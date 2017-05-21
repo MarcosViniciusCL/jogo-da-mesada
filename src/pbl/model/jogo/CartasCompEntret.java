@@ -10,5 +10,22 @@ package pbl.model.jogo;
  * @author marcos
  */
 public class CartasCompEntret {
-    
+    private String descrição;
+    private double valor;
+
+    public String getDescrição() {
+        return descrição;
+    }
+
+    public void setDescrição(String descrição) {
+        this.descrição = descrição;
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
 }

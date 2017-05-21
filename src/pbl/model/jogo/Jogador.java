@@ -14,6 +14,7 @@ import pbl.model.banco.Conta;
  * @author marcos
  */
 public class Jogador {
+    private int identificacao;
     private Peao peao;
     private final String nome;
     private List<String> cartasCorreios;
@@ -26,6 +27,38 @@ public class Jogador {
         this.cartasCorreios = new ArrayList();
         this.cartasCompEntret = new ArrayList();
         conta = new Conta(3000.0);
+    }
+
+    public int getIdentificacao() {
+        return identificacao;
+    }
+
+    public void setIdentificacao(int identificacao) {
+        this.identificacao = identificacao;
+    }
+
+    public List<String> getCartasCorreios() {
+        return cartasCorreios;
+    }
+
+    public void setCartasCorreios(List<String> cartasCorreios) {
+        this.cartasCorreios = cartasCorreios;
+    }
+
+    public List<String> getCartasCompEntret() {
+        return cartasCompEntret;
+    }
+
+    public void setCartasCompEntret(List<String> cartasCompEntret) {
+        this.cartasCompEntret = cartasCompEntret;
+    }
+
+    public Conta getConta() {
+        return conta;
+    }
+
+    public void setConta(Conta conta) {
+        this.conta = conta;
     }
     
     public void addCartaCorreio(String carta){
@@ -43,6 +76,4 @@ public class Jogador {
     public void setPeao(Peao peao) {
         this.peao = peao;
     }
-    
-    
 }

@@ -7,47 +7,36 @@ package pbl.model.jogo;
 
 import java.util.ArrayList;
 import java.util.List;
+import pbl.controller.ControllerJogo;
 
 /**
  *
  * @author marcos
  */
 public class Tabuleiro {
-    private List<Peao> tabuleiro;
-    private List<Jogador> jogadores;
+    private ControllerJogo controller = ControllerJogo.getInstance();
+    private List<Peao> peoes;
+    private int qtdDias;
 
-    public Tabuleiro(int dias, List jogadores) {
-        gerarTabuleiro(dias);
-        this.jogadores = jogadores;
+    public Tabuleiro(int dias) {
+        this.peoes = new ArrayList();
+        this.qtdDias = dias;
+        gerarTabuleiro();
     }
     
     /**
-     * Gera a lista que se comportará como um tabuleiro, todos espaços
-     * serão nulos.
+     * Gera a lista que se comportará como um tabuleiro
      * @param dias - Quantidades de dias que a partida terá.
      */
-    private void gerarTabuleiro(int dias){
-        this.tabuleiro = new ArrayList();
-        for(int i = 0; i <= dias; i++)
-            tabuleiro.add(null);
+    private void gerarTabuleiro(){
+        List <Jogador>jogadores = controller.getJogadores();
+        for(Jogador j: jogadores){
+            peoes.add(j.getPeao());
+        }
     }
     
-    /**
-     * Pega todos o jogadores que estão na lista e atualiza suas posições
-     * no tabuleiro.
-     */
-    public void atualizarTabuleiro(){
-        for (int i=0; i<tabuleiro.size(); i++) {
-            tabuleiro.set(i,null);
-        }
-        for (int i=0; i<jogadores.size(); i++) {
-            Jogador jogador = jogadores.get(i);
-            tabuleiro.add(jogador.getPeao().getPosicao(), jogador.getPeao());
-        }
-    }
-
     public List<Peao> getTabuleiro() {
-        return this.tabuleiro;
+        return peoes;
     }
     
 }

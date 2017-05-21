@@ -5,20 +5,20 @@
  */
 package pbl.model.jogo;
 
-import com.sun.prism.paint.Color;
+//import com.sun.prism.paint.Color;
 
 /**
  *
  * @author marcos
  */
 public class Peao {
-    private final Color cor;
+  //  private final Color cor;
     private int posicao; //Posição no tabuleiro
 
-    public Peao(Color cor) {
+    /*public Peao(Color cor) {
         this.cor = cor;
         this.posicao = 0;
-    }
+    }*/
 
     public int getPosicao() {
         return posicao;
