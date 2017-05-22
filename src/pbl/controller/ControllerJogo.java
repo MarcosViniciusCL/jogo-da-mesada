@@ -23,7 +23,7 @@ public class ControllerJogo {
     private final ControllerConexao controllerConexao; //Instancia do controller de conexão.
 
     //ATRIBUTOS DO JOGO
-    private boolean minhaVez; //Variavel para informar se é a vez do cliente jogar o dado;
+    private boolean minhaVez = true;//(TESTE) //Variavel para informar se é a vez do cliente jogar o dado;
     private final Dado dado; //Dado do jogo
     private String ultimaMens; //Fica salva a ultima mensagem que foi enviada ao grupo para reenvio caso tenha perda.
     private List <Jogador> jogadores;

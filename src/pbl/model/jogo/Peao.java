@@ -7,52 +7,68 @@ package pbl.model.jogo;
 
 //import com.sun.prism.paint.Color;
 
-import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 
 /**
  *
  * @author marcos
  */
-public class Peao extends JPanel{
-  //  private final Color cor;
-    private int x; //Posição no tabuleiro
-    private int y;
+public class Peao extends javax.swing.JLabel{
+    private final Color cor;
+    private int lin; //Posição no tabuleiro
+    private int col;
 
-    /*public Peao(Color cor) {
+    public Peao(Color cor) {
         this.cor = cor;
-        this.posicao = 0;
-    }*/
+        this.lin = 0;
+        this.col = 0;
+        
+    }
+    
 
     
+    @Override
+    public void paintComponent(Graphics g){
+        Graphics2D g2d = (Graphics2D) g;
+        super.paintComponent(g);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
+        g.setColor(cor);
+        g.fillOval(0, 0, 20, 20);
+    }
     /**
      * Caminha as casas do tabuleiro.
      * @param casa 
      */
     public void andarCasas(int casa){
-        if(y + casa > 6){
-            y = y+casa-6;
-            x++;
+        if(col + casa > 6){
+            col = col+casa-6-1;
+            lin++;
+        } else{
+            col += casa;
         }
-        if(x > 4){
-            x = 0;
+        if(lin > 4){
+            lin=0;
         }
     }
 
-    public int getX() {
-        return x;
+    public int getLinha() {
+        return lin;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setLinha(int lin) {
+        this.lin = lin;
     }
 
-    public int getY() {
-        return y;
+    public int getColuna() {
+        return col;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setColuna(int col) {
+        this.col = col;
     }
 
 
