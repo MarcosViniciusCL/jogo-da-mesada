@@ -29,6 +29,16 @@ public class ControllerJogo {
     private List <Jogador> jogadores;
     private double sorteGrande;
     private int qntMeses;
+    
+    //CONSTANTES DO JOGO
+    private final double cPremio = 5000;
+    private final double cBolao = 100;
+    private final double cSorteGrande = 0;
+    private final double cMesada = 3500;
+    private final double cConcursoBandaArrocha = 1000;
+    private final double cFelizAniversario = 100;
+    private final double cNegocioOcasiao = 100;
+    private final double cMaratonaBeneficente = 100;
         
     private ControllerJogo() {
         this.controllerConexao = ControllerConexao.getInstance();
@@ -63,7 +73,7 @@ public class ControllerJogo {
      * @param jogador jogador que caiu na casa
      */
     public void premio(Jogador jogador){
-        jogador.getConta().depositar(5000);
+        jogador.getConta().depositar(cPremio);
     }
     
     /**
@@ -74,9 +84,9 @@ public class ControllerJogo {
      */
     public void bolaoEsportes(Jogador ganhador, List <Jogador> participantes){
         for(Jogador j: participantes){ // cada participante paga 100 reais ao jogador que ganhou o bolao
-            if(!j.getConta().transferir(ganhador.getConta(), 100)){ //se o jogador não tiver saldo suficiente
-                j.getConta().realizarEmprestimo(100); //realiza um emprestimo
-                j.getConta().transferir(ganhador.getConta(), 100);
+            if(!j.getConta().transferir(ganhador.getConta(), cBolao)){ //se o jogador não tiver saldo suficiente
+                j.getConta().realizarEmprestimo(cBolao); //realiza um emprestimo
+                j.getConta().transferir(ganhador.getConta(), cBolao);
             }
         }
         ganhador.getConta().depositar(1000); //banco deposita 1000 para o ganhador
@@ -87,11 +97,11 @@ public class ControllerJogo {
      * @param jogador que caiu na casa
      */
     public void praiaNoDomingo(Jogador jogador){
-        if(!jogador.getConta().sacar(valorIndicadoNaSorteGrande)){ //verifica se o jogador tem saldo suficiente
-             jogador.getConta().realizarEmprestimo(valorIndicadoNaSorteGrande); //se não realiza um emprestimo
-             jogador.getConta().sacar(valorIndicadoNaSorteGrande);
+        if(!jogador.getConta().sacar(cSorteGrande)){ //verifica se o jogador tem saldo suficiente
+             jogador.getConta().realizarEmprestimo(cSorteGrande); //se não realiza um emprestimo
+             jogador.getConta().sacar(cSorteGrande);
          }
-         sorteGrande +=valorIndicadoNaSorteGrande; //adiciona o valor a sorte grande
+         sorteGrande +=cSorteGrande; //adiciona o valor a sorte grande
     }
         
     /**
@@ -99,7 +109,7 @@ public class ControllerJogo {
      * @param jogador jogador ganhador
      */
     public void concursoBandaArrocha(Jogador jogador){
-        jogador.getConta().depositar(1000);
+        jogador.getConta().depositar(cConcursoBandaArrocha);
     }
     
     /**
@@ -108,9 +118,9 @@ public class ControllerJogo {
      */
     public void felizAniversario(Jogador jogador){
         for(Jogador j: jogadores){
-            if(!j.getConta().transferir(jogador.getConta(), 100)){ //se o jogador não possuir saldo suficiente
-                jogador.getConta().realizarEmprestimo(100); //faz emprestimo
-                j.getConta().transferir(jogador.getConta(), 100);
+            if(!j.getConta().transferir(jogador.getConta(), cFelizAniversario)){ //se o jogador não possuir saldo suficiente
+                jogador.getConta().realizarEmprestimo(cFelizAniversario); //faz emprestimo
+                j.getConta().transferir(jogador.getConta(), cFelizAniversario);
             }
         }
     }
@@ -121,9 +131,9 @@ public class ControllerJogo {
      * @param valorDado 
      */
     public void vendeNegocioOcasiao(Jogador jogador, int valorDado){
-        if(!jogador.getConta().sacar(valorDado*100)){ //se o jogador não possuir saldo suficiente
-            jogador.getConta().realizarEmprestimo(valorDado*100); //realiza emprestimo
-            jogador.getConta().sacar(valorDado*100);
+        if(!jogador.getConta().sacar(valorDado*cNegocioOcasiao)){ //se o jogador não possuir saldo suficiente
+            jogador.getConta().realizarEmprestimo(valorDado*cNegocioOcasiao); //realiza emprestimo
+            jogador.getConta().sacar(valorDado*cNegocioOcasiao);
         }
     }
     
@@ -133,9 +143,9 @@ public class ControllerJogo {
      * @param valorDado 
      */
     public void maratonaBeneficente(Jogador jogador, int valorDado){
-        if(!jogador.getConta().sacar(valorDado*100)){
-           jogador.getConta().realizarEmprestimo(valorDado*100);
-           jogador.getConta().sacar(valorDado*100);
+        if(!jogador.getConta().sacar(valorDado*cMaratonaBeneficente)){
+           jogador.getConta().realizarEmprestimo(valorDado*cMaratonaBeneficente);
+           jogador.getConta().sacar(valorDado*cMaratonaBeneficente);
         }
         sorteGrande += valorDado*100;
     }
@@ -154,7 +164,7 @@ public class ControllerJogo {
      * @param jogador 
      */
     public void diaDaMesada(Jogador jogador){ 
-        jogador.getConta().depositar(3500);
+        jogador.getConta().depositar(cMesada);
         if(jogador.getMes()==qntMeses){
             jogador.pagarDividasFimJogo();
         }else{
