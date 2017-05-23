@@ -15,8 +15,10 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -52,7 +54,8 @@ public class ControllerConexao {
     //********************************* METODOS DO JOGO ******************************************************************
     public void entraSala(int maxJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
         if (servidor == null) {
-            conectarServidor("127.0.0.1");
+            System.out.print("Servidor: ");
+            conectarServidor(new Scanner(System.in).next());
         }
 
         enviarMensagemServidor("101;" + "MARCOS;" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
@@ -168,9 +171,11 @@ public class ControllerConexao {
             monitorMensGRP = new Thread() {
                 @Override
                 public void run() {
-                    byte buff[] = new byte[1024];
-                    DatagramPacket mens = new DatagramPacket(buff, buff.length);
+                    byte[] buff;
+                    DatagramPacket mens;
                     while (true) {
+                        buff = new byte[1024];
+                        mens = new DatagramPacket(buff, buff.length);
                         try {
                             grupoMulticast.receive(mens);
                             novaMensReceb(new String(mens.getData()));
@@ -203,14 +208,17 @@ public class ControllerConexao {
 
     private void seletorAcao(String[] str) {
         switch (str[0]) {
-            case "111":
-                controllerJogo.seletorAcao("MSG;A SALA ESTÁ COMPLETA".split(";"));
+            case "MSG": //Apenas mensagem para chat.
+                controllerJogo.seletorAcao(str);
+                break;
+            case "111": //Informando que a sala está cheia.
+                controllerJogo.seletorAcao("MSG;A SALA ESTÁ COMPLETA,#".split(";"));
                 break;
             case "200":
                 controllerJogo.seletorAcao(str);
                 break;
             case "201":
-                controllerJogo.seletorAcao("MSG;O JOGO VAI COMEÇAR".split(";"));
+                controllerJogo.seletorAcao("MSG;O JOGO VAI COMEÇAR;#".split(";"));
                 if (this.identificador == this.idJogAtual){ //Verifica se é a vez do jogador.
                     controllerJogo.seletorAcao("MSG;SUA VEZ DE JOGAR".split(";"));
                 }

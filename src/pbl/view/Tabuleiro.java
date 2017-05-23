@@ -5,19 +5,134 @@
  */
 package pbl.view;
 
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import pbl.model.jogo.Peao;
+
 /**
  *
- * @author emerson
+ * @author marcos
  */
 public class Tabuleiro extends javax.swing.JPanel {
 
     /**
      * Creates new form Tabuleiro
      */
+    private JPanel[][] tabuleiro;
+    private final List<Peao> peoes;
+
     public Tabuleiro() {
         initComponents();
+        this.peoes = new ArrayList<>();
+        gerarGUI();
+    }
+    
+    //Metodo para testar movimento de objeto;
+    public void andar(int casas){
+        Peao p = peoes.get(0);
+        p.andarCasas(casas);
+        atualizarLocalInterface();
+    }
+    
+    public void adicionarPeao(Peao peao){
+        peoes.add(peao);
+        atualizarLocalInterface();
     }
 
+    private void gerarGUI() {
+        this.setLayout(new GridLayout(5, 7, 2, 2));
+        tabuleiro = new JPanel[5][7];
+        
+        tabuleiro[0][0] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[0][1] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[0][2] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[0][3] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[0][4] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[0][5] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[0][6] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[1][0] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[1][1] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[1][2] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[1][3] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[1][4] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[1][5] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[1][6] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[2][0] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[2][1] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[2][2] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[2][3] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[2][4] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[2][5] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[2][6] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[3][0] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[3][1] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[3][2] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[3][3] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[3][4] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[3][5] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[3][6] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[4][0] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[4][1] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[4][2] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[4][3] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[4][4] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[4][5] = new JPanel(new GridLayout(3, 2, 1, 1));
+        tabuleiro[4][6] = new JPanel(new GridLayout(3, 2, 1, 1));
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                if ((i + j) % 2 == 0) {
+                    tabuleiro[i][j].setBackground(Color.black);
+                } else {
+                    tabuleiro[i][j].setBackground(Color.white);
+                }
+                this.add(tabuleiro[i][j]);
+            }
+
+        }
+//        tabuleiro[0][1].add(new JLabel("BLA"));
+
+    }
+
+    public void atualizarLocalInterface(){
+        limparTabuleiro();
+        for (Peao peao : peoes) {
+//            removerPeao(peao);
+            int x = peao.getLinha();
+            int y = peao.getColuna();
+            tabuleiro[x][y].add(peao);
+            tabuleiro[x][y].validate();
+        }
+        validate();
+        
+    }
+    private void removerPeao(Peao p){
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                tabuleiro[i][j].remove(p);
+                tabuleiro[i][j].validate();
+            }
+        }
+        validate();
+    }
+    private void limparTabuleiro(){
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 7; j++) {
+                int quant = tabuleiro[i][j].getComponents().length-1;
+                for (int k = 0; k < quant; k++) {
+                    tabuleiro[i][j].remove(k);
+                }
+                //tabuleiro[i][j].removeAll();
+                tabuleiro[i][j].validate();
+            }
+        }
+        validate();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,262 +142,19 @@ public class Tabuleiro extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tabuleiro = new javax.swing.JPanel();
-        d1 = new javax.swing.JSeparator();
-        d2 = new javax.swing.JSeparator();
-        d3 = new javax.swing.JSeparator();
-        d4 = new javax.swing.JSeparator();
-        d5 = new javax.swing.JSeparator();
-        d6 = new javax.swing.JSeparator();
-        d7 = new javax.swing.JSeparator();
-        d8 = new javax.swing.JSeparator();
-        d9 = new javax.swing.JSeparator();
-        d10 = new javax.swing.JSeparator();
-        d11 = new javax.swing.JSeparator();
-        d12 = new javax.swing.JSeparator();
-        d13 = new javax.swing.JSeparator();
-        d14 = new javax.swing.JSeparator();
-        d15 = new javax.swing.JSeparator();
-        d16 = new javax.swing.JSeparator();
-        d17 = new javax.swing.JSeparator();
-        d18 = new javax.swing.JSeparator();
-        d19 = new javax.swing.JSeparator();
-        d20 = new javax.swing.JSeparator();
-        d21 = new javax.swing.JSeparator();
-        d22 = new javax.swing.JSeparator();
-        d23 = new javax.swing.JSeparator();
-        d24 = new javax.swing.JSeparator();
-        d25 = new javax.swing.JSeparator();
-        d26 = new javax.swing.JSeparator();
-        d27 = new javax.swing.JSeparator();
-        d28 = new javax.swing.JSeparator();
-        d29 = new javax.swing.JSeparator();
-        d30 = new javax.swing.JSeparator();
-
-        d1.setBackground(new java.awt.Color(201, 157, 122));
-        d1.setForeground(new java.awt.Color(193, 66, 66));
-
-        d2.setBackground(new java.awt.Color(255, 250, 246));
-
-        d3.setBackground(new java.awt.Color(255, 250, 246));
-
-        d4.setBackground(new java.awt.Color(255, 250, 246));
-
-        d5.setBackground(new java.awt.Color(255, 250, 246));
-
-        d6.setBackground(new java.awt.Color(255, 250, 246));
-
-        d7.setBackground(new java.awt.Color(255, 250, 246));
-
-        d8.setBackground(new java.awt.Color(255, 250, 246));
-
-        d9.setBackground(new java.awt.Color(255, 250, 246));
-
-        d10.setBackground(new java.awt.Color(255, 250, 246));
-
-        d11.setBackground(new java.awt.Color(255, 250, 246));
-
-        d12.setBackground(new java.awt.Color(255, 250, 246));
-
-        d13.setBackground(new java.awt.Color(255, 250, 246));
-
-        d14.setBackground(new java.awt.Color(255, 250, 246));
-
-        d15.setBackground(new java.awt.Color(255, 250, 246));
-
-        d16.setBackground(new java.awt.Color(255, 250, 246));
-
-        d17.setBackground(new java.awt.Color(255, 250, 246));
-
-        d18.setBackground(new java.awt.Color(255, 250, 246));
-
-        d19.setBackground(new java.awt.Color(255, 250, 246));
-
-        d20.setBackground(new java.awt.Color(255, 250, 246));
-
-        d21.setBackground(new java.awt.Color(255, 250, 246));
-
-        d22.setBackground(new java.awt.Color(255, 250, 246));
-
-        d23.setBackground(new java.awt.Color(255, 250, 246));
-
-        d24.setBackground(new java.awt.Color(255, 250, 246));
-
-        d25.setBackground(new java.awt.Color(255, 250, 246));
-
-        d26.setBackground(new java.awt.Color(255, 250, 246));
-
-        d27.setBackground(new java.awt.Color(255, 250, 246));
-
-        d28.setBackground(new java.awt.Color(255, 250, 246));
-
-        d29.setBackground(new java.awt.Color(255, 250, 246));
-
-        d30.setBackground(new java.awt.Color(255, 250, 246));
-
-        javax.swing.GroupLayout tabuleiroLayout = new javax.swing.GroupLayout(tabuleiro);
-        tabuleiro.setLayout(tabuleiroLayout);
-        tabuleiroLayout.setHorizontalGroup(
-            tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tabuleiroLayout.createSequentialGroup()
-                .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(d1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d7, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d13, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d19, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d25, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(d2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d8, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d14, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d20, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d26, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(d3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d9, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d15, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d21, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d27, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(d4, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d10, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d16, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d22, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d28, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(d5, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d11, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d17, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d23, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d29, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(d6, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d12, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d18, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d24, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(d30, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-        );
-        tabuleiroLayout.setVerticalGroup(
-            tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(tabuleiroLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(tabuleiroLayout.createSequentialGroup()
-                        .addComponent(d6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d12, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d18, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d24, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d30, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(tabuleiroLayout.createSequentialGroup()
-                        .addComponent(d5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d11, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d17, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d23, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(d29, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabuleiroLayout.createSequentialGroup()
-                            .addComponent(d4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d10, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d16, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d22, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d28, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(tabuleiroLayout.createSequentialGroup()
-                            .addComponent(d3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d15, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d21, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(d27, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(tabuleiroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(tabuleiroLayout.createSequentialGroup()
-                                .addComponent(d2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d8, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d14, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d20, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d26, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(tabuleiroLayout.createSequentialGroup()
-                                .addComponent(d1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d7, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d13, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d19, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(d25, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(tabuleiro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 161, Short.MAX_VALUE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabuleiro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JSeparator d1;
-    private javax.swing.JSeparator d10;
-    private javax.swing.JSeparator d11;
-    private javax.swing.JSeparator d12;
-    private javax.swing.JSeparator d13;
-    private javax.swing.JSeparator d14;
-    private javax.swing.JSeparator d15;
-    private javax.swing.JSeparator d16;
-    private javax.swing.JSeparator d17;
-    private javax.swing.JSeparator d18;
-    private javax.swing.JSeparator d19;
-    private javax.swing.JSeparator d2;
-    private javax.swing.JSeparator d20;
-    private javax.swing.JSeparator d21;
-    private javax.swing.JSeparator d22;
-    private javax.swing.JSeparator d23;
-    private javax.swing.JSeparator d24;
-    private javax.swing.JSeparator d25;
-    private javax.swing.JSeparator d26;
-    private javax.swing.JSeparator d27;
-    private javax.swing.JSeparator d28;
-    private javax.swing.JSeparator d29;
-    private javax.swing.JSeparator d3;
-    private javax.swing.JSeparator d30;
-    private javax.swing.JSeparator d4;
-    private javax.swing.JSeparator d5;
-    private javax.swing.JSeparator d6;
-    private javax.swing.JSeparator d7;
-    private javax.swing.JSeparator d8;
-    private javax.swing.JSeparator d9;
-    private javax.swing.JPanel tabuleiro;
     // End of variables declaration//GEN-END:variables
 }
