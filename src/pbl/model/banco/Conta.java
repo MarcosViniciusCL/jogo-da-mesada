@@ -25,6 +25,10 @@ public class Conta implements Serializable{
         this.saldo = saldo;
         this.emprestimo = new Emprestimo(0);
     }
+
+    public Emprestimo getEmprestimo() {
+        return emprestimo;
+    }
     
     /**
      * devolve o valor do saldo
