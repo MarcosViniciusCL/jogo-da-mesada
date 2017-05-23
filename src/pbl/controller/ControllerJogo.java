@@ -153,9 +153,11 @@ public class ControllerJogo {
      * @param jogador 
      */
     public void diaDaMesada(Jogador jogador){ 
-        jogador.getConta().depositar(mesada);
-        if(!jogador.getConta().pagarEmprestimo()){ //se o saldo não for suficiente para pagar o emprestimo
-            jogador.getConta().pagarJurosEmprestimo();
+        jogador.getConta().depositar(3500);
+        if(jogador.isEndGame()){
+            jogador.pagarDividasFimJogo();
+        }else{
+            jogador.pagarDividasFimRodada();
         }
     }
     
