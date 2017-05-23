@@ -28,7 +28,8 @@ public class ControllerJogo {
     private String ultimaMens; //Fica salva a ultima mensagem que foi enviada ao grupo para reenvio caso tenha perda.
     private List <Jogador> jogadores;
     private double sorteGrande;
-    
+    private int qntMeses;
+        
     private ControllerJogo() {
         this.controllerConexao = ControllerConexao.getInstance();
         this.dado = new Dado();
@@ -154,7 +155,7 @@ public class ControllerJogo {
      */
     public void diaDaMesada(Jogador jogador){ 
         jogador.getConta().depositar(3500);
-        if(jogador.isEndGame()){
+        if(jogador.getMes()==qntMeses){
             jogador.pagarDividasFimJogo();
         }else{
             jogador.pagarDividasFimRodada();

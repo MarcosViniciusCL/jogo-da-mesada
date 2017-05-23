@@ -15,13 +15,16 @@ import pbl.model.banco.Conta;
  */
 public class Jogador {
     private int identificacao;
+    private int mes;
     private Peao peao;
     private final String nome;
     private List<Cartas> cartasCorreios;
     private List<Cartas> cartasCompEntret;
     private Conta conta;
 
-    public Jogador(String nome, Peao peao) {
+    public Jogador(int identificacao, String nome, Peao peao) {
+        this.identificacao = identificacao;
+        this.mes = 1;
         this.nome = nome;
         this.peao = peao;
         this.cartasCorreios = new ArrayList();
@@ -67,6 +70,17 @@ public class Jogador {
 
     public void setPeao(Peao peao) {
         this.peao = peao;
+    }
+    
+    public int getMes(){
+        return mes;
+    }
+    /**
+     * Adicona 1 ao valor do mes do jogador
+     * @param valorDado 
+     */
+    public void novoMes(int valorDado){
+        mes++;
     }
     
     /**
@@ -178,9 +192,5 @@ public class Jogador {
      */
     public double getSaldoFinal(){
         return (conta.consultarSaldo()-conta.getEmprestimo().getValorTotal());
-    }
-
-    public boolean isEndGame() {
-        return true;
     }
 }
