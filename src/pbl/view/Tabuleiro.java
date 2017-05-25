@@ -5,6 +5,7 @@
  */
 package pbl.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -23,116 +24,58 @@ public class Tabuleiro extends javax.swing.JPanel {
     /**
      * Creates new form Tabuleiro
      */
-    private JPanel[][] tabuleiro;
     private final List<Peao> peoes;
+    private Tabuleiro tabuleiro;
 
     public Tabuleiro() {
         initComponents();
         this.peoes = new ArrayList<>();
         gerarGUI();
     }
-    
+
     //Metodo para testar movimento de objeto;
-    public void andar(int casas){
+    public void andar(int casas) throws InterruptedException {
         Peao p = peoes.get(0);
-        p.andarCasas(casas);
+        p.andarCasas(1);
         atualizarLocalInterface();
     }
-    
-    public void adicionarPeao(Peao peao){
+
+    public void adicionarPeao(Peao peao) {
         peoes.add(peao);
+        this.add(peao);
         atualizarLocalInterface();
     }
 
     private void gerarGUI() {
-        this.setLayout(new GridLayout(5, 7, 2, 2));
-        tabuleiro = new JPanel[5][7];
-        
-        tabuleiro[0][0] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[0][1] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[0][2] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[0][3] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[0][4] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[0][5] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[0][6] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[1][0] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[1][1] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[1][2] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[1][3] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[1][4] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[1][5] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[1][6] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[2][0] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[2][1] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[2][2] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[2][3] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[2][4] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[2][5] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[2][6] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[3][0] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[3][1] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[3][2] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[3][3] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[3][4] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[3][5] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[3][6] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[4][0] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[4][1] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[4][2] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[4][3] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[4][4] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[4][5] = new JPanel(new GridLayout(3, 2, 1, 1));
-        tabuleiro[4][6] = new JPanel(new GridLayout(3, 2, 1, 1));
-
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                if ((i + j) % 2 == 0) {
-                    tabuleiro[i][j].setBackground(Color.black);
-                } else {
-                    tabuleiro[i][j].setBackground(Color.white);
-                }
-                this.add(tabuleiro[i][j]);
-            }
-
-        }
-//        tabuleiro[0][1].add(new JLabel("BLA"));
+        this.setLayout(new BorderLayout());
+        this.setBackground(Color.white);
+        this.setSize(480, 720);
+        //    this.add(new JButton());
 
     }
 
-    public void atualizarLocalInterface(){
-        limparTabuleiro();
+    public void atualizarLocalInterface() {
+//        limparTabuleiro();
         for (Peao peao : peoes) {
 //            removerPeao(peao);
-            int x = peao.getLinha();
-            int y = peao.getColuna();
-            tabuleiro[x][y].add(peao);
-            tabuleiro[x][y].validate();
+            System.out.println("Peao \nX: " + peao.getX() + "\nY: " + peao.getY());
+//            this.add(new JButton());
         }
-        validate();
-        
+//        repaint();
+//        validate();
     }
-    private void removerPeao(Peao p){
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                tabuleiro[i][j].remove(p);
-                tabuleiro[i][j].validate();
-            }
-        }
-        validate();
+
+    private void removerPeao(Peao p) {
+        this.remove(p);
+        this.validate();
     }
-    private void limparTabuleiro(){
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 7; j++) {
-                int quant = tabuleiro[i][j].getComponents().length-1;
-                for (int k = 0; k < quant; k++) {
-                    tabuleiro[i][j].remove(k);
-                }
-                //tabuleiro[i][j].removeAll();
-                tabuleiro[i][j].validate();
-            }
-        }
-        validate();
+
+    private void limparTabuleiro() {
+
+        this.removeAll();
+        this.validate();
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
