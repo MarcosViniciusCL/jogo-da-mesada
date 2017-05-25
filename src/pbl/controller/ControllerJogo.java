@@ -10,8 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import pbl.exception.ErroComunicacaoServidorException;
 import pbl.model.jogo.Dado;
 import pbl.model.jogo.Jogador;
+import pbl.model.jogo.Peao;
+import pbl.view.Principal;
 
 /**
  *
@@ -29,6 +35,9 @@ public class ControllerJogo {
     private List <Jogador> jogadores;
     private double sorteGrande;
     private int qntMeses;
+    private Jogador jogadorPrincipal;
+    
+    private Principal telaPrincipal;
     
     //CONSTANTES DO JOGO
     private final double cPremio = 5000;
@@ -78,9 +87,9 @@ public class ControllerJogo {
     
     /**
      * todos os jogadores que participaram do bolão pagam 100 para o ganhador
-     * o banco paga 1000 para o ganhador
-     * @param jogador
-     * @param qtdJogadores 
+     * o banco paga 1000 para o ganhador 
+     * @param ganhador
+     * @param participantes
      */
     public void bolaoEsportes(Jogador ganhador, List <Jogador> participantes){
         for(Jogador j: participantes){ // cada participante paga 100 reais ao jogador que ganhou o bolao
@@ -172,6 +181,26 @@ public class ControllerJogo {
         }
     }
     
+    /**
+     * Move o peão de qualquer jogador na partida.
+     * @param jogador
+     * @param casas 
+     */
+    public void moverPeao(Jogador jogador, int casas){
+        jogador.getPeao().andarCasas(casas);
+    }
+    
+    /**
+     * Move o peão do jogador que pertence a esse cliente.
+     * @param valor 
+     */
+    public void moverPeao(int valor) {
+        jogadorPrincipal.getPeao().andarCasas(valor);
+        dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
+    }
+    
+ 
+    
     
     //****************************************** METODOS RESPONSAVEIS PELA COMUNICAÇÃO ************************************
     
@@ -182,6 +211,25 @@ public class ControllerJogo {
      */
     public void reenviarUltMensGRP() throws IOException {
         controllerConexao.enviarMensagemGRP(ultimaMens);
+    }
+    
+    /**
+     * Solicita ao servidor para entrar em um sala.
+     * @param quantJogadores
+     * @param quantMeses
+     * @throws ErroComunicacaoServidorException
+     * @throws IOException 
+     */
+    public void entrarSala(int quantJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException{
+        controllerConexao.entraSala(quantJogadores, quantMeses);    
+    }
+    
+    private void dadoJogado(int valorDado){
+        try {
+            controllerConexao.enviarMensagemGRP("PROTOCOLO;"+valorDado);
+        } catch (IOException ex) {
+            Logger.getLogger(ControllerJogo.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
@@ -207,6 +255,15 @@ public class ControllerJogo {
         return this.jogadores;
     }
     
+    public List<Peao> getPeoes(){
+        List l = new ArrayList();
+        for (Jogador jogador : jogadores) {
+            l.add(jogador.getPeao());
+        }
+        return l;
+    }
+    
+    
     /**
      * Busca um jogador pelo id
      * @param idJogador 
@@ -220,5 +277,11 @@ public class ControllerJogo {
         }
         return null;
     }
+    
+    public void setTelaPrincipal(Principal frame){
+        this.telaPrincipal = frame;
+    }
+
+    
 
 }
