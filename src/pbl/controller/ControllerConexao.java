@@ -44,6 +44,9 @@ public class ControllerConexao {
     private int idJogAtual; //Contém o ID do jogador que está jogando no momento;
     private int maxJogadores; //Numero maximo de jogadores que deve ter na sala.
 
+    //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
+    
+    
     private ControllerConexao() {
         ControllerConexao.controllerJogo = null;
         this.monitorMensGRP = null;
@@ -52,28 +55,9 @@ public class ControllerConexao {
     }
 
     //********************************* METODOS DO JOGO ******************************************************************
-    public void entraSala(int maxJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
-        if (servidor == null) {
-            System.out.print("Servidor: ");
-            conectarServidor(new Scanner(System.in).next());
-        }
-
-        enviarMensagemServidor("101;" + "MARCOS;" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
-        String resp = receberMensagemServidor();
-        if (resp != null) {
-            String[] str = resp.split(";");
-            //str[1] - endGrupo, str[2] - porta, str[3] - numero de identificação
-            this.identificador = Integer.parseInt(str[3]); //Identificando o cliente;
-            if (identificador == 1) {
-                this.superNo = true; //Torna o cliente super no;
-            }
-            assinarGrupoMult(str[1], Integer.parseInt(str[2])); //Assina o grupo que o servidor mandou;
-            this.maxJogadores = maxJogadores;
-            monitorMensGRP();
-        }
-
-    }
-
+    
+    
+    
     //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************
     /**
      * Conecta ao servidor que irá criar a partida.
@@ -87,6 +71,29 @@ public class ControllerConexao {
             this.enviar = new PrintStream(this.servidor.getOutputStream());
             this.receber = new BufferedReader(new InputStreamReader(this.servidor.getInputStream()));
         }
+    }
+
+    public void entraSala(int maxJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
+        if (servidor == null) {
+            System.out.print("Servidor: ");
+            conectarServidor(new Scanner(System.in).next());
+        }
+
+        enviarMensagemServidor("100;" + "MARCOS;" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
+        String resp = receberMensagemServidor();
+        System.out.println(resp);
+        if (resp != null) {
+            String[] str = resp.split(";");
+            //str[1] - endGrupo, str[2] - porta, str[3] - numero de identificação
+            this.identificador = Integer.parseInt(str[3]); //Identificando o cliente;
+            if (identificador == 1) {
+                this.superNo = true; //Torna o cliente super no;
+            }
+            assinarGrupoMult(str[1], Integer.parseInt(str[2])); //Assina o grupo que o servidor mandou;
+            this.maxJogadores = maxJogadores;
+            monitorMensGRP();
+        }
+
     }
 
     private void enviarMensagemServidor(String mens) {
@@ -108,6 +115,9 @@ public class ControllerConexao {
     }
 
     //********************************** COMUNICAÇÃO COM GRUPO MULTICAST **********************************
+    
+    
+    
     /**
      * Assina um grupo multcast.
      *
