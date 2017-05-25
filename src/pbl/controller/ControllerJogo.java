@@ -14,9 +14,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import pbl.exception.ErroComunicacaoServidorException;
+import pbl.exception.ErroNaBuscaDeCartaOuVendedor;
+import pbl.exception.NenhumJogadorGanhouBolaoException;
+import pbl.exception.NumeroBilheteJaEscolhidoException;
+import pbl.model.jogo.BilheteBolao;
+import pbl.model.jogo.Carta;
 import pbl.model.jogo.Dado;
 import pbl.model.jogo.Jogador;
 import pbl.model.jogo.Peao;
+import pbl.model.jogo.PilhaCartasComprasEntretenimento;
 import pbl.view.Principal;
 
 /**
@@ -36,6 +42,7 @@ public class ControllerJogo {
     private double sorteGrande;
     private int qntMeses;
     private Jogador jogadorPrincipal;
+    private List <BilheteBolao> bilhetesBolao;
     
     private Principal telaPrincipal;
     
@@ -73,10 +80,63 @@ public class ControllerJogo {
         }
         return valor;
     }
-
-    public void achouUmComprador(){
-        
+    public void novoBolaoDeEsportes(){
+        bilhetesBolao = new ArrayList<>();
     }
+    
+    /**
+     * Adiciona um participante para um bolão
+     * @param numero numero do bilhete escolhido para o jogador
+     * @param idJogador id do jogador que adiquiriu o bilhete
+     * @throws NumeroBilheteJaEscolhidoException caso o jogador escolha um numero que já foi escolhido
+     */
+    public void participarBolao(int numero, int idJogador) throws NumeroBilheteJaEscolhidoException{
+        for(BilheteBolao b: bilhetesBolao){ //verifica se o numero já foi escolhido
+            if(b.getNumero()==numero){
+                throw new NumeroBilheteJaEscolhidoException(); //exceção para caso o numero já tenha sido escolhido
+            }
+        }
+        bilhetesBolao.add(new BilheteBolao(numero, idJogador)); //adiciona o bilhete a lista
+    }
+    
+    /**
+     * Encerra um bolão de esportes 
+     * @param numeroSorteado numero do bilhete sorteado
+     * @throws NenhumJogadorGanhouBolaoException  Caso o numero sorteado não tenha sido escolhido por nenhum jogador
+     */
+    public void finalizarBolao(int numeroSorteado) throws NenhumJogadorGanhouBolaoException{
+        List <Jogador> participantes = new ArrayList<>();
+        Jogador ganhador = null;
+        for(BilheteBolao b: bilhetesBolao){ //percorre a lista de bilhetes buscando o numero sortedo
+            if(b.getNumero()==numeroSorteado){ //caso encontre o numero sorteado
+                ganhador = buscarJogador(b.getIdJogador());
+            }else{ //caso nao adiciona a lista de participantes do bolão
+                participantes.add(buscarJogador(b.getIdJogador()));
+            }
+        }
+        if(ganhador == null){
+            throw new NenhumJogadorGanhouBolaoException();
+        }
+        bolaoEsportes(ganhador, participantes); //realiza o deposito e as transferencias de valores para a conta do ganhador
+    }
+
+    /**
+     * Metodo em que o jogador vende um propriedade
+     * @param idJogador id do jogador que vendeu a propriedade
+     * @param codigoCarta
+     * @throws ErroNaBuscaDeCartaOuVendedor 
+     */
+    public void achouUmComprador(int idJogador, int codigoCarta) throws ErroNaBuscaDeCartaOuVendedor{
+        Jogador vendedor = buscarJogador(idJogador);
+        Carta carta = PilhaCartasComprasEntretenimento.buscarCarta(codigoCarta);
+        
+        if(vendedor == null || carta == null){
+            throw new ErroNaBuscaDeCartaOuVendedor();
+        }
+        vendedor.removerCartaCompEntret(codigoCarta);
+        vendedor.getConta().depositar(carta.getValor()*1.5);
+    }
+    
     /**
      * O jogador que caiu na casa recebe 5000 do banco;
      * @param jogador jogador que caiu na casa

@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class PilhaCartasCorreios {
 
-    private final List<Cartas> cartas;
+    private final List<Carta> cartas;
     private int index;
 
     public PilhaCartasCorreios() {
@@ -25,10 +25,10 @@ public class PilhaCartasCorreios {
         criarCartas();
     }
 
-    public Cartas pegarCarta() {
+    public Carta pegarCarta() {
         if(index >= cartas.size())
             embaralharCartas();
-        Cartas tipo =  cartas.get(index);
+        Carta tipo =  cartas.get(index);
         this.index++;
         return tipo;
     }
@@ -39,12 +39,12 @@ public class PilhaCartasCorreios {
     }
     
     private void criarCartas(){
-        this.cartas.add(new Cartas("CONTAS", "", 0));
-        this.cartas.add(new Cartas("PAGUE A UM VIZINHO AGORA", "", 0));
-        this.cartas.add(new Cartas("DINHEIRO EXTRA", "", 0));
-        this.cartas.add(new Cartas("DOAÇÕES", "", 0));
-        this.cartas.add(new Cartas("COBRANÇA MONSTRO", "", 0));
-        this.cartas.add(new Cartas("VÁ EM FRENTE AGORA", "", 0));
+        this.cartas.add(new Carta("CONTAS", "", 0));
+        this.cartas.add(new Carta("PAGUE A UM VIZINHO AGORA", "", 0));
+        this.cartas.add(new Carta("DINHEIRO EXTRA", "", 0));
+        this.cartas.add(new Carta("DOAÇÕES", "", 0));
+        this.cartas.add(new Carta("COBRANÇA MONSTRO", "", 0));
+        this.cartas.add(new Carta("VÁ EM FRENTE AGORA", "", 0));
         embaralharCartas();
     }
 }

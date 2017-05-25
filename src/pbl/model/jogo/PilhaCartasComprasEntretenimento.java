@@ -13,36 +13,51 @@ import java.util.List;
  *
  * @author emerson
  */
-public class PilhaCartasComprasEntretenimento {
-    private final List<Cartas> cartas;
-    private int index;
-
-    public PilhaCartasComprasEntretenimento() {
-        this.cartas = new ArrayList();
-        this.index = 0;
-        criarCartas();
-    }
-
-    public Cartas pegarCarta() {
-        if(index >= cartas.size())
+public abstract class PilhaCartasComprasEntretenimento {
+    private static final List<Carta> cartas = new ArrayList();
+    private static int index = 0;
+    
+    /**
+     * Devolve uma carta da pilha
+     * @return 
+     */
+    public static Carta pegarCarta() {
+        if(cartas.size()==0){ //se não existirem cartas, cria-se
+            criarCartas();
+        }
+        
+        if(index >= cartas.size()){ //quando a pilha de cartas chegar ao fim
             embaralharCartas();
-        Cartas tipo =  cartas.get(index);
-        this.index++;
+        }
+        Carta tipo =  cartas.get(index);
+        index++;
         return tipo;
     }
     
-    public void embaralharCartas(){
-        Collections.shuffle(this.cartas);
-        this.index = 0;
+    /**
+     * Embaralha as cartas do monte, e zera o id da pilha de carta
+     */
+    private static void embaralharCartas(){
+        Collections.shuffle(cartas);
+        index = 0;
     }
     
-    private void criarCartas(){
-        this.cartas.add(new Cartas("CONTAS", "", 0));
-        this.cartas.add(new Cartas("PAGUE A UM VIZINHO AGORA", "", 0));
-        this.cartas.add(new Cartas("DINHEIRO EXTRA", "", 0));
-        this.cartas.add(new Cartas("DOAÇÕES", "", 0));
-        this.cartas.add(new Cartas("COBRANÇA MOSTRO", "", 0));
-        this.cartas.add(new Cartas("VÁ EM FRENTE AGORA", "", 0));
+    private static void criarCartas(){
+        cartas.add(new Carta("CONTAS", "", 0));
+        cartas.add(new Carta("PAGUE A UM VIZINHO AGORA", "", 0));
+        cartas.add(new Carta("DINHEIRO EXTRA", "", 0));
+        cartas.add(new Carta("DOAÇÕES", "", 0));
+        cartas.add(new Carta("COBRANÇA MOSTRO", "", 0));
+        cartas.add(new Carta("VÁ EM FRENTE AGORA", "", 0));
         embaralharCartas();
+    }
+    
+    public static Carta buscarCarta(int codigo){
+        for(Carta c: cartas){
+            if(c.getCodigo()==codigo){
+                return c;
+            }
+        }
+        return null;
     }
 }

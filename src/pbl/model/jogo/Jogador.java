@@ -18,8 +18,8 @@ public class Jogador {
     private int mes;
     private Peao peao;
     private final String nome;
-    private List<Cartas> cartasCorreios;
-    private List<Cartas> cartasCompEntret;
+    private List<Carta> cartasCorreios;
+    private List<Carta> cartasCompEntret;
     private Conta conta;
 
     public Jogador(int identificacao, String nome, Peao peao) {
@@ -40,11 +40,11 @@ public class Jogador {
         this.identificacao = identificacao;
     }
 
-    public List<Cartas> getCartasCorreios() {
+    public List<Carta> getCartasCorreios() {
         return cartasCorreios;
     }
 
-    public List<Cartas> getCartasCompEntret() {
+    public List<Carta> getCartasCompEntret() {
         return cartasCompEntret;
     }
 
@@ -56,12 +56,20 @@ public class Jogador {
         this.conta = conta;
     }
     
-    public void addCartaCorreio(Cartas carta){
+    public void addCartaCorreio(Carta carta){
         cartasCorreios.add(carta);
     }
     
-    public void addCartaCompEntret(Cartas carta){
+    public void addCartaCompEntret(Carta carta){
         cartasCompEntret.add(carta);
+    }
+    
+    public void removerCartaCompEntret(int codigoCarta){
+        for(Carta c: cartasCompEntret){
+            if(c.getCodigo()==codigoCarta){
+                cartasCompEntret.remove(c);
+            }
+        }
     }
 
     public Peao getPeao() {
@@ -89,7 +97,7 @@ public class Jogador {
      */
     private double calcularValorTotalContas(){
         double valorTotal = 0;
-        for(Cartas c: cartasCorreios){
+        for(Carta c: cartasCorreios){
             if(c.getNome().equals("CONTAS")){
                 valorTotal += c.getValor();
             }
@@ -103,7 +111,7 @@ public class Jogador {
      */
     private double calcularValorTotalCobrancaMonstro(){
         double valorTotal = 0;
-        for(Cartas c: cartasCorreios){
+        for(Carta c: cartasCorreios){
             if(c.getNome().equals("COBRANÇA MONSTRO")){
                 valorTotal += (c.getValor()*1.1);
             }
@@ -117,7 +125,7 @@ public class Jogador {
      */
     private double calcularValorJurosCobrancaMonstro(){
         double valorTotal = 0;
-        for(Cartas c: cartasCorreios){
+        for(Carta c: cartasCorreios){
             if(c.getNome().equals("COBRANÇA MONSTRO")){
                 valorTotal += (c.getValor()*0.1);
             }

@@ -9,18 +9,22 @@ package pbl.model.jogo;
  *
  * @author marcos
  */
-public class Cartas {
+public class Carta {
     private int codigo;
     private String nome;
     private String descrição;
     private double valor;
     private static int cod = 0;
     
-    public Cartas(String nome, String descricao, double valor){
+    public Carta(String nome, String descricao, double valor){
         this.nome = nome;
         this.descrição = descricao;
         this.valor = valor;
         this.codigo = cod++;
+    }
+    
+    public int getCodigo(){
+        return codigo;
     }
 
     public String getNome() {
