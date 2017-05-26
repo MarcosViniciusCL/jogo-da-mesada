@@ -91,6 +91,15 @@ public class ControllerJogo {
         }
         return valor;
     }
+    
+    public void realizarEmprestimo(Jogador j, double valor){
+        if(valor>0)
+            j.getConta().realizarEmprestimo(valor);
+    }
+    
+    /**
+     * Cria uma nova instancia da lista bolão de esportes
+     */
 
     public void novoBolaoDeEsportes() {
         bilhetesBolao = new ArrayList<>();
