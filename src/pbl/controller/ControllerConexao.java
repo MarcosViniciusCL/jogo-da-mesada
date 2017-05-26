@@ -45,6 +45,7 @@ public class ControllerConexao {
     private int maxJogadores; //Numero maximo de jogadores que deve ter na sala.
 
     //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
+    private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
     
     
     private ControllerConexao() {
@@ -55,7 +56,13 @@ public class ControllerConexao {
     }
 
     //********************************* METODOS DO JOGO ******************************************************************
-    
+    public void dadoJogado(int valorDado){
+        try {
+            enviarMensagemGRP(protDadoJogado+";"+valorDado);
+        } catch (IOException ex) {
+            Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     
     //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************

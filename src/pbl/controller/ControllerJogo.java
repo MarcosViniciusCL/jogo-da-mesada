@@ -256,7 +256,11 @@ public class ControllerJogo {
      */
     public void moverPeao(int valor) {
         jogadorPrincipal.getPeao().andarCasas(valor);
-        dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
+        controllerConexao.dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
+    }
+    
+    public void pedirEmprestimo(double valorEmprestimo){
+        jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
     }
     
  
@@ -283,14 +287,7 @@ public class ControllerJogo {
     public void entrarSala(int quantJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException{
         controllerConexao.entraSala(quantJogadores, quantMeses);    
     }
-    
-    private void dadoJogado(int valorDado){
-        try {
-            controllerConexao.enviarMensagemGRP("PROTOCOLO;"+valorDado);
-        } catch (IOException ex) {
-            Logger.getLogger(ControllerJogo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+
     
     
     
