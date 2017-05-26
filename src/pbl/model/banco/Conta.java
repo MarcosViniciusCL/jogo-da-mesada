@@ -80,6 +80,7 @@ public class Conta implements Serializable{
      */
     public void realizarEmprestimo(double valor){
         emprestimo.addValor(valor);
+        depositar(valor);
     }
     
     /**
