@@ -9,8 +9,10 @@ import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import pbl.controller.ControllerJogo;
 import pbl.exception.AguadarVezException;
+import pbl.model.jogo.Jogador;
 import pbl.model.jogo.Peao;
 
 /**
@@ -19,20 +21,19 @@ import pbl.model.jogo.Peao;
  */
 public class Principal extends javax.swing.JFrame {
 
-    public static void atualizarInterface() {
-        
-    }
 
     /**
      * Creates new form Principal
      */
     private JLabel[][] tabuleiro;
     private final ControllerJogo controllerJogo;
-    
+
     public Principal(String title) {
         super(title);
         initComponents();
         controllerJogo = ControllerJogo.getInstance();
+        controllerJogo.setTelaPrincipal(this);
+        atualizarInformacoesTela();
     }
 
     /**
@@ -54,8 +55,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        jTextFieldExibSaldoJogador = new javax.swing.JTextField();
+        jTextFieldExibDividaJogador = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
@@ -101,9 +102,9 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel3.setText("DEPITO:");
 
-        jTextField2.setEditable(false);
+        jTextFieldExibSaldoJogador.setEditable(false);
 
-        jTextField3.setEditable(false);
+        jTextFieldExibDividaJogador.setEditable(false);
 
         jLabel4.setText("Informações dos jogadores");
 
@@ -113,6 +114,11 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTextArea2);
 
         jButton1.setText("Emprestimo");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -130,8 +136,8 @@ public class Principal extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField3))))
+                            .addComponent(jTextFieldExibSaldoJogador)
+                            .addComponent(jTextFieldExibDividaJogador))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
                 .addContainerGap())
@@ -148,12 +154,12 @@ public class Principal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldExibSaldoJogador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldExibDividaJogador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -216,11 +222,22 @@ public class Principal extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             int valor = controllerJogo.jogarDado();
+            jButton2.setText("Jogar dado: "+valor);
             controllerJogo.moverPeao(valor);
         } catch (AguadarVezException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String valor = JOptionPane.showInputDialog("Valor do emprestimo");
+        if (valor != null | !valor.isEmpty()) {
+            valor = valor.replace(",", ".");
+            controllerJogo.pedirEmprestimo(Integer.parseInt(valor));
+        }
+        
+        atualizarInformacoesTela();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -239,9 +256,21 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextFieldExibDividaJogador;
+    private javax.swing.JTextField jTextFieldExibSaldoJogador;
     private pbl.view.Tabuleiro tabuleiro1;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * Atualiza todas as informações dos jogadores na tela principal e
+     * atualiza o tabuleiro em seguida.
+     */
+    public void atualizarInformacoesTela() {
+        Jogador j = controllerJogo.getJogador();
+        jTextFieldExibSaldoJogador.setText(j.getConta().consultarSaldo()+"");
+        jTextFieldExibDividaJogador.setText(j.getConta().getEmprestimo().getValorTotal()+"");
+        
+        tabuleiro1.atualizarTabuleiro();
+    }
 
 }

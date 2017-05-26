@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import pbl.controller.ControllerJogo;
 import pbl.model.jogo.Peao;
 
 /**
@@ -24,45 +25,40 @@ public class Tabuleiro extends javax.swing.JPanel {
     /**
      * Creates new form Tabuleiro
      */
-    private final List<Peao> peoes;
+    private ControllerJogo controllerJogo;
+    private List<Peao> peoes;
     private Tabuleiro tabuleiro;
+    private Peao peaoPrincipal;
 
     public Tabuleiro() {
         initComponents();
         this.peoes = new ArrayList<>();
+        this.controllerJogo = ControllerJogo.getInstance();
         gerarGUI();
     }
 
-    //Metodo para testar movimento de objeto;
-    public void andar(int casas) throws InterruptedException {
-        Peao p = peoes.get(0);
-        p.andarCasas(1);
-        atualizarLocalInterface();
-    }
 
-    public void adicionarPeao(Peao peao) {
-        peoes.add(peao);
-        this.add(peao);
-        atualizarLocalInterface();
+    private void adicionarPeoesTabuleiro() {
+        this.peaoPrincipal = controllerJogo.getJogador().getPeao();
+        this.add(peaoPrincipal);
+        this.peoes = controllerJogo.getPeoes();
+        for (Peao peao : peoes) {
+            this.add(peao);
+        }
+        repaint();
     }
 
     private void gerarGUI() {
         this.setLayout(new BorderLayout());
         this.setBackground(Color.white);
         this.setSize(480, 720);
-        //    this.add(new JButton());
-
+        adicionarPeoesTabuleiro();
     }
 
-    public void atualizarLocalInterface() {
-//        limparTabuleiro();
-        for (Peao peao : peoes) {
-//            removerPeao(peao);
-            System.out.println("Peao \nX: " + peao.getX() + "\nY: " + peao.getY());
-//            this.add(new JButton());
-        }
-//        repaint();
-//        validate();
+    public void atualizarTabuleiro() {
+//        this.peaoPrincipal = controllerJogo.getJogador().getPeao();
+//        this.peoes = controllerJogo.getPeoes();
+        repaint();
     }
 
     private void removerPeao(Peao p) {

@@ -26,8 +26,8 @@ import javax.swing.JOptionPane;
  */
 public class ControllerConexao {
 
-    private static ControllerConexao controlConexao; //Instancia da propria classe.
-    private static ControllerJogo controllerJogo; //Instancia do controller do jogo.
+//    private static ControllerConexao controlConexao; //Instancia da propria classe.
+    private ControllerJogo controllerJogo; //Instancia do controller do jogo.
 
     //ATRIBUTOS PARA CONEXÃO
     private MulticastSocket grupoMulticast; //Grupo que o cliente pertence no multicast;
@@ -48,8 +48,8 @@ public class ControllerConexao {
     private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
     
     
-    private ControllerConexao() {
-        ControllerConexao.controllerJogo = null;
+    public ControllerConexao(ControllerJogo controllerJogo) {
+        this.controllerJogo = controllerJogo;
         this.monitorMensGRP = null;
         this.idJogAtual = 0;
         this.identificador = 0;
@@ -80,13 +80,13 @@ public class ControllerConexao {
         }
     }
 
-    public void entraSala(int maxJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
+    public void entraSala(String nome, int maxJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
         if (servidor == null) {
             System.out.print("Servidor: ");
             conectarServidor(new Scanner(System.in).next());
         }
 
-        enviarMensagemServidor("100;" + "MARCOS;" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
+        enviarMensagemServidor("100;" + nome +";" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
         String resp = receberMensagemServidor();
         System.out.println(resp);
         if (resp != null) {
@@ -98,6 +98,7 @@ public class ControllerConexao {
             }
             assinarGrupoMult(str[1], Integer.parseInt(str[2])); //Assina o grupo que o servidor mandou;
             this.maxJogadores = maxJogadores;
+            controllerJogo.criarJogadorPrincipal(identificador, nome); //Cria o jogador principal no controller de jogo
             monitorMensGRP();
         }
 
@@ -215,13 +216,13 @@ public class ControllerConexao {
 
     }
 
-    public static ControllerConexao getInstance() {
-        if (controlConexao == null) {
-            ControllerConexao.controlConexao = new ControllerConexao();
-            ControllerConexao.controllerJogo = ControllerJogo.getInstance();
-        }
-        return ControllerConexao.controlConexao;
-    }
+//    public static ControllerConexao getInstance() {
+//        if (controlConexao == null) {
+//            ControllerConexao.controlConexao = new ControllerConexao();
+//            ControllerConexao.controllerJogo = ControllerJogo.getInstance();
+//        }
+//        return ControllerConexao.controlConexao;
+//    }
 
     private void seletorAcao(String[] str) {
         switch (str[0]) {

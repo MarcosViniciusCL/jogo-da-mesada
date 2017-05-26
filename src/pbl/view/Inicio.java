@@ -121,13 +121,17 @@ public class Inicio extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            controllerJogo.entrarSala(Integer.parseInt((String) jComboBoxQuantJog.getSelectedItem()),Integer.parseInt((String) jComboBoxQuantMes.getSelectedItem()));
+            controllerJogo.entrarSala(jTextFieldNome.getText().trim(),Integer.parseInt((String) jComboBoxQuantJog.getSelectedItem()),Integer.parseInt((String) jComboBoxQuantMes.getSelectedItem()));
             Principal fp = new Principal("Jogo da Mesada");
             fp.setLocationRelativeTo(null);
             fp.setVisible(true);
             dispose();
         } catch (ErroComunicacaoServidorException | IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possivel conectar ao servidor.\nVerifique se o servidor está disponivel.");
+            Principal fp = new Principal("Jogo da Mesada");
+            fp.setLocationRelativeTo(null);
+            fp.setVisible(true);
+            dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
