@@ -23,6 +23,7 @@ import pbl.model.jogo.Dado;
 import pbl.model.jogo.Jogador;
 import pbl.model.jogo.Peao;
 import pbl.model.jogo.PilhaCartasComprasEntretenimento;
+import pbl.model.jogo.PilhaCartasCorreios;
 import pbl.view.Principal;
 
 /**
@@ -55,6 +56,8 @@ public class ControllerJogo {
     private final double cFelizAniversario = 100;
     private final double cNegocioOcasiao = 100;
     private final double cMaratonaBeneficente = 100;
+    private final double cShopping = 1000;
+    private final double cLanchonete = 600;
 
     private ControllerJogo() {
         this.dado = new Dado();
@@ -302,9 +305,116 @@ public class ControllerJogo {
         this.jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
         atualizarTela();
     }
+    
+    //*************************************** CASAS FORA DO MANUAL
+    
+    /**
+     * O jogador que caiu na casa paga 500 de conta do shopping
+     * @param jogador jogador que caiu na casa
+     */
+    public void comprasShopping(Jogador jogador){
+        if(!jogador.getConta().sacar(cShopping)){ //verifica se o jogador tem saldo para pagar
+            jogador.getConta().realizarEmprestimo(cShopping);
+            jogador.getConta().sacar(cShopping);
+        }
+    }
+    
+    /**
+     * O jogador que caiu na casa paga  de conta da lanchonete
+     * @param jogador 
+     */
+    public void lanconete(Jogador jogador){
+        if(!jogador.getConta().sacar(cLanchonete)){ //verifica se o jogador tem saldo para pagar
+            jogador.getConta().realizarEmprestimo(cLanchonete);
+            jogador.getConta().sacar(cLanchonete);
+        }
+    }
+    
+    //*************************************** METODOS DA CARTA CORREIO
+    
+    /**
+     * metodo paga caso o jogador retire um carta do tipo conta do monte
+     * @param jogador jogador que recebeu a conta
+     * @param pagarAgora verifica se o jogador solicitou o pagamento imediato
+     * @param codCarta codigo da carta que o jogador sortou
+     */
+    public void contas(Jogador jogador, boolean pagarAgora, int codCarta){
+        Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
+        if(pagarAgora){ //se o jogador desejou pagar na hora
+            if(!jogador.getConta().sacar(c.getValor())){ //verifica se o jogador tem saldo
+                jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
+                jogador.getConta().sacar(c.getValor()); //saca o valor
+            }
+        }else{ //caso o jogador prefira pagar depois
+            jogador.addCartaCorreio(c); 
+        }
+    }
+    
+    /**
+     * transfere o valor contido na carta para um vizinho da escolha do jogador
+     * que caiu na casa
+     * @param jogador jogador que sorteou a carta
+     * @param vizinho vizinho escolhido
+     * @param codCarta codigo da carta sorteada
+     */
+    public void dinheiroExtra(Jogador jogador, Jogador vizinho, int codCarta){
+        Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
+        if(!vizinho.getConta().transferir(jogador.getConta(), c.getValor())){ //verifica se o vizinho tem saldo para transferir para o vizinho
+            vizinho.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
+            vizinho.getConta().transferir(jogador.getConta(), c.getValor()); //transfere o valor
+        }
+    }
+    
+    /**
+     * 
+     * @param jogador
+     * @param vizinho
+     * @param codCarta 
+     */
+    public void pagueUmVizinhoAgora(Jogador jogador, Jogador vizinho, int codCarta){
+        Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
+        if(!jogador.getConta().transferir(vizinho.getConta(), c.getValor())){ //verifica se o jogador tem saldo para transferir para o vizinho
+            jogador.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
+            jogador.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
+        }
+    }
+    
+    /**
+     * Debita da conta do jogador que sorteou essa carta o valor da carta
+     * @param jogador jogador que sorteou a carta
+     * @param codCarta codigo da carta sorteada
+     */
+    public void doacao(Jogador jogador, int codCarta){
+        Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
+        if(!jogador.getConta().sacar(c.getValor())){ //verifica se o jogador tem saldo para pagar a carta
+            jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
+        }
+        sorteGrande += c.getValor(); //deposita o valor no campo sorte grande
+    }
+    
+    public void cobrancaMonstro(Jogador jogador, boolean pagarAgora, int codCarta){
+        Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
+        if(pagarAgora){ //verifica se o jogador deseja pagar a carta agora
+            if(!jogador.getConta().sacar((c.getValor()*1.1))){ //verifica se o jogador tem saldo suficiente
+                jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um empretimo
+                jogador.getConta().sacar((c.getValor()*1.1)); //saca o valor
+            }
+        }else{ //caso o jogador decida pagar depois
+            jogador.addCartaCorreio(c); 
+        }
+    }
+    
+    public void irParaFrenteAgora(Jogador jogador, boolean irComprasEntretenimento){
+        if(irComprasEntretenimento){
+            jogador.getPeao().irParaProximaCasaComprasEntretenimento();
+        }else{
+            jogador.getPeao().irParaProximaCasaAcheiComprador();
+        }
+        atualizarTela();
+    }        
 
     //****************************************** METODOS RESPONSAVEIS PELA COMUNICAÇÃO ************************************
-    /**
+    /** 
      * Reenvia a ultima mensagem que foi enviada ao grupo multcast.
      *
      * @throws java.io.IOException
