@@ -131,7 +131,11 @@ public class Jogador {
      * @return verdadeiro ou falso
      */
     public boolean pagarTodasContas(){
-        return this.getConta().sacar(calcularValorTotalContas());
+        if(this.getConta().sacar(calcularValorTotalContas())){
+           contas = new ArrayList<>();
+           return true;
+        }
+        return false;
     }
     
     /**
