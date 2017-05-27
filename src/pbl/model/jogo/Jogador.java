@@ -8,6 +8,7 @@ package pbl.model.jogo;
 import java.util.ArrayList;
 import java.util.List;
 import pbl.model.banco.Conta;
+import pbl.model.banco.Emprestimo;
 
 /**
  *
@@ -18,7 +19,8 @@ public class Jogador {
     private int mes;
     private Peao peao;
     private final String nome;
-    private List<Carta> cartasCorreios;
+    private List<Carta> contas;
+    private Emprestimo cobrancaMonstro;
     private List<Carta> cartasCompEntret;
     private Conta conta;
 
@@ -27,8 +29,9 @@ public class Jogador {
         this.mes = 1;
         this.nome = nome;
         this.peao = peao;
-        this.cartasCorreios = new ArrayList();
+        this.contas = new ArrayList();
         this.cartasCompEntret = new ArrayList();
+        this.cobrancaMonstro = new Emprestimo(0);
         conta = new Conta(3000.0);
     }
 
@@ -41,7 +44,7 @@ public class Jogador {
     }
 
     public List<Carta> getCartasCorreios() {
-        return cartasCorreios;
+        return contas;
     }
 
     public List<Carta> getCartasCompEntret() {
@@ -57,7 +60,11 @@ public class Jogador {
     }
     
     public void addCartaCorreio(Carta carta){
-        cartasCorreios.add(carta);
+        if(carta.getNome().equals("CONTAS")){ //caso seja uma conta
+            contas.add(carta);
+        }else if(carta.getNome().equals("COBRANÇA MONSTRO")){ //caso seja uma cobrança monstro
+            cobrancaMonstro.addValor(carta.getValor());
+        }   
     }
     
     public void addCartaCompEntret(Carta carta){
@@ -97,10 +104,8 @@ public class Jogador {
      */
     private double calcularValorTotalContas(){
         double valorTotal = 0;
-        for(Carta c: cartasCorreios){
-            if(c.getNome().equals("CONTAS")){
-                valorTotal += c.getValor();
-            }
+        for(Carta c: contas){
+            valorTotal += c.getValor();
         }
         return valorTotal;
     }
@@ -110,13 +115,7 @@ public class Jogador {
      * @return a soma de todas as cobranças monstros e seu juros
      */
     private double calcularValorTotalCobrancaMonstro(){
-        double valorTotal = 0;
-        for(Carta c: cartasCorreios){
-            if(c.getNome().equals("COBRANÇA MONSTRO")){
-                valorTotal += (c.getValor()*1.1);
-            }
-        }
-        return valorTotal;
+        return cobrancaMonstro.getValorTotal();
     }
     
     /**
@@ -124,13 +123,7 @@ public class Jogador {
      * @return a soma dos juros da cobrança monstro
      */
     private double calcularValorJurosCobrancaMonstro(){
-        double valorTotal = 0;
-        for(Carta c: cartasCorreios){
-            if(c.getNome().equals("COBRANÇA MONSTRO")){
-                valorTotal += (c.getValor()*0.1);
-            }
-        }
-        return valorTotal;
+        return cobrancaMonstro.getValorJuros();
     }
     
     /**
@@ -146,7 +139,11 @@ public class Jogador {
      * @return verdadeiro ou falso
      */
     public boolean pagarTodasCobrancasMonstros(){
-        return this.getConta().sacar(calcularValorTotalCobrancaMonstro());
+        if(this.getConta().sacar(calcularValorTotalCobrancaMonstro())){ //verifica se o jogador tem saldo suficiente para pagar toda cobrança monstro
+            cobrancaMonstro.pagarEmprestimo();
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -154,43 +151,66 @@ public class Jogador {
      * @return verdadeiro ou falso
      */
     public boolean pagarJurosCobrancaMonstro(){
-        return this.getConta().sacar(calcularValorJurosCobrancaMonstro());
+        if(this.getConta().sacar(calcularValorJurosCobrancaMonstro())){
+            cobrancaMonstro.pagarJuros();
+            return true;
+        }
+        return false;
     }
     
     /**
      * paga todas as dividas do jogador, se não for possivel, paga o juro
+     * paga todas as dividas do jogador, se não for possivel, paga o juro
      * das mesmas
      */
-    public void pagarDividasFimRodada(){
+    public String pagarDividasFimRodada(){
+        String acoes = "";
+        
         if(!pagarTodasContas()){
             conta.realizarEmprestimo(calcularValorTotalContas());
             pagarTodasContas();
+            acoes += this.nome+": realizou um emprestimo para pagar as contas\n";
         }
+        acoes += this.nome+": pagou todas as contas\n";
         if(!pagarTodasCobrancasMonstros()){
             if(!pagarJurosCobrancaMonstro()){
                 conta.realizarEmprestimo(calcularValorJurosCobrancaMonstro());
                 pagarJurosCobrancaMonstro();
+                acoes += this.nome+": realizou um emprestimo para pagar a(s) cobranca(s) monstro\n";
             }
+            acoes += this.nome+": pagou os juros da(s) cobranca(s) monstro\n";
+        }else{
+            acoes += this.nome+": pagou todas a(s) cobranca(s) monstro\n";
         }
         if(!conta.pagarEmprestimo()){
             conta.pagarJurosEmprestimo();
+            acoes += this.nome+": pagou os juros do emprestimo\n";
+        }else{
+            acoes += this.nome+": pagou o emprestimo\n";
         }
+        return acoes;
     }
     
     /**
      * Pagar todas as dividas, se possivel os emprestimos
      * metodo para ser usado no fim da partida
      */
-    public void pagarDividasFimJogo(){
+    public String pagarDividasFimJogo(){
+        String acoes = "";
+        
         if(!pagarTodasContas()){
             conta.realizarEmprestimo(calcularValorTotalContas());
             pagarTodasContas();
         }
+        acoes += this.nome+": pagou todas as contas\n";
         if(!pagarTodasCobrancasMonstros()){
             conta.realizarEmprestimo(calcularValorTotalCobrancaMonstro());
             pagarTodasCobrancasMonstros();
         }
+        acoes += this.nome+": pagou a(s) cobrança(s) monstro\n";
         conta.pagarEmprestimo();
+        acoes += this.nome+": pagou o emprestimo\n";
+        return acoes;
     }
     
     /**
