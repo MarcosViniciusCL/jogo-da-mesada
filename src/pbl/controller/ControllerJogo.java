@@ -19,6 +19,7 @@ import pbl.exception.NenhumJogadorGanhouBolaoException;
 import pbl.exception.NumeroBilheteJaEscolhidoException;
 import pbl.model.jogo.BilheteBolao;
 import pbl.model.jogo.Carta;
+import pbl.model.jogo.Chat;
 import pbl.model.jogo.Dado;
 import pbl.model.jogo.Jogador;
 import pbl.model.jogo.Peao;
@@ -44,6 +45,7 @@ public class ControllerJogo {
     private int qntMeses;
     private Jogador jogadorPrincipal;
     private List<BilheteBolao> bilhetesBolao;
+    private Chat chat;
 
     private Principal telaPrincipal;
 
@@ -61,7 +63,8 @@ public class ControllerJogo {
 
     private ControllerJogo() {
         this.dado = new Dado();
-        jogadores = new ArrayList<>();
+        this.jogadores = new ArrayList<>();
+        this.chat = new Chat();
     }
 
     //****************************************** METODOS RESPONSAVEIS PELA AÇÃO DO JOGO ************************************
@@ -77,6 +80,7 @@ public class ControllerJogo {
      */
     public void adicionarJogadores(int identificador, String nome) {
         jogadores.add(new Jogador(identificador, nome, new Peao()));
+        telaPrincipal.carregarPeoesTabuleiro();
     }
 
     /**
@@ -306,6 +310,76 @@ public class ControllerJogo {
         atualizarTela();
     }
     
+    /**
+     * Veirifica qual casa o jogador se encontra e realiza as funções necessarias
+     */
+    private void acaoCasa(){
+        int casa = this.jogadorPrincipal.getPeao().getPosicao(); //Retorna a posição do piao do jogador;
+        switch (casa) {
+            case 1: //Correio, 1 carta
+                break;
+            case 2: //Prêmio! Você ganhou $5.000
+                break;
+            case 3: //Correio, 3 carta
+                break;
+            case 4: //Compras e entretenimento
+                break;
+            case 5: //Correio, 2 carta
+                break;
+            case 6: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                break;
+            case 7: //Domingo de praia, pague $500
+                break;
+            case 8: //Concurso de Banda de Rock, o primeiro jogador que tirar um 3 ganha $1.000
+                break;
+            case 9: //Você achou um comprador
+                break;
+            case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
+                break;
+            case 11: //Correio, 1 carta
+                break;
+            case 12: //Compras e entretenimento
+                break;
+            case 13: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                break;
+            case 14: //Ajude a floresta amazonica, doe $400
+                break;
+            case 15: //Compras e entretenimento
+                break;
+            case 16: //Correio, 3 carta
+                break;
+            case 17: //Você achou um comprador
+                break;
+            case 18: //Lanchonete, pague $600
+                break;
+            case 19: //Correio, 1 carta
+                break;
+            case 20: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                break;
+            case 21: //Negócios de ocasião seu por apenas $100 mais X nº dado
+                break;
+            case 22: //Correio, 1 carta
+                break;
+            case 23: //Você achou um comprador
+                break;
+            case 24: //Correio, 2 carta
+                break;
+            case 25: //Compras e entretenimento
+                break;
+            case 26: //Você achou um comprador
+                break;
+            case 27: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                break;
+            case 28: //Compras no shopping
+                break;
+            case 29: //Você achou um comprador
+                break;
+            case 30: //Maratona beneficiente, Os outros jogadores doam $100 X nº no dado
+                break;
+            default:
+                break;
+        }
+    }
     //*************************************** CASAS FORA DO MANUAL
     
     /**
@@ -434,6 +508,15 @@ public class ControllerJogo {
      */
     public void entrarSala(String nome, int quantJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
         controllerConexao.entraSala(nome, quantJogadores, quantMeses);
+    }
+    
+    public void novaMensagemChat(String mens){
+        chat.novaMensagem(mens);
+        telaPrincipal.atualizarInformacoesTela();
+    }
+    
+    public Chat getChat(){
+        return this.chat;
     }
 
     //****************************************** METODOS DO CONTROLLER ************************************
