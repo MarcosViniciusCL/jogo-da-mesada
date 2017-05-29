@@ -23,17 +23,20 @@ public class Peao extends javax.swing.JLabel {
     private int y;
     private int posicao; //Casa do tabuleiro.
     private int mesAtual;
+    private int quantMes; //Por padrão o valor é 1;
 
     public Peao() {
         this.cor = Color.red;
         this.x = 0;
         this.y = 0;
+        this.quantMes = 1;
+        this.mesAtual = 1;
         configurar();
     }
 
     private void configurar() {
         this.setSize(30, 30);
-        //   this.setIcon(new ImageIcon(this.getClass().getResource("/pbl/view/icones/peaoT.png")));
+        this.setIcon(new ImageIcon(this.getClass().getResource("/pbl/view/icones/peaoT.png")));
     }
 
     @Override
@@ -42,7 +45,7 @@ public class Peao extends javax.swing.JLabel {
         super.paintComponent(g);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
         g.setColor(cor);
-        g.fillOval(0, 0, 40, 40);
+        g.fillOval(0, 0, 15, 15);
     }
 
     /**
@@ -51,12 +54,24 @@ public class Peao extends javax.swing.JLabel {
      * @param casa
      */
     public void andarCasas(int casa) {
-        int col = 0, lin = 0;
-        if (posicao + casa > 30) {
-            posicao = casa; //Coloca o peão no inicio do tabuleiro, caso ta tenha completado o primeiro mes;
-        } else {
-            posicao += casa;
+        posicao += casa;
+        if (posicao > 30) {
+            mesAtual++; //Vai para o proximo mes;
         }
+        if (quantMes >= mesAtual) {
+            if (posicao > 30) {
+                posicao -= posicao-30; //Coloca o peão no inicio do tabuleiro, caso ta tenha completado o primeiro mes;
+            } else {
+                posicao += casa;
+            }
+        }
+        
+        if(quantMes < mesAtual && posicao > 30){ //Se o peao ja chegou ao fim e a partida atingiu o limite de mes; 
+            posicao = 30;
+            return;
+        }
+
+        int col = 0, lin = 0;
         switch (posicao) { //Coloca a posição X e Y do peao de acordo com a posição no tabuleiro.
             case 0:
                 lin = 0;
@@ -200,35 +215,35 @@ public class Peao extends javax.swing.JLabel {
     public void setPosicao(int posicao) {
         this.posicao = posicao;
     }
-    
+
     /**
      * procura e move o peao para proxima casa achei um comprador
      */
-    public void irParaProximaCasaAcheiComprador(){
-        if(posicao<9){
+    public void irParaProximaCasaAcheiComprador() {
+        if (posicao < 9) {
             andarCasas(9);
-        }else if(posicao<17){
+        } else if (posicao < 17) {
             andarCasas(17);
-        }else if(posicao<23){
+        } else if (posicao < 23) {
             andarCasas(23);
-        }else if(posicao<26){
+        } else if (posicao < 26) {
             andarCasas(26);
-        }else if(posicao<29){
+        } else if (posicao < 29) {
             andarCasas(29);
         }
     }
-    
+
     /**
      * procura e move o peao para proxima casa comprarEntretenimento
      */
-    public void irParaProximaCasaComprasEntretenimento(){
-        if(posicao<4){
+    public void irParaProximaCasaComprasEntretenimento() {
+        if (posicao < 4) {
             andarCasas(4);
-        }else if(posicao<12){
+        } else if (posicao < 12) {
             andarCasas(12);
-        }else if(posicao<15){
+        } else if (posicao < 15) {
             andarCasas(15);
-        }else if(posicao<25){
+        } else if (posicao < 25) {
             andarCasas(25);
         }
     }
@@ -249,6 +264,14 @@ public class Peao extends javax.swing.JLabel {
 
     public void setY(int col) {
         this.y = col;
+    }
+
+    public int getQuantMes() {
+        return quantMes;
+    }
+
+    public void setQuantMes(int quantMes) {
+        this.quantMes = quantMes;
     }
 
 }

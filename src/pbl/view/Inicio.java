@@ -102,7 +102,7 @@ public class Inicio extends javax.swing.JFrame {
                     .addComponent(jComboBoxQuantMes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(209, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -113,7 +113,7 @@ public class Inicio extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -128,10 +128,6 @@ public class Inicio extends javax.swing.JFrame {
             dispose();
         } catch (ErroComunicacaoServidorException | IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possivel conectar ao servidor.\nVerifique se o servidor está disponivel.");
-            Principal fp = new Principal("Jogo da Mesada");
-            fp.setLocationRelativeTo(null);
-            fp.setVisible(true);
-            dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

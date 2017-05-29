@@ -46,8 +46,7 @@ public class ControllerConexao {
 
     //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
     private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
-    
-    
+
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
         this.monitorMensGRP = null;
@@ -56,15 +55,14 @@ public class ControllerConexao {
     }
 
     //********************************* METODOS DO JOGO ******************************************************************
-    public void dadoJogado(int valorDado){
+    public void dadoJogado(int valorDado) {
         try {
-            enviarMensagemGRP(protDadoJogado+";"+valorDado);
+            enviarMensagemGRP(protDadoJogado + ";" + valorDado);
         } catch (IOException ex) {
             Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
     //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************
     /**
      * Conecta ao servidor que irá criar a partida.
@@ -82,11 +80,14 @@ public class ControllerConexao {
 
     public void entraSala(String nome, int maxJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
         if (servidor == null) {
-            System.out.print("Servidor: ");
-            conectarServidor(new Scanner(System.in).next());
+            if (JOptionPane.showConfirmDialog(null, "Servidor local?") == 0) {
+                conectarServidor("localhost");
+            } else {
+                conectarServidor(JOptionPane.showInputDialog("IP Servidor"));
+            }
         }
 
-        enviarMensagemServidor("100;" + nome +";" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
+        enviarMensagemServidor("100;" + nome + ";" + maxJogadores + ";" + quantMeses); //Solicitação para entrar em uma sala;
         String resp = receberMensagemServidor();
         System.out.println(resp);
         if (resp != null) {
@@ -123,9 +124,6 @@ public class ControllerConexao {
     }
 
     //********************************** COMUNICAÇÃO COM GRUPO MULTICAST **********************************
-    
-    
-    
     /**
      * Assina um grupo multcast.
      *
@@ -158,7 +156,7 @@ public class ControllerConexao {
      * @throws java.net.SocketException
      */
     public void enviarMensagemGRP(String mens) throws SocketException, IOException {
-        mens = mens+";"+identificador;
+        mens = mens + ";" + identificador;
         if (mens != null) {
             DatagramPacket env = new DatagramPacket(mens.getBytes(), mens.length(), InetAddress.getByName(this.endGrupo), this.porta);
             grupoMulticast.send(env);
@@ -223,7 +221,6 @@ public class ControllerConexao {
 //        }
 //        return ControllerConexao.controlConexao;
 //    }
-
     private void seletorAcao(String[] str) {
         switch (str[0]) {
             case "MSG": //Apenas mensagem para chat.
@@ -237,13 +234,13 @@ public class ControllerConexao {
                 break;
             case "201":
                 controllerJogo.seletorAcao("MSG;O JOGO VAI COMEÇAR;#".split(";"));
-                if (this.identificador == this.idJogAtual){ //Verifica se é a vez do jogador.
+                if (this.identificador == this.idJogAtual) { //Verifica se é a vez do jogador.
                     controllerJogo.seletorAcao("MSG;SUA VEZ DE JOGAR".split(";"));
                 }
                 break;
             case "203":
                 incrementarJogador(); //Incrementa a variavel que informa qual será o jogador da vez;
-                if (this.identificador == this.idJogAtual){ //Verifica se é a vez do jogador.
+                if (this.identificador == this.idJogAtual) { //Verifica se é a vez do jogador.
                     controllerJogo.seletorAcao("MSG;SUA VEZ DE JOGAR".split(";"));
                 }
                 break;
