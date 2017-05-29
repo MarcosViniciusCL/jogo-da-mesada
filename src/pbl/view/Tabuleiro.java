@@ -35,19 +35,19 @@ public class Tabuleiro extends javax.swing.JPanel {
         this.peoes = new ArrayList<>();
         this.controllerJogo = ControllerJogo.getInstance();
         gerarGUI();
-        adicionarPeoesTabuleiro();
+//        adicionarPeoesTabuleiro();
     }
 
 
     public void adicionarPeoesTabuleiro() {
         this.removeAll();
-        validate();
         this.peaoPrincipal = controllerJogo.getJogador().getPeao();
         this.add(peaoPrincipal);
         this.peoes = controllerJogo.getPeoes();
         for (Peao peao : peoes) {
             this.add(peao);
         }
+        validate();
         repaint();
     }
 
@@ -59,7 +59,7 @@ public class Tabuleiro extends javax.swing.JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
         g.setColor(Color.black);
         //Retangulo laterais
-        g.drawRect(0, 0, 718, 480);
+        g.drawRect(0, 0, 719, 480);
         //Linha verticais
         g.drawLine(102, 0, 102, 480);
         g.drawLine(204, 0, 204, 480);

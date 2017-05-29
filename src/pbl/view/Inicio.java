@@ -57,6 +57,12 @@ public class Inicio extends javax.swing.JFrame {
 
         jLabel3.setText("Seu nome:");
 
+        jTextFieldNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNomeActionPerformed(evt);
+            }
+        });
+
         jButton1.setText("Procurar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,6 +136,10 @@ public class Inicio extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Não foi possivel conectar ao servidor.\nVerifique se o servidor está disponivel.");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
+        jButton1ActionPerformed(evt);
+    }//GEN-LAST:event_jTextFieldNomeActionPerformed
 
     /**
      * @param args the command line arguments
