@@ -32,7 +32,6 @@ public class Principal extends javax.swing.JFrame {
         super(title);
         initComponents();
         controllerJogo = ControllerJogo.getInstance();
-        controllerJogo.setTelaPrincipal(this);
         atualizarInformacoesTela();
     }
 
@@ -67,6 +66,7 @@ public class Principal extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jPanel1.setLayout(null);
 
@@ -251,7 +251,7 @@ public class Principal extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String valor = JOptionPane.showInputDialog("Valor do emprestimo");
         if (valor != null | !valor.isEmpty()) {
-            valor = valor.replace(",", ".");
+            valor = valor.trim().replace(",", ".");
             controllerJogo.pedirEmprestimo(Integer.parseInt(valor));
         }
         
@@ -301,10 +301,6 @@ public class Principal extends javax.swing.JFrame {
         jTextAreaChat.removeAll();
         jTextAreaChat.setText(controllerJogo.getChat().getMensagem());
         tabuleiro1.atualizarTabuleiro();
-    }
-    
-    public void carregarPeoesTabuleiro(){
-        tabuleiro1.adicionarPeoesTabuleiro();
     }
 
 }

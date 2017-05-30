@@ -34,32 +34,34 @@ public class Tabuleiro extends javax.swing.JPanel {
         initComponents();
         this.peoes = new ArrayList<>();
         this.controllerJogo = ControllerJogo.getInstance();
+        
+        adicionarPeoesTabuleiro();
         gerarGUI();
-//        adicionarPeoesTabuleiro();
     }
 
-
     public void adicionarPeoesTabuleiro() {
-        this.removeAll();
-        this.peaoPrincipal = controllerJogo.getJogador().getPeao();
-        this.add(peaoPrincipal);
-        this.peoes = controllerJogo.getPeoes();
-        for (Peao peao : peoes) {
-            this.add(peao);
+        if (controllerJogo.getJogador() != null) {
+            this.peaoPrincipal = controllerJogo.getJogador().getPeao();
+            this.removeAll();
+            this.add(peaoPrincipal);
+            this.peoes = controllerJogo.getPeoes();
+            for (Peao peao : peoes) {
+                this.add(peao);
+            }
+            this.validate();
+            repaint();
         }
-        validate();
-        repaint();
     }
 
     @Override
-    public void paintComponent(Graphics g){
+    public void paintComponent(Graphics g) {
         //Desenhando tabuleiro;
         Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
         g.setColor(Color.black);
         //Retangulo laterais
-        g.drawRect(0, 0, 719, 480);
+        g.drawRect(0, 0, 720, 480);
         //Linha verticais
         g.drawLine(102, 0, 102, 480);
         g.drawLine(204, 0, 204, 480);
@@ -68,12 +70,13 @@ public class Tabuleiro extends javax.swing.JPanel {
         g.drawLine(510, 0, 510, 480);
         g.drawLine(612, 0, 612, 480);
         //Linha horizontais
-        g.drawLine(0, 96,  720, 96);
+        g.drawLine(0, 96, 720, 96);
         g.drawLine(0, 192, 720, 192);
         g.drawLine(0, 288, 720, 288);
         g.drawLine(0, 384, 720, 384);
-        
+
     }
+
     private void gerarGUI() {
         this.setLayout(null);
         this.setBackground(Color.white);
@@ -81,8 +84,11 @@ public class Tabuleiro extends javax.swing.JPanel {
     }
 
     public void atualizarTabuleiro() {
-        this.peaoPrincipal = controllerJogo.getJogador().getPeao();
-        this.peoes = controllerJogo.getPeoes();
+        if(this.peaoPrincipal != controllerJogo.getJogador().getPeao())
+            adicionarPeoesTabuleiro();
+        if(!this.peoes.equals(controllerJogo.getPeoes())){
+            adicionarPeoesTabuleiro();
+        }
         repaint();
 //        imagemFundo.repaint();
     }
@@ -118,6 +124,11 @@ public class Tabuleiro extends javax.swing.JPanel {
             .addGap(0, 480, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    void adicionarPeao(Peao p) {
+        this.peoes.add(p);
+        adicionarPeoesTabuleiro();
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

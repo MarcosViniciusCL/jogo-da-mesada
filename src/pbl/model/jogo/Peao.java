@@ -61,8 +61,6 @@ public class Peao extends javax.swing.JLabel {
         if (quantMes >= mesAtual) {
             if (posicao > 30) {
                 posicao -= posicao-30; //Coloca o peão no inicio do tabuleiro, caso ta tenha completado o primeiro mes;
-            } else {
-                posicao += casa;
             }
         }
         

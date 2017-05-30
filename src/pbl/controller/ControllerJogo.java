@@ -69,7 +69,8 @@ public class ControllerJogo {
 
     //****************************************** METODOS RESPONSAVEIS PELA AÇÃO DO JOGO ************************************
     public void criarJogadorPrincipal(int identificador, String nome) {
-        this.jogadorPrincipal = new Jogador(identificador, nome, new Peao());
+        Peao p =  new Peao();
+        this.jogadorPrincipal = new Jogador(identificador, nome, p);
     }
 
     /**
@@ -79,8 +80,9 @@ public class ControllerJogo {
      * @param nome
      */
     public void adicionarJogadores(int identificador, String nome) {
-        jogadores.add(new Jogador(identificador, nome, new Peao()));
-        telaPrincipal.carregarPeoesTabuleiro();
+        Peao p = new Peao();
+        jogadores.add(new Jogador(identificador, nome, p));
+        telaPrincipal.atualizarInformacoesTela();
     }
 
     /**
@@ -302,6 +304,7 @@ public class ControllerJogo {
     public void moverPeao(int valor) {
         this.jogadorPrincipal.getPeao().andarCasas(valor);
         atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
+        acaoCasa(); //Chama o metodo que será responsavel por executar uma ação de acordo com a casa que o peao caiu
 //        controllerConexao.dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
     }
 
