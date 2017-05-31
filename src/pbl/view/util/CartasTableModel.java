@@ -93,6 +93,10 @@ public class CartasTableModel extends javax.swing.table.AbstractTableModel{
         fireTableRowsDeleted(indexCarta, indexCarta);
     }
     
+    public Carta getCarta(int indexLinha){
+        return cartas.get(indexLinha);
+    }
+    
     public void limpar(){
         cartas.clear();
         fireTableDataChanged();

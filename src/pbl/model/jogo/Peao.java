@@ -55,17 +55,17 @@ public class Peao extends javax.swing.JLabel {
      */
     public void andarCasas(int casa) {
         posicao += casa;
-        if (posicao > 30) {
+        if (posicao > 31) {
             mesAtual++; //Vai para o proximo mes;
         }
         if (quantMes >= mesAtual) {
-            if (posicao > 30) {
-                posicao -= posicao-30; //Coloca o peão no inicio do tabuleiro, caso ta tenha completado o primeiro mes;
+            if (posicao > 31) {
+                posicao -= posicao-31; //Coloca o peão no inicio do tabuleiro, caso ta tenha completado o primeiro mes;
             }
         }
         
-        if(quantMes < mesAtual && posicao > 30){ //Se o peao ja chegou ao fim e a partida atingiu o limite de mes; 
-            posicao = 30;
+        if(quantMes < mesAtual && posicao > 31){ //Se o peao ja chegou ao fim e a partida atingiu o limite de mes; 
+            posicao = 31;
             return;
         }
 
@@ -198,6 +198,10 @@ public class Peao extends javax.swing.JLabel {
             case 30:
                 lin = 385;
                 col = 205;
+                break;
+            case 31:
+                lin = 385;
+                col = 307;
                 break;
             default:
                 break;

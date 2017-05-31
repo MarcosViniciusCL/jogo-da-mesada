@@ -97,15 +97,16 @@ public class ControllerJogo {
         }
         return valor;
     }
-    
+
     /**
      * Pega uma carta correio aleatoria;
-     * @return 
+     *
+     * @return
      */
     public Carta pegarCartaCorreio() {
         return PilhaCartasCorreios.pegarCarta();
     }
-    
+
     /**
      * Cria uma nova instancia da lista bolão de esportes
      */
@@ -177,7 +178,8 @@ public class ControllerJogo {
      * @param jogador jogador que caiu na casa
      */
     public void premio(Jogador jogador) {
-        jogador.getConta().depositar(cPremio);
+        jogadorPrincipal.getConta().depositar(cPremio);
+        novaMensagemChat("Ganhei $5.000,00 HUHU");
     }
 
     /**
@@ -319,7 +321,12 @@ public class ControllerJogo {
         this.jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
         atualizarTela();
     }
-    
+
+    public void depositar(double valor) {
+        jogadorPrincipal.getConta().depositar(valor);
+        atualizarTela();
+    }
+
     /**
      * Veirifica qual casa o jogador se encontra e realiza as funções
      * necessarias
@@ -328,15 +335,18 @@ public class ControllerJogo {
         int casa = this.jogadorPrincipal.getPeao().getPosicao(); //Retorna a posição do piao do jogador;
         switch (casa) {
             case 1: //Correio, 1 carta
-                telaPrincipal.abrirJanelaPegarCartaCorreio(2);
+                telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 2: //Prêmio! Você ganhou $5.000
+                premio(null);
                 break;
             case 3: //Correio, 3 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(3);
                 break;
             case 4: //Compras e entretenimento
                 break;
             case 5: //Correio, 2 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(2);
                 break;
             case 6: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
                 break;
@@ -349,6 +359,7 @@ public class ControllerJogo {
             case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
                 break;
             case 11: //Correio, 1 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 12: //Compras e entretenimento
                 break;
@@ -359,22 +370,26 @@ public class ControllerJogo {
             case 15: //Compras e entretenimento
                 break;
             case 16: //Correio, 3 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(3);
                 break;
             case 17: //Você achou um comprador
                 break;
             case 18: //Lanchonete, pague $600
                 break;
             case 19: //Correio, 1 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 20: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
                 break;
             case 21: //Negócios de ocasião seu por apenas $100 mais X nº dado
                 break;
             case 22: //Correio, 1 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 23: //Você achou um comprador
                 break;
             case 24: //Correio, 2 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(2);
                 break;
             case 25: //Compras e entretenimento
                 break;
@@ -387,6 +402,8 @@ public class ControllerJogo {
             case 29: //Você achou um comprador
                 break;
             case 30: //Maratona beneficiente, Os outros jogadores doam $100 X nº no dado
+                break;
+            case 31: //Oba!!! Dia da Mesada, receba $3.500 
                 break;
             default:
                 break;
@@ -416,6 +433,7 @@ public class ControllerJogo {
             jogador.getConta().realizarEmprestimo(cLanchonete);
             jogador.getConta().sacar(cLanchonete);
         }
+        novaMensagemChat("paguei " + cLanchonete + " a lanchonete");
     }
 
     //*************************************** METODOS DA CARTA CORREIO
@@ -456,16 +474,18 @@ public class ControllerJogo {
 
     /**
      *
-     * @param jogador
-     * @param vizinho
+     * @param idVizinho
      * @param codCarta
      */
-    public void pagueUmVizinhoAgora(Jogador jogador, Jogador vizinho, int codCarta) {
+    public void pagueUmVizinhoAgora(int idVizinho, int codCarta) {
+        Jogador vizinho = buscarJogador(idVizinho);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if (!jogador.getConta().transferir(vizinho.getConta(), c.getValor())) { //verifica se o jogador tem saldo para transferir para o vizinho
-            jogador.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
-            jogador.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
+        if (!jogadorPrincipal.getConta().transferir(vizinho.getConta(), c.getValor())) { //verifica se o jogador tem saldo para transferir para o vizinho
+            jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
+            jogadorPrincipal.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
         }
+        controllerConexao.pagueUmVizinhoAgora(idVizinho, c.getValor()); //Enviando valor para o vizinho;
+        novaMensagemChat("paguei " + c.getValor() + " para " + vizinho.getNome()); //Adiciona a informação no chat
     }
 
     /**
@@ -613,8 +633,6 @@ public class ControllerJogo {
         this.minhaVez = minhaVez;
         telaPrincipal.atualizarInformacoesTela();
     }
-    
-    
 
     /**
      * Retorna o jogador principal(METODO TEMPORARIO)
@@ -639,7 +657,5 @@ public class ControllerJogo {
         }
         return null;
     }
-
-
 
 }

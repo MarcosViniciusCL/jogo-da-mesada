@@ -362,9 +362,9 @@ public class Principal extends javax.swing.JFrame {
 
         //Atualizando informações dos jogadores;
         List<Jogador> l = controllerJogo.getJogadores();
-        jTextAreaInfJog.removeAll();
+        jTextAreaInfJog.setText("");
         for (Jogador jog : l) {
-            jTextAreaInfJog.append(jog.getNome() + ": R$" + jog.getConta().consultarSaldo() + "\n");
+            jTextAreaInfJog.append(jog.getIdentificacao()+" - "+jog.getNome() + ": R$" + jog.getConta().consultarSaldo() + "\n");
         }
 
         //Atualizando mensagem do chat

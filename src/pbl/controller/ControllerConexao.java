@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -46,6 +47,7 @@ public class ControllerConexao {
     //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
     private final int protMensChat = 300; //<- Protocolo para envio de mensagem pelo chat
     private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
+    private final int protPagarVizinho = 4012;
 
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -56,11 +58,11 @@ public class ControllerConexao {
 
     //********************************* METODOS DO JOGO ******************************************************************
     public void dadoJogado(int valorDado) {
-        try {
-            enviarMensagemGRP(protDadoJogado + ";" + valorDado);
-        } catch (IOException ex) {
-            Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        enviarMensagemGRP(protDadoJogado + ";" + valorDado);
+    }
+    
+    public void pagueUmVizinhoAgora(int idVizinho, double valor) {
+        enviarMensagemGRP(protPagarVizinho+";"+idVizinho+";"+valor);
     }
 
     //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************
@@ -155,11 +157,19 @@ public class ControllerConexao {
      * @param mens - Mensagem que será enviada ao grupo.
      * @throws java.net.SocketException
      */
-    public void enviarMensagemGRP(String mens) throws SocketException, IOException {
+    public void enviarMensagemGRP(String mens){
         mens = mens + ";" + identificador;
         if (mens != null) {
-            DatagramPacket env = new DatagramPacket(mens.getBytes(), mens.length(), InetAddress.getByName(this.endGrupo), this.porta);
-            grupoMulticast.send(env);
+            DatagramPacket env;
+            try {
+                env = new DatagramPacket(mens.getBytes(), mens.length(), InetAddress.getByName(this.endGrupo), this.porta);
+                grupoMulticast.send(env);
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
     }
 
@@ -215,11 +225,7 @@ public class ControllerConexao {
     }
 
     public void novaMensChat(String mens){
-        try {
-            enviarMensagemGRP(protMensChat+";"+mens);
-        } catch (IOException ex) {
-            Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        enviarMensagemGRP(protMensChat+";"+mens);
     }
     
     private void seletorAcao(String[] str) {
@@ -244,6 +250,10 @@ public class ControllerConexao {
                 incrementarJogador();
                 controllerJogo.setMinhaVez(isMinhaVez());
                 break;
+            case protPagarVizinho: //Protocolo para pagar a um vizinho;
+                if(Integer.parseInt(str[1].trim()) == identificador){ //Testa se o dinheiro foi para mim
+                    controllerJogo.depositar(Double.parseDouble(str[2].trim()));
+                }
             default:
                 break;
         }
@@ -259,5 +269,7 @@ public class ControllerConexao {
     private boolean isMinhaVez(){
         return idJogAtual == identificador;
     }
+
+  
 
 }
