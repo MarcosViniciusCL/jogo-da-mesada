@@ -13,21 +13,29 @@ import java.util.List;
  * @author marcos
  */
 public class Chat {
+
     private final List<String> chat;
-    
-    public Chat(){
+
+    public Chat() {
         chat = new ArrayList<>();
     }
-    
-    public void novaMensagem(String mens){
-        chat.add(mens+"\n");
+
+    public void novaMensagem(String mens) {
+        chat.add(mens + "\n");
     }
-    
-    public String getMensagem(){
+
+    public String getTodasMensagens() {
         StringBuilder str = new StringBuilder();
         for (String string : chat) {
             str.append(string);
         }
         return str.toString();
+    }
+
+    public String getUltimaMens() {
+        if (!chat.isEmpty()) {
+            return chat.get(chat.size() - 1);
+        }
+        return "";
     }
 }

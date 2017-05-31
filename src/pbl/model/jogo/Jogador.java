@@ -18,7 +18,7 @@ public class Jogador {
     private int identificacao;
     private int mes;
     private Peao peao;
-    private final String nome;
+    private String nome;
     private List<Carta> contas;
     private Emprestimo cobrancaMonstro;
     private List<Carta> cartasCompEntret;
@@ -225,4 +225,14 @@ public class Jogador {
     public double getSaldoFinal(){
         return (conta.consultarSaldo()-conta.getEmprestimo().getValorTotal());
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
+    
 }

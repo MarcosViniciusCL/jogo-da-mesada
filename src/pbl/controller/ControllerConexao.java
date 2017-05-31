@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,6 +46,7 @@ public class ControllerConexao {
     private int maxJogadores; //Numero maximo de jogadores que deve ter na sala.
 
     //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
+    private final int protMensChat = 300; //<- Protocolo para envio de mensagem pelo chat
     private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
 
     public ControllerConexao(ControllerJogo controllerJogo) {
@@ -214,35 +216,32 @@ public class ControllerConexao {
 
     }
 
-//    public static ControllerConexao getInstance() {
-//        if (controlConexao == null) {
-//            ControllerConexao.controlConexao = new ControllerConexao();
-//            ControllerConexao.controllerJogo = ControllerJogo.getInstance();
-//        }
-//        return ControllerConexao.controlConexao;
-//    }
+    public void novaMensChat(String mens){
+        try {
+            enviarMensagemGRP(protMensChat+";"+mens);
+        } catch (IOException ex) {
+            Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void seletorAcao(String[] str) {
-        switch (str[0]) {
-            case "MSG": //Apenas mensagem para chat.
-                controllerJogo.seletorAcao(str);
+        int aux = Integer.parseInt(str[0]);
+        switch (aux) {
+            case protMensChat: //Apenas mensagem para chat.
+                controllerJogo.adicionarMensChat(str); //Adiciona a mensagem recebida no chat;
                 break;
-            case "111": //Informando que a sala está cheia.
-                controllerJogo.seletorAcao("MSG;A SALA ESTÁ COMPLETA,#".split(";"));
-                break;
-            case "200":
-                controllerJogo.seletorAcao(str);
-                break;
-            case "201":
-                controllerJogo.seletorAcao("MSG;O JOGO VAI COMEÇAR;#".split(";"));
-                if (this.identificador == this.idJogAtual) { //Verifica se é a vez do jogador.
-                    controllerJogo.seletorAcao("MSG;SUA VEZ DE JOGAR".split(";"));
+            case 111: //Informando que a sala está cheia.
+                controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
+                int i = Integer.parseInt(str[1]); //Numero de jogadores
+                int iId = 2, iNome = 3;
+                for (int j = 0; j < i; j++) {
+                    controllerJogo.adicionarJogadores(Integer.parseInt(str[iId].trim()), str[iNome].trim()); //Adicionando jogadores;
+                    iId += 2;
+                    iNome += 2;
                 }
                 break;
-            case "203":
-                incrementarJogador(); //Incrementa a variavel que informa qual será o jogador da vez;
-                if (this.identificador == this.idJogAtual) { //Verifica se é a vez do jogador.
-                    controllerJogo.seletorAcao("MSG;SUA VEZ DE JOGAR".split(";"));
-                }
+            case protDadoJogado: //Informa que algum jogador jogou o dado.
+                controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
                 break;
             default:
                 break;

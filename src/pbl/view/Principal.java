@@ -6,6 +6,7 @@
 package pbl.view;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -20,7 +21,6 @@ import pbl.model.jogo.Peao;
  * @author marcos
  */
 public class Principal extends javax.swing.JFrame {
-
 
     /**
      * Creates new form Principal
@@ -48,7 +48,7 @@ public class Principal extends javax.swing.JFrame {
         jPanelChat = new javax.swing.JPanel();
         jTextFieldChat = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        jScrollPaneChat = new javax.swing.JScrollPane();
         jTextAreaChat = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -78,10 +78,15 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel5.setText("Chat");
 
-        jTextAreaChat.setEditable(false);
+        jScrollPaneChat.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPaneChat.setToolTipText("");
+
         jTextAreaChat.setColumns(20);
         jTextAreaChat.setRows(5);
-        jScrollPane3.setViewportView(jTextAreaChat);
+        jTextAreaChat.setInheritsPopupMenu(true);
+        jTextAreaChat.setLineWrap(true);
+        jTextAreaChat.setWrapStyleWord(true);
+        jScrollPaneChat.setViewportView(jTextAreaChat);
 
         javax.swing.GroupLayout jPanelChatLayout = new javax.swing.GroupLayout(jPanelChat);
         jPanelChat.setLayout(jPanelChatLayout);
@@ -91,14 +96,14 @@ public class Principal extends javax.swing.JFrame {
             .addGroup(jPanelChatLayout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+            .addComponent(jScrollPaneChat, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
         );
         jPanelChatLayout.setVerticalGroup(
             jPanelChatLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelChatLayout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPaneChat, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldChat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -241,7 +246,7 @@ public class Principal extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             int valor = controllerJogo.jogarDado();
-            jButton2.setText("Jogar dado: "+valor);
+            jButton2.setText("Jogar dado: " + valor);
             controllerJogo.moverPeao(1);
         } catch (AguadarVezException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
@@ -254,13 +259,16 @@ public class Principal extends javax.swing.JFrame {
             valor = valor.trim().replace(",", ".");
             controllerJogo.pedirEmprestimo(Integer.parseInt(valor));
         }
-        
+
         atualizarInformacoesTela();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextFieldChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldChatActionPerformed
-        controllerJogo.novaMensagemChat(jTextFieldChat.getText().trim());
-        jTextFieldChat.setText("");
+        String text = jTextFieldChat.getText().trim();
+        if (!text.trim().equals("")) {
+            controllerJogo.novaMensagemChat(text);
+            jTextFieldChat.setText("");
+        }
     }//GEN-LAST:event_jTextFieldChatActionPerformed
 
 
@@ -277,7 +285,7 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelChat;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPaneChat;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextAreaChat;
     private javax.swing.JTextField jTextField1;
@@ -288,18 +296,23 @@ public class Principal extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Atualiza todas as informações dos jogadores na tela principal e
-     * atualiza o tabuleiro em seguida.
+     * Atualiza todas as informações dos jogadores na tela principal e atualiza
+     * o tabuleiro em seguida.
      */
     public void atualizarInformacoesTela() {
         //Atualizando dados da conta bancaria do jogador
         Jogador j = controllerJogo.getJogador();
-        jTextFieldExibSaldoJogador.setText(j.getConta().consultarSaldo()+"");
-        jTextFieldExibDividaJogador.setText(j.getConta().getEmprestimo().getValorTotal()+"");
-        
+        jTextFieldExibSaldoJogador.setText(j.getConta().consultarSaldo() + "");
+        jTextFieldExibDividaJogador.setText(j.getConta().getEmprestimo().getValorTotal() + "");
+
         //Atualizando mensagem do chat
-        jTextAreaChat.removeAll();
-        jTextAreaChat.setText(controllerJogo.getChat().getMensagem());
+        String[] str = jTextAreaChat.getText().split("\n");
+        String nova = controllerJogo.getChat().getUltimaMens();
+        if (!str[str.length - 1].equals(nova.replace("\n", ""))) {
+            jTextAreaChat.append(nova);
+            jScrollPaneChat.getViewport().setViewPosition(new Point(0, jScrollPaneChat.getVerticalScrollBar().getMaximum()));//Coloca o scroll no fim do texto.
+        }
+
         tabuleiro1.atualizarTabuleiro();
     }
 

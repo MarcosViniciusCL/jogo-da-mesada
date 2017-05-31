@@ -69,7 +69,7 @@ public class ControllerJogo {
 
     //****************************************** METODOS RESPONSAVEIS PELA AÇÃO DO JOGO ************************************
     public void criarJogadorPrincipal(int identificador, String nome) {
-        Peao p =  new Peao();
+        Peao p = new Peao();
         this.jogadorPrincipal = new Jogador(identificador, nome, p);
     }
 
@@ -100,11 +100,10 @@ public class ControllerJogo {
         }
         return valor;
     }
-    
+
     /**
      * Cria uma nova instancia da lista bolão de esportes
      */
-
     public void novoBolaoDeEsportes() {
         bilhetesBolao = new ArrayList<>();
     }
@@ -312,11 +311,12 @@ public class ControllerJogo {
         this.jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
         atualizarTela();
     }
-    
+
     /**
-     * Veirifica qual casa o jogador se encontra e realiza as funções necessarias
+     * Veirifica qual casa o jogador se encontra e realiza as funções
+     * necessarias
      */
-    private void acaoCasa(){
+    private void acaoCasa() {
         int casa = this.jogadorPrincipal.getPeao().getPosicao(); //Retorna a posição do piao do jogador;
         switch (casa) {
             case 1: //Correio, 1 carta
@@ -384,114 +384,118 @@ public class ControllerJogo {
         }
     }
     //*************************************** CASAS FORA DO MANUAL
-    
+
     /**
      * O jogador que caiu na casa paga 500 de conta do shopping
+     *
      * @param jogador jogador que caiu na casa
      */
-    public void comprasShopping(Jogador jogador){
-        if(!jogador.getConta().sacar(cShopping)){ //verifica se o jogador tem saldo para pagar
+    public void comprasShopping(Jogador jogador) {
+        if (!jogador.getConta().sacar(cShopping)) { //verifica se o jogador tem saldo para pagar
             jogador.getConta().realizarEmprestimo(cShopping);
             jogador.getConta().sacar(cShopping);
         }
     }
-    
+
     /**
-     * O jogador que caiu na casa paga  de conta da lanchonete
-     * @param jogador 
+     * O jogador que caiu na casa paga de conta da lanchonete
+     *
+     * @param jogador
      */
-    public void lanconete(Jogador jogador){
-        if(!jogador.getConta().sacar(cLanchonete)){ //verifica se o jogador tem saldo para pagar
+    public void lanconete(Jogador jogador) {
+        if (!jogador.getConta().sacar(cLanchonete)) { //verifica se o jogador tem saldo para pagar
             jogador.getConta().realizarEmprestimo(cLanchonete);
             jogador.getConta().sacar(cLanchonete);
         }
     }
-    
+
     //*************************************** METODOS DA CARTA CORREIO
-    
     /**
      * metodo paga caso o jogador retire um carta do tipo conta do monte
+     *
      * @param jogador jogador que recebeu a conta
      * @param pagarAgora verifica se o jogador solicitou o pagamento imediato
      * @param codCarta codigo da carta que o jogador sortou
      */
-    public void contas(Jogador jogador, boolean pagarAgora, int codCarta){
+    public void contas(Jogador jogador, boolean pagarAgora, int codCarta) {
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if(pagarAgora){ //se o jogador desejou pagar na hora
-            if(!jogador.getConta().sacar(c.getValor())){ //verifica se o jogador tem saldo
+        if (pagarAgora) { //se o jogador desejou pagar na hora
+            if (!jogador.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
                 jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
                 jogador.getConta().sacar(c.getValor()); //saca o valor
             }
-        }else{ //caso o jogador prefira pagar depois
-            jogador.addCartaCorreio(c); 
+        } else { //caso o jogador prefira pagar depois
+            jogador.addCartaCorreio(c);
         }
     }
-    
+
     /**
      * transfere o valor contido na carta para um vizinho da escolha do jogador
      * que caiu na casa
+     *
      * @param jogador jogador que sorteou a carta
      * @param vizinho vizinho escolhido
      * @param codCarta codigo da carta sorteada
      */
-    public void dinheiroExtra(Jogador jogador, Jogador vizinho, int codCarta){
+    public void dinheiroExtra(Jogador jogador, Jogador vizinho, int codCarta) {
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if(!vizinho.getConta().transferir(jogador.getConta(), c.getValor())){ //verifica se o vizinho tem saldo para transferir para o vizinho
+        if (!vizinho.getConta().transferir(jogador.getConta(), c.getValor())) { //verifica se o vizinho tem saldo para transferir para o vizinho
             vizinho.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
             vizinho.getConta().transferir(jogador.getConta(), c.getValor()); //transfere o valor
         }
     }
-    
+
     /**
-     * 
+     *
      * @param jogador
      * @param vizinho
-     * @param codCarta 
+     * @param codCarta
      */
-    public void pagueUmVizinhoAgora(Jogador jogador, Jogador vizinho, int codCarta){
+    public void pagueUmVizinhoAgora(Jogador jogador, Jogador vizinho, int codCarta) {
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if(!jogador.getConta().transferir(vizinho.getConta(), c.getValor())){ //verifica se o jogador tem saldo para transferir para o vizinho
+        if (!jogador.getConta().transferir(vizinho.getConta(), c.getValor())) { //verifica se o jogador tem saldo para transferir para o vizinho
             jogador.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
             jogador.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
         }
     }
-    
+
     /**
      * Debita da conta do jogador que sorteou essa carta o valor da carta
+     *
      * @param jogador jogador que sorteou a carta
      * @param codCarta codigo da carta sorteada
      */
-    public void doacao(Jogador jogador, int codCarta){
+    public void doacao(Jogador jogador, int codCarta) {
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if(!jogador.getConta().sacar(c.getValor())){ //verifica se o jogador tem saldo para pagar a carta
+        if (!jogador.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo para pagar a carta
             jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
         }
         sorteGrande += c.getValor(); //deposita o valor no campo sorte grande
     }
-    
-    public void cobrancaMonstro(Jogador jogador, boolean pagarAgora, int codCarta){
+
+    public void cobrancaMonstro(Jogador jogador, boolean pagarAgora, int codCarta) {
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if(pagarAgora){ //verifica se o jogador deseja pagar a carta agora
-            if(!jogador.getConta().sacar((c.getValor()*1.1))){ //verifica se o jogador tem saldo suficiente
+        if (pagarAgora) { //verifica se o jogador deseja pagar a carta agora
+            if (!jogador.getConta().sacar((c.getValor() * 1.1))) { //verifica se o jogador tem saldo suficiente
                 jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um empretimo
-                jogador.getConta().sacar((c.getValor()*1.1)); //saca o valor
+                jogador.getConta().sacar((c.getValor() * 1.1)); //saca o valor
             }
-        }else{ //caso o jogador decida pagar depois
-            jogador.addCartaCorreio(c); 
+        } else { //caso o jogador decida pagar depois
+            jogador.addCartaCorreio(c);
         }
     }
-    
-    public void irParaFrenteAgora(Jogador jogador, boolean irComprasEntretenimento){
-        if(irComprasEntretenimento){
+
+    public void irParaFrenteAgora(Jogador jogador, boolean irComprasEntretenimento) {
+        if (irComprasEntretenimento) {
             jogador.getPeao().irParaProximaCasaComprasEntretenimento();
-        }else{
+        } else {
             jogador.getPeao().irParaProximaCasaAcheiComprador();
         }
         atualizarTela();
-    }        
+    }
 
     //****************************************** METODOS RESPONSAVEIS PELA COMUNICAÇÃO ************************************
-    /** 
+    /**
      * Reenvia a ultima mensagem que foi enviada ao grupo multcast.
      *
      * @throws java.io.IOException
@@ -512,13 +516,49 @@ public class ControllerJogo {
     public void entrarSala(String nome, int quantJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
         controllerConexao.entraSala(nome, quantJogadores, quantMeses);
     }
-    
-    public void novaMensagemChat(String mens){
-        chat.novaMensagem(mens);
+
+    /**
+     * Metodo chamado quando o jogador manda uma mensagem no grupo.
+     *
+     * @param mens
+     */
+    public void novaMensagemChat(String mens) {
+        controllerConexao.novaMensChat(mens);
+    }
+
+    /**
+     * Metodo chamado quando chega uma nova mensagem pelo grupo
+     *
+     * @param mens
+     */
+    public void adicionarMensChat(String[] mens) {
+        String nome, mensagem;
+        if (mens[2].trim().length() <= 0) { //Testa se a mensagem veio sem a identificação;
+            nome = "Anônimo disse: ";
+            mensagem = mens[1];
+        } else if (!mens[2].trim().equals("#")) { //Testa se a mensagem foi enviada pelo servidor, caso não, é executado
+            if (this.jogadorPrincipal.getIdentificacao() == Integer.parseInt(mens[2].trim())) { //Testa se o proprio jogador mandou a mensagem
+                nome = "Você disse: ";
+                mensagem = mens[1];
+            } else { //Caso não tenha sido o proprio jogador, ele procura quem mandou a mensagem.
+                Jogador j = buscarJogador(Integer.parseInt(mens[2].trim()));
+                if (j != null) {
+                    nome = j.getNome()+" disse: ";
+                    mensagem = mens[1];
+                } else {
+                    nome = "Anônimo disse: ";
+                    mensagem = mens[1];
+                }
+            }
+        } else { //Se foi enviada pelo servidor
+            nome = "Servidor disse: ";
+            mensagem = mens[1];
+        }
+        chat.novaMensagem(nome + mensagem);
         telaPrincipal.atualizarInformacoesTela();
     }
-    
-    public Chat getChat(){
+
+    public Chat getChat() {
         return this.chat;
     }
 
@@ -532,17 +572,13 @@ public class ControllerJogo {
     }
 
     private void atualizarTela() {
-    //    if (telaPrincipal != null) {
-         telaPrincipal.atualizarInformacoesTela();
-    //    }
+        //    if (telaPrincipal != null) {
+        telaPrincipal.atualizarInformacoesTela();
+        //    }
     }
 
     public void setTelaPrincipal(Principal frame) {
         this.telaPrincipal = frame;
-    }
-
-    public void seletorAcao(String[] mens) {
-        System.out.println(Arrays.toString(mens));
     }
 
     /**
