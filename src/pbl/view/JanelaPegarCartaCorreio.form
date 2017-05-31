@@ -107,7 +107,7 @@
                 </Property>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.modelTable = new pbl.view.util.CartasTableModel();"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="this.modelTable = new pbl.view.util.CartasCorreioTableModel();"/>
               </AuxValues>
             </Component>
           </SubComponents>

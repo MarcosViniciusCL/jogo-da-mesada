@@ -8,9 +8,10 @@ package pbl.view;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
+import pbl.controller.ControllerConexao;
 import pbl.controller.ControllerJogo;
 import pbl.model.jogo.Carta;
-import pbl.view.util.CartasTableModel;
+import pbl.view.util.CartasCorreioTableModel;
 
 /**
  *
@@ -20,7 +21,7 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
 
     private int quantCarta;
     private ControllerJogo controllerJogo;
-    private CartasTableModel modelTable;
+    private CartasCorreioTableModel modelTable;
 
     /**
      * Creates new form JanelaPegarCarta
@@ -69,7 +70,7 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
 
         jLabel2.setText("Cartas Correios:");
 
-        this.modelTable = new pbl.view.util.CartasTableModel();
+        this.modelTable = new pbl.view.util.CartasCorreioTableModel();
         jTable1.setModel(this.modelTable);
         jScrollPane1.setViewportView(jTable1);
 
@@ -143,7 +144,7 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         int select = jTable1.getSelectedRow();
         if (select > -1) {
-            CartasTableModel model = (CartasTableModel) jTable1.getModel();
+            CartasCorreioTableModel model = (CartasCorreioTableModel) jTable1.getModel();
             Carta carta = model.getCarta(select);
             switch (carta.getCodigo()) {
                 case 0:
@@ -157,7 +158,8 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     controllerJogo.dinheiroExtra(Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO")), carta.getCodigo());
                     model.remCarta(select);
                     break;
-                case 3:
+                case 3: //Carta doação
+                    controllerJogo.doacao(carta.getCodigo());
                     model.remCarta(select);
                     break;
                 case 4:

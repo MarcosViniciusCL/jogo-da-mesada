@@ -49,6 +49,7 @@ public class ControllerConexao {
     private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
     private final int protPagarVizinho = 4012; //<- Protocolo que informa a carta pagra vizinho agora;
     private final int protDinheiroExtra = 4013; //<- Protocolo que informa a carta dinheiro extra
+    private final int protDoacao = 4014; //Doação para o sorte grande
 
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -67,7 +68,11 @@ public class ControllerConexao {
     }
 
     public void dinheiroExtra(int idVizinho, double valor) {
-        enviarMensagemGRP(protDinheiroExtra+";"+ idVizinho +";"+valor);
+        enviarMensagemGRP(protDinheiroExtra + ";" + idVizinho + ";" + valor);
+    }
+
+    public void doacao(double valor) {
+        enviarMensagemGRP(protDoacao + ";" + valor);
     }
 
     private void seletorAcao(String[] str) {
@@ -103,10 +108,16 @@ public class ControllerConexao {
                     controllerJogo.sacar(Double.parseDouble(str[2].trim()));
                 }
                 break;
+            case protDoacao: //Protocolo doação, adiciona dinheiro no sorte grande
+                if (Integer.parseInt(str[2].trim()) != identificador) { //Caso tenha sido enviado por mim, não há necessidade de adicionar novamente
+                    controllerJogo.adicionarSorteGrande(Double.parseDouble(str[1].trim()));
+                }
+                break;
             default:
                 break;
         }
     }
+
     //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************
     /**
      * Conecta ao servidor que irá criar a partida.
@@ -269,8 +280,6 @@ public class ControllerConexao {
     public void novaMensChat(String mens) {
         enviarMensagemGRP(protMensChat + ";" + mens);
     }
-
-    
 
     private void incrementarJogador() {
         this.idJogAtual++;

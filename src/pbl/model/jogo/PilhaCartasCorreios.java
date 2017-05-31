@@ -48,7 +48,7 @@ public abstract class PilhaCartasCorreios {
         cartas.add(new Carta("CONTAS", "", 0));
         cartas.add(new Carta("PAGUE A UM VIZINHO AGORA", "", 500.00));
         cartas.add(new Carta("DINHEIRO EXTRA", "", 800.00));
-        cartas.add(new Carta("DOAÇÕES", "", 0));
+        cartas.add(new Carta("DOAÇÕES", "", 300.00));
         cartas.add(new Carta("COBRANÇA MOSTRO", "", 0));
         cartas.add(new Carta("VÁ EM FRENTE AGORA", "", 0));
         embaralharCartas();

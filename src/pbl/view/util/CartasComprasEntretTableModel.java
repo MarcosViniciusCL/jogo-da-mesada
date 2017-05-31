@@ -13,20 +13,20 @@ import pbl.model.jogo.Carta;
  *
  * @author marcos
  */
-public class CartasTableModel extends javax.swing.table.AbstractTableModel{
+public class CartasComprasEntretTableModel extends javax.swing.table.AbstractTableModel{
 
     private List<Carta> cartas;
     private String[] colunas;
 
-    public CartasTableModel() {
+    public CartasComprasEntretTableModel() {
         cartas= new ArrayList<>();
-        this.colunas = new String[] {"ID", "NOME", "VALOR"};
+        this.colunas = new String[] {"NOME", "VALOR", "VALOR VENDA"};
     }
 
     
-    public CartasTableModel(List cartas) {
+    public CartasComprasEntretTableModel(List cartas) {
         this.cartas = cartas;
-        this.colunas = new String[] {"ID", "NOME", "VALOR"};
+        this.colunas = new String[] {"NOME", "VALOR", "VALOR VENDA"};
     }
     
     
@@ -55,11 +55,11 @@ public class CartasTableModel extends javax.swing.table.AbstractTableModel{
         Carta carta = cartas.get(rowIndex);
         switch (columnIndex) {
             case 0:
-                return carta.getCodigo();
-            case 1:
                 return carta.getNome();
-            case 2:
+            case 1:
                 return carta.getValor();
+            case 2:
+                return carta.getValor()*1.5;
             default:
                 throw new IndexOutOfBoundsException("index da coluna está fora do escopo: \""+columnIndex+"\"");
         }
