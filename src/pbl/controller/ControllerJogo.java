@@ -21,6 +21,7 @@ import pbl.model.jogo.Jogador;
 import pbl.model.jogo.Peao;
 import pbl.model.jogo.PilhaCartasComprasEntretenimento;
 import pbl.model.jogo.PilhaCartasCorreios;
+import pbl.model.jogo.SorteGrande;
 import pbl.view.Principal;
 
 /**
@@ -37,18 +38,19 @@ public class ControllerJogo {
     private final Dado dado; //Dado do jogo
     private String ultimaMens; //Fica salva a ultima mensagem que foi enviada ao grupo para reenvio caso tenha perda.
     private List<Jogador> jogadores;
-    private double sorteGrande;
     private int qntMeses;
     private Jogador jogadorPrincipal;
     private List<BilheteBolao> bilhetesBolao;
     private Chat chat;
-
+    private SorteGrande sorteGrande;
+    
+    //INTERFACE GRAFICA
     private Principal telaPrincipal;
 
     //CONSTANTES DO JOGO
     private final double cPremio = 5000;
     private final double cBolao = 100;
-    private final double cSorteGrande = 0;
+    private final double cDomingoPraia = 500;
     private final double cMesada = 3500;
     private final double cConcursoBandaArrocha = 1000;
     private final double cFelizAniversario = 100;
@@ -59,6 +61,7 @@ public class ControllerJogo {
 
     private ControllerJogo() {
         this.minhaVez = true; //TROCAR DEPOIS, CERTO É FALSE;
+        this.sorteGrande = new SorteGrande();
         this.dado = new Dado();
         this.jogadores = new ArrayList<>();
         this.chat = new Chat();
@@ -179,7 +182,7 @@ public class ControllerJogo {
      */
     public void premio(Jogador jogador) {
         jogadorPrincipal.getConta().depositar(cPremio);
-        novaMensagemChat("Ganhei $5.000,00 HUHU");
+        novaMensagemChat("\"PREMIO\" GANHEI $5.000,00 HUHU");
     }
 
     /**
@@ -206,11 +209,11 @@ public class ControllerJogo {
      * @param jogador que caiu na casa
      */
     public void praiaNoDomingo(Jogador jogador) {
-        if (!jogador.getConta().sacar(cSorteGrande)) { //verifica se o jogador tem saldo suficiente
-            jogador.getConta().realizarEmprestimo(cSorteGrande); //se não realiza um emprestimo
-            jogador.getConta().sacar(cSorteGrande);
+        if (!jogador.getConta().sacar(cDomingoPraia)) { //verifica se o jogador tem saldo suficiente
+            jogador.getConta().realizarEmprestimo(cDomingoPraia); //se não realiza um emprestimo
+            jogador.getConta().sacar(cDomingoPraia);
         }
-        sorteGrande += cSorteGrande; //adiciona o valor a sorte grande
+        sorteGrande.adicionarDinheiro(cDomingoPraia); //adiciona o valor a sorte grande
     }
 
     /**
@@ -262,7 +265,7 @@ public class ControllerJogo {
             jogador.getConta().realizarEmprestimo(valorDado * cMaratonaBeneficente);
             jogador.getConta().sacar(valorDado * cMaratonaBeneficente);
         }
-        sorteGrande += valorDado * 100;
+        sorteGrande.adicionarDinheiro(valorDado * 100);
     }
 
     /**
@@ -272,8 +275,7 @@ public class ControllerJogo {
      * @param jogador
      */
     public void sorteGrande(Jogador jogador) {
-        jogador.getConta().depositar(sorteGrande);
-        sorteGrande = 0;
+        jogador.getConta().depositar(sorteGrande.pegarValor());
     }
 
     /**
@@ -324,6 +326,12 @@ public class ControllerJogo {
 
     public void depositar(double valor) {
         jogadorPrincipal.getConta().depositar(valor);
+        atualizarTela();
+    }
+    
+    
+    public void sacar(double valor) {
+        jogadorPrincipal.getConta().sacar(valor);
         atualizarTela();
     }
 
@@ -433,7 +441,7 @@ public class ControllerJogo {
             jogador.getConta().realizarEmprestimo(cLanchonete);
             jogador.getConta().sacar(cLanchonete);
         }
-        novaMensagemChat("paguei " + cLanchonete + " a lanchonete");
+        novaMensagemChat("LANCHONETE: PAGUEI " + cLanchonete + "");
     }
 
     //*************************************** METODOS DA CARTA CORREIO
@@ -460,16 +468,18 @@ public class ControllerJogo {
      * transfere o valor contido na carta para um vizinho da escolha do jogador
      * que caiu na casa
      *
-     * @param jogador jogador que sorteou a carta
-     * @param vizinho vizinho escolhido
+     * @param idVizinho
      * @param codCarta codigo da carta sorteada
      */
-    public void dinheiroExtra(Jogador jogador, Jogador vizinho, int codCarta) {
+    public void dinheiroExtra(int idVizinho, int codCarta) {
+        Jogador vizinho  = buscarJogador(idVizinho);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if (!vizinho.getConta().transferir(jogador.getConta(), c.getValor())) { //verifica se o vizinho tem saldo para transferir para o vizinho
+        if (!vizinho.getConta().transferir(jogadorPrincipal.getConta(), c.getValor())) { //verifica se o vizinho tem saldo para transferir para o vizinho
             vizinho.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
-            vizinho.getConta().transferir(jogador.getConta(), c.getValor()); //transfere o valor
+            vizinho.getConta().transferir(jogadorPrincipal.getConta(), c.getValor()); //transfere o valor
         }
+        controllerConexao.dinheiroExtra(idVizinho, c.getValor());
+        novaMensagemChat("\"DINHEIRO EXTRA\" PEGUEI "+c.getValor()+" DE "+vizinho.getNome());
     }
 
     /**
@@ -485,7 +495,7 @@ public class ControllerJogo {
             jogadorPrincipal.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
         }
         controllerConexao.pagueUmVizinhoAgora(idVizinho, c.getValor()); //Enviando valor para o vizinho;
-        novaMensagemChat("paguei " + c.getValor() + " para " + vizinho.getNome()); //Adiciona a informação no chat
+        novaMensagemChat("\"PAGUE A UM VIZINHO\" PAGUEI " + c.getValor() + " PARA " + vizinho.getNome()); //Adiciona a informação no chat
     }
 
     /**
@@ -499,7 +509,7 @@ public class ControllerJogo {
         if (!jogador.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo para pagar a carta
             jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
         }
-        sorteGrande += c.getValor(); //deposita o valor no campo sorte grande
+        sorteGrande.adicionarDinheiro(c.getValor());  //deposita o valor no campo sorte grande
     }
 
     public void cobrancaMonstro(Jogador jogador, boolean pagarAgora, int codCarta) {
@@ -657,5 +667,10 @@ public class ControllerJogo {
         }
         return null;
     }
+    
+    public double getSorteGrande(){
+        return sorteGrande.getValor();
+    }
+
 
 }

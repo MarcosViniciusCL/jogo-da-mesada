@@ -52,7 +52,6 @@ public class Principal extends javax.swing.JFrame {
         jScrollPaneChat = new javax.swing.JScrollPane();
         jTextAreaChat = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jTextFieldExibSaldoJogador = new javax.swing.JTextField();
@@ -61,10 +60,11 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaInfJog = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
+        jTextFieldExibNome = new javax.swing.JTextField();
         jButtonJogaDado = new javax.swing.JButton();
         tabuleiro1 = new pbl.view.Tabuleiro();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldExibSorteGrande = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -113,8 +113,6 @@ public class Principal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jLabel1.setText("Suas informações");
-
         jLabel2.setText("SALDO:");
 
         jLabel3.setText("DEPITO:");
@@ -137,35 +135,33 @@ public class Principal extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldExibNome.setEditable(false);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 34, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldExibSaldoJogador)
-                            .addComponent(jTextFieldExibDividaJogador))))
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldExibSaldoJogador)
+                    .addComponent(jTextFieldExibDividaJogador))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel4)
                 .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jTextFieldExibNome)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+                .addComponent(jTextFieldExibNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -190,7 +186,7 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel6.setText("SORTE GRANDE:");
 
-        jTextField1.setEditable(false);
+        jTextFieldExibSorteGrande.setEditable(false);
 
         jLabel7.setText("CARTAS: COMPRAS E ENTRETENIMENTOS");
 
@@ -235,7 +231,7 @@ public class Principal extends javax.swing.JFrame {
                         .addGap(4, 4, 4)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldExibSorteGrande, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonJogaDado, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -257,7 +253,7 @@ public class Principal extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldExibSorteGrande, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButtonJogaDado)
                             .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -319,7 +315,6 @@ public class Principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonJogaDado;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -335,10 +330,11 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextAreaChat;
     private javax.swing.JTextArea jTextAreaInfJog;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextFieldChat;
     private javax.swing.JTextField jTextFieldExibDividaJogador;
+    private javax.swing.JTextField jTextFieldExibNome;
     private javax.swing.JTextField jTextFieldExibSaldoJogador;
+    private javax.swing.JTextField jTextFieldExibSorteGrande;
     private pbl.view.Tabuleiro tabuleiro1;
     // End of variables declaration//GEN-END:variables
 
@@ -357,9 +353,13 @@ public class Principal extends javax.swing.JFrame {
     public void atualizarInformacoesTela() {
         //Atualizando dados da conta bancaria do jogador
         Jogador j = controllerJogo.getJogador();
-        jTextFieldExibSaldoJogador.setText(j.getConta().consultarSaldo() + "");
-        jTextFieldExibDividaJogador.setText(j.getConta().getEmprestimo().getValorTotal() + "");
+        jTextFieldExibNome.setText(j.getNome());
+        jTextFieldExibSaldoJogador.setText(String.format("%.2f", j.getConta().consultarSaldo()));
+        jTextFieldExibDividaJogador.setText(String.format("%.2f", j.getConta().getEmprestimo().getValorTotal()));
 
+        //Atualizando exibição de sorte grande;
+        jTextFieldExibSorteGrande.setText(String.format("%.2f", controllerJogo.getSorteGrande()));
+        
         //Atualizando informações dos jogadores;
         List<Jogador> l = controllerJogo.getJogadores();
         jTextAreaInfJog.setText("");

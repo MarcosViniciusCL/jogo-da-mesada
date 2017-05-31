@@ -145,9 +145,29 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
         if (select > -1) {
             CartasTableModel model = (CartasTableModel) jTable1.getModel();
             Carta carta = model.getCarta(select);
-            if(carta.getCodigo() == 1){
-                controllerJogo.pagueUmVizinhoAgora(Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO")), carta.getCodigo());
-                model.remCarta(carta.getCodigo());
+            switch (carta.getCodigo()) {
+                case 0:
+                    model.remCarta(select);
+                    break;
+                case 1:
+                    controllerJogo.pagueUmVizinhoAgora(Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO")), carta.getCodigo());
+                    model.remCarta(select);
+                    break;
+                case 2:
+                    controllerJogo.dinheiroExtra(Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO")), carta.getCodigo());
+                    model.remCarta(select);
+                    break;
+                case 3:
+                    model.remCarta(select);
+                    break;
+                case 4:
+                    model.remCarta(select);
+                    break;
+                case 5:
+                    model.remCarta(select);
+                    break;
+                default:
+                    break;
             }
         } else {
             JOptionPane.showMessageDialog(null, "Selecione uma carta antes.");

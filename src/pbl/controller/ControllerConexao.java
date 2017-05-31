@@ -47,7 +47,8 @@ public class ControllerConexao {
     //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
     private final int protMensChat = 300; //<- Protocolo para envio de mensagem pelo chat
     private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
-    private final int protPagarVizinho = 4012;
+    private final int protPagarVizinho = 4012; //<- Protocolo que informa a carta pagra vizinho agora;
+    private final int protDinheiroExtra = 4013; //<- Protocolo que informa a carta dinheiro extra
 
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -60,11 +61,52 @@ public class ControllerConexao {
     public void dadoJogado(int valorDado) {
         enviarMensagemGRP(protDadoJogado + ";" + valorDado);
     }
-    
+
     public void pagueUmVizinhoAgora(int idVizinho, double valor) {
-        enviarMensagemGRP(protPagarVizinho+";"+idVizinho+";"+valor);
+        enviarMensagemGRP(protPagarVizinho + ";" + idVizinho + ";" + valor);
     }
 
+    public void dinheiroExtra(int idVizinho, double valor) {
+        enviarMensagemGRP(protDinheiroExtra+";"+ idVizinho +";"+valor);
+    }
+
+    private void seletorAcao(String[] str) {
+        int aux = Integer.parseInt(str[0]);
+        switch (aux) {
+            case protMensChat: //Apenas mensagem para chat.
+                controllerJogo.adicionarMensChat(str); //Adiciona a mensagem recebida no chat;
+                break;
+            case 111: //Informando que a sala está cheia.
+                controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
+                int i = Integer.parseInt(str[1]); //Numero de jogadores
+                int iId = 2,
+                 iNome = 3;
+                for (int j = 0; j < i; j++) {
+                    controllerJogo.adicionarJogadores(Integer.parseInt(str[iId].trim()), str[iNome].trim()); //Adicionando jogadores;
+                    iId += 2;
+                    iNome += 2;
+                }
+                controllerJogo.setMinhaVez(isMinhaVez());
+                break;
+            case protDadoJogado: //Informa que algum jogador jogou o dado.
+                controllerJogo.moverPeao(Integer.parseInt(str[2].trim()), Integer.parseInt(str[1].trim())); //Movendo peao de jogadores
+                incrementarJogador();
+                controllerJogo.setMinhaVez(isMinhaVez());
+                break;
+            case protPagarVizinho: //Protocolo para pagar a um vizinho;
+                if (Integer.parseInt(str[1].trim()) == identificador) { //Testa se o dinheiro foi para mim
+                    controllerJogo.depositar(Double.parseDouble(str[2].trim()));
+                }
+                break;
+            case protDinheiroExtra: //Protocolo dinheiro extra, tomar do vizinho ameaçando;
+                if (Integer.parseInt(str[1].trim()) == identificador) { //Testa se o dinheiro foi para mim
+                    controllerJogo.sacar(Double.parseDouble(str[2].trim()));
+                }
+                break;
+            default:
+                break;
+        }
+    }
     //********************************* METODOS DE COMUNICAÇÃO COM SERVIDOR(TCP) *****************************************
     /**
      * Conecta ao servidor que irá criar a partida.
@@ -157,7 +199,7 @@ public class ControllerConexao {
      * @param mens - Mensagem que será enviada ao grupo.
      * @throws java.net.SocketException
      */
-    public void enviarMensagemGRP(String mens){
+    public void enviarMensagemGRP(String mens) {
         mens = mens + ";" + identificador;
         if (mens != null) {
             DatagramPacket env;
@@ -169,7 +211,7 @@ public class ControllerConexao {
             } catch (IOException ex) {
                 Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }
 
@@ -224,40 +266,11 @@ public class ControllerConexao {
 
     }
 
-    public void novaMensChat(String mens){
-        enviarMensagemGRP(protMensChat+";"+mens);
+    public void novaMensChat(String mens) {
+        enviarMensagemGRP(protMensChat + ";" + mens);
     }
+
     
-    private void seletorAcao(String[] str) {
-        int aux = Integer.parseInt(str[0]);
-        switch (aux) {
-            case protMensChat: //Apenas mensagem para chat.
-                controllerJogo.adicionarMensChat(str); //Adiciona a mensagem recebida no chat;
-                break;
-            case 111: //Informando que a sala está cheia.
-                controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
-                int i = Integer.parseInt(str[1]); //Numero de jogadores
-                int iId = 2, iNome = 3;
-                for (int j = 0; j < i; j++) {
-                    controllerJogo.adicionarJogadores(Integer.parseInt(str[iId].trim()), str[iNome].trim()); //Adicionando jogadores;
-                    iId += 2;
-                    iNome += 2;
-                }
-                controllerJogo.setMinhaVez(isMinhaVez());
-                break;
-            case protDadoJogado: //Informa que algum jogador jogou o dado.
-                controllerJogo.moverPeao(Integer.parseInt(str[2].trim()), Integer.parseInt(str[1].trim())); //Movendo peao de jogadores
-                incrementarJogador();
-                controllerJogo.setMinhaVez(isMinhaVez());
-                break;
-            case protPagarVizinho: //Protocolo para pagar a um vizinho;
-                if(Integer.parseInt(str[1].trim()) == identificador){ //Testa se o dinheiro foi para mim
-                    controllerJogo.depositar(Double.parseDouble(str[2].trim()));
-                }
-            default:
-                break;
-        }
-    }
 
     private void incrementarJogador() {
         this.idJogAtual++;
@@ -265,11 +278,9 @@ public class ControllerConexao {
             this.idJogAtual = 1;
         }
     }
-    
-    private boolean isMinhaVez(){
+
+    private boolean isMinhaVez() {
         return idJogAtual == identificador;
     }
-
-  
 
 }
