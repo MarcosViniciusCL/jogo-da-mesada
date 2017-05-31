@@ -8,11 +8,7 @@ package pbl.controller;
 import pbl.exception.AguadarVezException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
 import pbl.exception.ErroComunicacaoServidorException;
 import pbl.exception.ErroNaBuscaDeCartaOuVendedor;
 import pbl.exception.NenhumJogadorGanhouBolaoException;
@@ -287,12 +283,15 @@ public class ControllerJogo {
     /**
      * Move o peão de qualquer jogador na partida.
      *
-     * @param jogador
+     * @param idJogador
      * @param casas
      */
-    public void moverPeao(Jogador jogador, int casas) {
-        jogador.getPeao().andarCasas(casas);
-        atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
+    public void moverPeao(int idJogador, int casas) {
+        Jogador jogador = buscarJogador(idJogador);
+        if (jogador != null) {
+            jogador.getPeao().andarCasas(casas);
+            atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
+        }
     }
 
     /**
@@ -304,7 +303,7 @@ public class ControllerJogo {
         this.jogadorPrincipal.getPeao().andarCasas(valor);
         atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
         acaoCasa(); //Chama o metodo que será responsavel por executar uma ação de acordo com a casa que o peao caiu
-//        controllerConexao.dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
+        controllerConexao.dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
     }
 
     public void pedirEmprestimo(double valorEmprestimo) {
@@ -543,7 +542,7 @@ public class ControllerJogo {
             } else { //Caso não tenha sido o proprio jogador, ele procura quem mandou a mensagem.
                 Jogador j = buscarJogador(Integer.parseInt(mens[2].trim()));
                 if (j != null) {
-                    nome = j.getNome()+" disse: ";
+                    nome = j.getNome() + " disse: ";
                     mensagem = mens[1];
                 } else {
                     nome = "Anônimo disse: ";
@@ -597,6 +596,17 @@ public class ControllerJogo {
         }
         return l;
     }
+
+    public boolean isMinhaVez() {
+        return minhaVez;
+    }
+
+    public void setMinhaVez(boolean minhaVez) {
+        this.minhaVez = minhaVez;
+        telaPrincipal.atualizarInformacoesTela();
+    }
+    
+    
 
     /**
      * Retorna o jogador principal(METODO TEMPORARIO)

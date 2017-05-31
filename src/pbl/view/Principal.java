@@ -60,7 +60,7 @@ public class Principal extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jButtonJogaDado = new javax.swing.JButton();
         tabuleiro1 = new pbl.view.Tabuleiro();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -177,10 +177,10 @@ public class Principal extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jButton2.setText("Jogar Dado");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonJogaDado.setText("Jogar Dado");
+        jButtonJogaDado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonJogaDadoActionPerformed(evt);
             }
         });
 
@@ -204,7 +204,7 @@ public class Principal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(435, 435, 435)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonJogaDado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tabuleiro1, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -219,7 +219,7 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton2))
+                            .addComponent(jButtonJogaDado))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tabuleiro1, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -243,15 +243,15 @@ public class Principal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButtonJogaDadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogaDadoActionPerformed
         try {
             int valor = controllerJogo.jogarDado();
-            jButton2.setText("Jogar dado: " + valor);
-            controllerJogo.moverPeao(1);
+            jButtonJogaDado.setText("Jogar dado: " + valor);
+            controllerJogo.moverPeao(valor);
         } catch (AguadarVezException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButtonJogaDadoActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String valor = JOptionPane.showInputDialog("Valor do emprestimo");
@@ -274,7 +274,7 @@ public class Principal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButtonJogaDado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -308,10 +308,13 @@ public class Principal extends javax.swing.JFrame {
         //Atualizando mensagem do chat
         String[] str = jTextAreaChat.getText().split("\n");
         String nova = controllerJogo.getChat().getUltimaMens();
-        if (!str[str.length - 1].equals(nova.replace("\n", ""))) {
+        if (!str[str.length - 1].equals(nova.replace("\n", ""))) { //Verificando duplicidade de mensagem;
             jTextAreaChat.append(nova);
             jScrollPaneChat.getViewport().setViewPosition(new Point(0, jScrollPaneChat.getVerticalScrollBar().getMaximum()));//Coloca o scroll no fim do texto.
         }
+        
+        //Habilitar botão para jogar dado
+        jButtonJogaDado.setEnabled(controllerJogo.isMinhaVez());
 
         tabuleiro1.atualizarTabuleiro();
     }

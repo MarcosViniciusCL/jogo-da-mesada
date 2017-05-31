@@ -15,8 +15,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.Arrays;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -28,7 +26,7 @@ import javax.swing.JOptionPane;
 public class ControllerConexao {
 
 //    private static ControllerConexao controlConexao; //Instancia da propria classe.
-    private ControllerJogo controllerJogo; //Instancia do controller do jogo.
+    private final ControllerJogo controllerJogo; //Instancia do controller do jogo.
 
     //ATRIBUTOS PARA CONEXÃO
     private MulticastSocket grupoMulticast; //Grupo que o cliente pertence no multicast;
@@ -241,7 +239,9 @@ public class ControllerConexao {
                 }
                 break;
             case protDadoJogado: //Informa que algum jogador jogou o dado.
-                controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
+                controllerJogo.moverPeao(Integer.parseInt(str[2].trim()), Integer.parseInt(str[1].trim())); //Movendo peao de jogadores
+                incrementarJogador();
+                controllerJogo.setMinhaVez(isMinhaVez());
                 break;
             default:
                 break;
@@ -253,6 +253,10 @@ public class ControllerConexao {
         if (this.idJogAtual > this.maxJogadores) {
             this.idJogAtual = 1;
         }
+    }
+    
+    private boolean isMinhaVez(){
+        return idJogAtual == identificador;
     }
 
 }
