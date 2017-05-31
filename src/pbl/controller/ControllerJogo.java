@@ -33,7 +33,7 @@ public class ControllerJogo {
     private static ControllerConexao controllerConexao; //Instancia do controller de conexão.
 
     //ATRIBUTOS DO JOGO
-    private boolean minhaVez = true;//(TESTE) //Variavel para informar se é a vez do cliente jogar o dado;
+    private boolean minhaVez;//Variavel para informar se é a vez do cliente jogar o dado;
     private final Dado dado; //Dado do jogo
     private String ultimaMens; //Fica salva a ultima mensagem que foi enviada ao grupo para reenvio caso tenha perda.
     private List<Jogador> jogadores;
@@ -58,6 +58,7 @@ public class ControllerJogo {
     private final double cLanchonete = 600;
 
     private ControllerJogo() {
+        this.minhaVez = true; //TROCAR DEPOIS, CERTO É FALSE;
         this.dado = new Dado();
         this.jogadores = new ArrayList<>();
         this.chat = new Chat();
@@ -96,7 +97,15 @@ public class ControllerJogo {
         }
         return valor;
     }
-
+    
+    /**
+     * Pega uma carta correio aleatoria;
+     * @return 
+     */
+    public Carta pegarCartaCorreio() {
+        return PilhaCartasCorreios.pegarCarta();
+    }
+    
     /**
      * Cria uma nova instancia da lista bolão de esportes
      */
@@ -310,7 +319,7 @@ public class ControllerJogo {
         this.jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
         atualizarTela();
     }
-
+    
     /**
      * Veirifica qual casa o jogador se encontra e realiza as funções
      * necessarias
@@ -319,6 +328,7 @@ public class ControllerJogo {
         int casa = this.jogadorPrincipal.getPeao().getPosicao(); //Retorna a posição do piao do jogador;
         switch (casa) {
             case 1: //Correio, 1 carta
+                telaPrincipal.abrirJanelaPegarCartaCorreio(2);
                 break;
             case 2: //Prêmio! Você ganhou $5.000
                 break;
@@ -571,9 +581,7 @@ public class ControllerJogo {
     }
 
     private void atualizarTela() {
-        //    if (telaPrincipal != null) {
         telaPrincipal.atualizarInformacoesTela();
-        //    }
     }
 
     public void setTelaPrincipal(Principal frame) {
@@ -631,5 +639,7 @@ public class ControllerJogo {
         }
         return null;
     }
+
+
 
 }

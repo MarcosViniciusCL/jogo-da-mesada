@@ -50,7 +50,7 @@ public class ControllerConexao {
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
         this.monitorMensGRP = null;
-        this.idJogAtual = 0;
+        this.idJogAtual = 1;
         this.identificador = 0;
     }
 
@@ -237,6 +237,7 @@ public class ControllerConexao {
                     iId += 2;
                     iNome += 2;
                 }
+                controllerJogo.setMinhaVez(isMinhaVez());
                 break;
             case protDadoJogado: //Informa que algum jogador jogou o dado.
                 controllerJogo.moverPeao(Integer.parseInt(str[2].trim()), Integer.parseInt(str[1].trim())); //Movendo peao de jogadores

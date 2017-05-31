@@ -7,6 +7,7 @@ package pbl.view;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -58,12 +59,15 @@ public class Principal extends javax.swing.JFrame {
         jTextFieldExibDividaJogador = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        jTextAreaInfJog = new javax.swing.JTextArea();
         jButton1 = new javax.swing.JButton();
         jButtonJogaDado = new javax.swing.JButton();
         tabuleiro1 = new pbl.view.Tabuleiro();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -121,10 +125,10 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel4.setText("Informações dos jogadores");
 
-        jTextArea2.setEditable(false);
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        jTextAreaInfJog.setEditable(false);
+        jTextAreaInfJog.setColumns(20);
+        jTextAreaInfJog.setRows(5);
+        jScrollPane2.setViewportView(jTextAreaInfJog);
 
         jButton1.setText("Emprestimo");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -188,6 +192,35 @@ public class Principal extends javax.swing.JFrame {
 
         jTextField1.setEditable(false);
 
+        jLabel7.setText("CARTAS: COMPRAS E ENTRETENIMENTOS");
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Carta", "Valor Compra", "Valor Venda"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -197,18 +230,24 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanelChat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(4, 4, 4)
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(435, 435, 435)
-                        .addComponent(jButtonJogaDado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonJogaDado, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tabuleiro1, javax.swing.GroupLayout.PREFERRED_SIZE, 720, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 9, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 14, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -219,9 +258,12 @@ public class Principal extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonJogaDado))
+                            .addComponent(jButtonJogaDado)
+                            .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tabuleiro1, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tabuleiro1, javax.swing.GroupLayout.PREFERRED_SIZE, 481, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -233,7 +275,9 @@ public class Principal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,7 +291,7 @@ public class Principal extends javax.swing.JFrame {
         try {
             int valor = controllerJogo.jogarDado();
             jButtonJogaDado.setText("Jogar dado: " + valor);
-            controllerJogo.moverPeao(valor);
+            controllerJogo.moverPeao(1);
         } catch (AguadarVezException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -281,19 +325,30 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelChat;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPaneChat;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextAreaChat;
+    private javax.swing.JTextArea jTextAreaInfJog;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextFieldChat;
     private javax.swing.JTextField jTextFieldExibDividaJogador;
     private javax.swing.JTextField jTextFieldExibSaldoJogador;
     private pbl.view.Tabuleiro tabuleiro1;
     // End of variables declaration//GEN-END:variables
+
+    //************************* METODOS PARA ABRIR NOVAS JANELAS ******************************
+    public void abrirJanelaPegarCartaCorreio(int quantCarta) {
+        JanelaPegarCartaCorreio jpc = new JanelaPegarCartaCorreio("Pegar Carta", quantCarta);
+        jpc.setLocationRelativeTo(null);
+        jpc.setResizable(false);
+        jpc.setVisible(true);
+    }
 
     /**
      * Atualiza todas as informações dos jogadores na tela principal e atualiza
@@ -305,6 +360,13 @@ public class Principal extends javax.swing.JFrame {
         jTextFieldExibSaldoJogador.setText(j.getConta().consultarSaldo() + "");
         jTextFieldExibDividaJogador.setText(j.getConta().getEmprestimo().getValorTotal() + "");
 
+        //Atualizando informações dos jogadores;
+        List<Jogador> l = controllerJogo.getJogadores();
+        jTextAreaInfJog.removeAll();
+        for (Jogador jog : l) {
+            jTextAreaInfJog.append(jog.getNome() + ": R$" + jog.getConta().consultarSaldo() + "\n");
+        }
+
         //Atualizando mensagem do chat
         String[] str = jTextAreaChat.getText().split("\n");
         String nova = controllerJogo.getChat().getUltimaMens();
@@ -312,7 +374,7 @@ public class Principal extends javax.swing.JFrame {
             jTextAreaChat.append(nova);
             jScrollPaneChat.getViewport().setViewPosition(new Point(0, jScrollPaneChat.getVerticalScrollBar().getMaximum()));//Coloca o scroll no fim do texto.
         }
-        
+
         //Habilitar botão para jogar dado
         jButtonJogaDado.setEnabled(controllerJogo.isMinhaVez());
 

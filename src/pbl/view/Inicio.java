@@ -6,8 +6,6 @@
 package pbl.view;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import pbl.controller.ControllerJogo;
 import pbl.exception.ErroComunicacaoServidorException;

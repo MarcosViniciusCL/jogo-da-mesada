@@ -10,7 +10,7 @@ package pbl.model.jogo;
  * @author marcos
  */
 public class Carta {
-    private int codigo;
+    private final int codigo;
     private String nome;
     private String descrição;
     private double valor;
