@@ -515,16 +515,20 @@ public class ControllerJogo {
      * @param pagarAgora verifica se o jogador solicitou o pagamento imediato
      * @param codCarta codigo da carta que o jogador sortou
      */
-    public void contas(Jogador jogador, boolean pagarAgora, int codCarta) {
+    public void contas(boolean pagarAgora, int codCarta) {
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
         if (pagarAgora) { //se o jogador desejou pagar na hora
-            if (!jogador.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
-                jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
-                jogador.getConta().sacar(c.getValor()); //saca o valor
+            if (!jogadorPrincipal.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
+                jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
+                jogadorPrincipal.getConta().sacar(c.getValor()); //saca o valor
+                novaMensagemChat("Realizou um emprestimo de: $"+c.getValor());
             }
+            novaMensagemChat("Paguei a conta: "+c.getDescrição());
         } else { //caso o jogador prefira pagar depois
-            jogador.addCartaCorreio(c);
+            jogadorPrincipal.addCartaCorreio(c);
+            novaMensagemChat("Tem uma nova conta de : "+c.getDescrição()+", no valor de: $"+c.getValor());
         }
+        controllerConexao.pagarConta(codCarta, pagarAgora);
     }
 
     /**

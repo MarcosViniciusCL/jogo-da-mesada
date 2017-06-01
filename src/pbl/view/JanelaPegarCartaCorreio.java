@@ -167,7 +167,13 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     vPF.show();
                     model.remCarta(select);
                     break;
-                case 5:
+                case 5: //Carta contas a pagar
+                    int pagarAgora = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
+                    if(pagarAgora == JOptionPane.YES_OPTION){
+                        controllerJogo.contas(true, carta.getCodigo());
+                    }else{
+                        controllerJogo.contas(false, carta.getCodigo());
+                    }
                     model.remCarta(select);
                     break;
                 default:

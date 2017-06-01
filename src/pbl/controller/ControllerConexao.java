@@ -52,6 +52,7 @@ public class ControllerConexao {
     private final int protDoacaoSorteGrande = 4014; // <- Doação para o sorte grande
     private final int protGanheiSorteGrande = 4015; // <- Informa que ganhou sorte grande;
     private final int protVaParaFrenteAgora = 4016; // <- Informa que o jogador tirou a casa va para frente agora
+    private final int protContasPagar = 4017; // <- jogador sorteou uma carta do tipo conta
     private final int protFelizAniversario = 501; // <- Feliz aniversario;
 
     public ControllerConexao(ControllerJogo controllerJogo) {
@@ -81,6 +82,7 @@ public class ControllerConexao {
     public void felizAniversario(double valor) {
         enviarMensagemGRP(protFelizAniversario + ";" + valor + ";");
     }
+    
 
     /**
      * Envia mensagem para o grupo informando que ganhou o valor do sorte
@@ -95,6 +97,13 @@ public class ControllerConexao {
             enviarMensagemGRP(protVaParaFrenteAgora+";1");
         else
             enviarMensagemGRP(protVaParaFrenteAgora+";2");
+    }
+    
+    public void pagarConta(int idCarta, boolean pagarAgora){
+        if(pagarAgora)
+            enviarMensagemGRP(protContasPagar+";"+idCarta+";1");
+        else
+            enviarMensagemGRP(protContasPagar+";"+idCarta+";2");
     }
 
     /**
@@ -156,7 +165,15 @@ public class ControllerConexao {
                     else
                         controllerJogo.irParaFrenteAgora(false);
                 }
-                    break;
+                break;
+            case protContasPagar:
+                if(Integer.parseInt(str[3].trim()) != identificador){
+                    if(Integer.parseInt(str[2]) == 1)
+                        controllerJogo.contas(true, Integer.parseInt(str[1]));
+                    else
+                        controllerJogo.contas(false, Integer.parseInt(str[1]));
+                }
+                break;
             default:
                 break;
         }
