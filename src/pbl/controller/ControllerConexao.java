@@ -46,10 +46,11 @@ public class ControllerConexao {
 
     //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
     private final int protMensChat = 300; //<- Protocolo para envio de mensagem pelo chat
-    private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
+    private final int protPassaVez = 201; //<- Protocolo que informa que o dado foi jogado;
     private final int protPagarVizinho = 4012; //<- Protocolo que informa a carta pagra vizinho agora;
     private final int protDinheiroExtra = 4013; //<- Protocolo que informa a carta dinheiro extra
-    private final int protDoacao = 4014; // <- Doação para o sorte grande
+    private final int protDoacaoSorteGrande = 4014; // <- Doação para o sorte grande
+    private final int protGanheiSorteGrande = 4015; // <- Informa que ganhou sorte grande;
     private final int protFelizAniversario = 501; // <- Feliz aniversario;
 
     public ControllerConexao(ControllerJogo controllerJogo) {
@@ -60,8 +61,8 @@ public class ControllerConexao {
     }
 
     //********************************* METODOS DO JOGO ******************************************************************
-    public void dadoJogado(int valorDado) {
-        enviarMensagemGRP(protDadoJogado + ";" + valorDado);
+    public void passaVez(int valorDado) {
+        enviarMensagemGRP(protPassaVez + ";" + valorDado);
     }
 
     public void pagueUmVizinhoAgora(int idVizinho, double valor) {
@@ -73,13 +74,26 @@ public class ControllerConexao {
     }
 
     public void doacao(double valor) {
-        enviarMensagemGRP(protDoacao + ";" + valor);
-    }
-    
-    public void felizAniversario(double valor) {
-        enviarMensagemGRP(protFelizAniversario+";"+valor+";");
+        enviarMensagemGRP(protDoacaoSorteGrande + ";" + valor);
     }
 
+    public void felizAniversario(double valor) {
+        enviarMensagemGRP(protFelizAniversario + ";" + valor + ";");
+    }
+
+    /**
+     * Envia mensagem para o grupo informando que ganhou o valor do sorte
+     * grande, todos os outros clientes devem zerar o sorte grande.
+     */
+    public void ganheiSorteGrande() {
+        enviarMensagemGRP(protGanheiSorteGrande + ";");
+    }
+
+    /**
+     * Seleciona o que será feito de acordo com a mensagem recebida pelo grupo.
+     *
+     * @param str
+     */
     private void seletorAcao(String[] str) {
         int aux = Integer.parseInt(str[0]);
         switch (aux) {
@@ -98,7 +112,7 @@ public class ControllerConexao {
                 }
                 controllerJogo.setMinhaVez(isMinhaVez());
                 break;
-            case protDadoJogado: //Informa que algum jogador jogou o dado.
+            case protPassaVez: //Informa que algum jogador jogou o dado.
                 controllerJogo.moverPeao(Integer.parseInt(str[2].trim()), Integer.parseInt(str[1].trim())); //Movendo peao de jogadores
                 incrementarJogador();
                 controllerJogo.setMinhaVez(isMinhaVez());
@@ -113,14 +127,19 @@ public class ControllerConexao {
                     controllerJogo.sacar(Double.parseDouble(str[2].trim()));
                 }
                 break;
-            case protDoacao: //Protocolo doação, adiciona dinheiro no sorte grande
+            case protDoacaoSorteGrande: //Protocolo doação, adiciona dinheiro no sorte grande
                 if (Integer.parseInt(str[2].trim()) != identificador) { //Caso tenha sido enviado por mim, não há necessidade de adicionar novamente
                     controllerJogo.adicionarSorteGrande(Double.parseDouble(str[1].trim()));
                 }
                 break;
             case protFelizAniversario: //Protocolo feliz aniversario
-                if (Integer.parseInt(str[2].trim()) != identificador){ //Verifica se foi o proprio jogador que mandou a mensagem
+                if (Integer.parseInt(str[2].trim()) != identificador) { //Verifica se foi o proprio jogador que mandou a mensagem
                     controllerJogo.sacar(Double.parseDouble(str[1].trim()));
+                }
+                break;
+            case protGanheiSorteGrande: //Informa que que ganhou sorte grande, os clientes devem tirar o dinheiro que tinha do sorte grande.
+                if (Integer.parseInt(str[2].trim()) != identificador) {
+                    controllerJogo.zerarSorteGrande();
                 }
                 break;
             default:
@@ -301,7 +320,5 @@ public class ControllerConexao {
     private boolean isMinhaVez() {
         return idJogAtual == identificador;
     }
-
-
 
 }

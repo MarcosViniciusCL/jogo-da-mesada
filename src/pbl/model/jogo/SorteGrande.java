@@ -34,4 +34,8 @@ public class SorteGrande {
         return valortotal;
     }
 
+    public boolean temDinheiro() {
+        return this.valortotal > 0.00;
+    }
+
 }

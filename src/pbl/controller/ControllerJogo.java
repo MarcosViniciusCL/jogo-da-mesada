@@ -267,6 +267,7 @@ public class ControllerJogo {
             jogador.getConta().realizarEmprestimo(valorDado * cNegocioOcasiao); //realiza emprestimo
             jogador.getConta().sacar(valorDado * cNegocioOcasiao);
         }
+        novaMensagemChat("paguei "+cNegocioOcasiao+", negócio de ocasião.");
     }
 
     /**
@@ -338,10 +339,13 @@ public class ControllerJogo {
      * @param valor
      */
     public void moverPeao(int valor) {
+        if(valor == 6 && sorteGrande.temDinheiro()){ //Ganhou sorte grande
+            sorteGrande(jogadorPrincipal);
+        }
         this.jogadorPrincipal.getPeao().andarCasas(valor);
         atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
-        acaoCasa(); //Chama o metodo que será responsavel por executar uma ação de acordo com a casa que o peao caiu
-        controllerConexao.dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
+        acaoCasa(valor); //Chama o metodo que será responsavel por executar uma ação de acordo com a casa que o peao caiu
+        controllerConexao.passaVez(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
     }
 
     /**
@@ -369,6 +373,10 @@ public class ControllerJogo {
     public void adicionarSorteGrande(double valor) {
         sorteGrande.adicionarDinheiro(valor);
     }
+    
+    public void zerarSorteGrande(){
+        sorteGrande.pegarValor();
+    }
 
     public void sacar(double valor) {
         jogadorPrincipal.getConta().sacar(valor);
@@ -379,7 +387,7 @@ public class ControllerJogo {
      * Veirifica qual casa o jogador se encontra e realiza as funções
      * necessarias
      */
-    private void acaoCasa() {
+    private void acaoCasa(int valorDado) {
         int casa = this.jogadorPrincipal.getPeao().getPosicao(); //Retorna a posição do piao do jogador;
         switch (casa) {
             case 1: //Correio, 1 carta
@@ -439,6 +447,7 @@ public class ControllerJogo {
             case 20: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
                 break;
             case 21: //Negócios de ocasião seu por apenas $100 mais X nº dado
+                vendeNegocioOcasiao(jogadorPrincipal, valorDado);
                 break;
             case 22: //Correio, 1 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
