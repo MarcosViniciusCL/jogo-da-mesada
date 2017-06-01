@@ -150,7 +150,7 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                 case 0:
                     model.remCarta(select);
                     break;
-                case 1:
+                case 1: //pague a um vizinho agora
                     controllerJogo.pagueUmVizinhoAgora(Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO")), carta.getCodigo());
                     model.remCarta(select);
                     break;
@@ -169,10 +169,19 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     break;
                 case 5: //Carta contas a pagar
                     int pagarAgora = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
-                    if(pagarAgora == JOptionPane.YES_OPTION){
+                    if(pagarAgora == JOptionPane.YES_OPTION){ //se o jogador desejar pagar no momento
                         controllerJogo.contas(true, carta.getCodigo());
                     }else{
                         controllerJogo.contas(false, carta.getCodigo());
+                    }
+                    model.remCarta(select);
+                    break;
+                case 6: //carta cobraça monstro
+                    int pagarAgora1 = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
+                    if(pagarAgora1 == JOptionPane.YES_OPTION){ //se o jogador desejar pagar no momento
+                        controllerJogo.cobrancaMonstro(true, carta.getCodigo());
+                    }else{
+                        controllerJogo.cobrancaMonstro(false, carta.getCodigo());
                     }
                     model.remCarta(select);
                     break;

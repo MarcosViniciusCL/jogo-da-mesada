@@ -53,6 +53,7 @@ public class ControllerConexao {
     private final int protGanheiSorteGrande = 4015; // <- Informa que ganhou sorte grande;
     private final int protVaParaFrenteAgora = 4016; // <- Informa que o jogador tirou a casa va para frente agora
     private final int protContasPagar = 4017; // <- jogador sorteou uma carta do tipo conta
+    private final int protCobrancaMonstro = 4018; // <- jogador sorteou uma carta do tipo cobrança monstro 
     private final int protFelizAniversario = 501; // <- Feliz aniversario;
 
     public ControllerConexao(ControllerJogo controllerJogo) {
@@ -99,11 +100,18 @@ public class ControllerConexao {
             enviarMensagemGRP(protVaParaFrenteAgora+";2");
     }
     
-    public void pagarConta(int idCarta, boolean pagarAgora){
+    public void conta(int idCarta, boolean pagarAgora){
         if(pagarAgora)
             enviarMensagemGRP(protContasPagar+";"+idCarta+";1");
         else
             enviarMensagemGRP(protContasPagar+";"+idCarta+";2");
+    }
+    
+    public void cobrancaMonstro(int idCarta, boolean pagarAgora){
+        if(pagarAgora)
+            enviarMensagemGRP(protCobrancaMonstro+";"+idCarta+";1");
+        else
+            enviarMensagemGRP(protCobrancaMonstro+";"+idCarta+";2");
     }
 
     /**
@@ -172,6 +180,14 @@ public class ControllerConexao {
                         controllerJogo.contas(true, Integer.parseInt(str[1]));
                     else
                         controllerJogo.contas(false, Integer.parseInt(str[1]));
+                }
+                break;
+            case protCobrancaMonstro:
+                if(Integer.parseInt(str[3].trim()) != identificador){
+                    if(Integer.parseInt(str[2]) == 1)
+                        controllerJogo.cobrancaMonstro(true, Integer.parseInt(str[1]));
+                    else
+                        controllerJogo.cobrancaMonstro(false, Integer.parseInt(str[1]));
                 }
                 break;
             default:

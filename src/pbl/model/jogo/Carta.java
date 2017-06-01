@@ -14,13 +14,12 @@ public class Carta {
     private String nome;
     private String descrição;
     private double valor;
-    private static int cod = 0;
     
-    public Carta(String nome, String descricao, double valor){
+    public Carta(int id, String nome, String descricao, double valor){
         this.nome = nome;
         this.descrição = descricao;
         this.valor = valor;
-        this.codigo = cod++;
+        this.codigo = id;
     }
     
     public int getCodigo(){
