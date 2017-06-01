@@ -149,9 +149,9 @@ public class ControllerConexao {
                 if (Integer.parseInt(str[2].trim()) != identificador) {
                     controllerJogo.zerarSorteGrande();
                 }
-            case protVaParaFrenteAgora:
-                if(Integer.parseInt(str[2].trim()) != identificador){
-                    if(Integer.parseInt(str[1]) == 1)
+            case protVaParaFrenteAgora: //atualiza o peão do jogador que tirou a carta sorte grande
+                if(Integer.parseInt(str[2].trim()) != identificador){ //verifica se sou eu
+                    if(Integer.parseInt(str[1]) == 1) //verifica se o jogador selecionou ir para compras e entretimentos
                         controllerJogo.irParaFrenteAgora(true);
                     else
                         controllerJogo.irParaFrenteAgora(false);
