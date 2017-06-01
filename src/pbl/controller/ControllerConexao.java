@@ -150,11 +150,13 @@ public class ControllerConexao {
                     controllerJogo.zerarSorteGrande();
                 }
             case protVaParaFrenteAgora:
-                if(Integer.parseInt(str[1]) == 1)
-                    controllerJogo.irParaFrenteAgora(true);
-                else
-                    controllerJogo.irParaFrenteAgora(false);
-                break;
+                if(Integer.parseInt(str[2].trim()) != identificador){
+                    if(Integer.parseInt(str[1]) == 1)
+                        controllerJogo.irParaFrenteAgora(true);
+                    else
+                        controllerJogo.irParaFrenteAgora(false);
+                }
+                    break;
             default:
                 break;
         }
