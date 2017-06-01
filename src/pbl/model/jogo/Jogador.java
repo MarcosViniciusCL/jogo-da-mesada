@@ -72,11 +72,14 @@ public class Jogador {
     }
     
     public void removerCartaCompEntret(int codigoCarta){
+        Carta cRem = null;
         for(Carta c: cartasCompEntret){
             if(c.getCodigo()==codigoCarta){
-                cartasCompEntret.remove(c);
+                cRem = c;
+                break;
             }
         }
+        cartasCompEntret.remove(cRem);
     }
 
     public Peao getPeao() {

@@ -33,7 +33,6 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
         super();
         this.controllerJogo = ControllerJogo.getInstance();
         this.quantCarta = quantCarta;
-        this.setModal(true);
         initComponents();
         botaoX();
 
@@ -57,7 +56,7 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
         jTable1 = new javax.swing.JTable();
         jButton2 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabelQuantCartas.setText("Pegue X cartas correiros");
 

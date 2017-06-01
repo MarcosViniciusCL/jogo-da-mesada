@@ -130,6 +130,8 @@ public class Inicio extends javax.swing.JFrame {
             Principal fp = new Principal("Jogo da Mesada");
             controllerJogo.setTelaPrincipal(fp);
             fp.setLocationRelativeTo(null);
+            fp.setResizable(false);
+            fp.atualizarInformacoesTela();
             fp.setVisible(true);
             dispose();
         } catch (ErroComunicacaoServidorException | IOException ex) {

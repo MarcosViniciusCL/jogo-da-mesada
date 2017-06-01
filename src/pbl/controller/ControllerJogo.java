@@ -185,6 +185,8 @@ public class ControllerJogo {
         }
         jogadorPrincipal.removerCartaCompEntret(codigoCarta);
         jogadorPrincipal.getConta().depositar(carta.getValor() * 1.5);
+        novaMensagemChat("Vendi uma carta.");
+        atualizarTela();
     }
 
     /**
@@ -340,16 +342,28 @@ public class ControllerJogo {
         controllerConexao.dadoJogado(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
     }
 
+    /**
+     * Metodo executado quando o jogador pede um emprestimo.
+     * @param valorEmprestimo 
+     */
     public void pedirEmprestimo(double valorEmprestimo) {
         this.jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
         atualizarTela();
     }
 
+    /**
+     * Metodo para depositar na conta do jogador.
+     * @param valor 
+     */
     public void depositar(double valor) {
         jogadorPrincipal.getConta().depositar(valor);
         atualizarTela();
     }
 
+    /**
+     * Metodo usado pelo controller conexão para adiciona valores no sorte grande.
+     * @param valor 
+     */
     public void adicionarSorteGrande(double valor) {
         sorteGrande.adicionarDinheiro(valor);
     }
@@ -389,6 +403,7 @@ public class ControllerJogo {
             case 8: //Concurso de Banda de Rock, o primeiro jogador que tirar um 3 ganha $1.000
                 break;
             case 9: //Você achou um comprador
+                telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
                 break;
@@ -410,6 +425,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(3);
                 break;
             case 17: //Você achou um comprador
+                telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 18: //Lanchonete, pague $600
                 lanconete();

@@ -43,12 +43,12 @@ public abstract class PilhaCartasComprasEntretenimento {
     }
     
     private static void criarCartas(){
-        cartas.add(new Carta("CONTAS", "", 0));
-        cartas.add(new Carta("PAGUE A UM VIZINHO AGORA", "", 0));
-        cartas.add(new Carta("DINHEIRO EXTRA", "", 0));
-        cartas.add(new Carta("DOAÇÕES", "", 0));
-        cartas.add(new Carta("COBRANÇA MOSTRO", "", 0));
-        cartas.add(new Carta("VÁ EM FRENTE AGORA", "", 0));
+        cartas.add(new Carta("TERRENO", "", 3000.00));
+        cartas.add(new Carta("BOLSA DE VALORES", "", 1000.00));
+        cartas.add(new Carta("RELIQUIA ANTIGA", "", 5000.00));
+        cartas.add(new Carta("EMPRESA", "", 2500.00));
+        cartas.add(new Carta("CANTOR", "", 1500.00));
+        cartas.add(new Carta("CAIXA 2", "", 2000.00));
         embaralharCartas();
     }
     
