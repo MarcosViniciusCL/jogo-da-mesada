@@ -78,7 +78,7 @@ public class ControllerConexao {
     }
 
     public void felizAniversario(double valor) {
-        enviarMensagemGRP(protFelizAniversario + ";" + valor + ";");
+        enviarMensagemGRP(protFelizAniversario + ";" + valor);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ControllerConexao {
      * grande, todos os outros clientes devem zerar o sorte grande.
      */
     public void ganheiSorteGrande() {
-        enviarMensagemGRP(protGanheiSorteGrande + ";");
+        enviarMensagemGRP(protGanheiSorteGrande+"");
     }
 
     /**

@@ -162,12 +162,15 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     controllerJogo.doacao(carta.getCodigo());
                     model.remCarta(select);
                     break;
-                case 4: //Carta vá para frente agora
-                    VaParaFrenteAgora vPF = new VaParaFrenteAgora((Frame)this.getOwner(), true);
-                    vPF.show();
+                case 4:
                     model.remCarta(select);
                     break;
-                case 5:
+                case 5: //Carta vá para frente agora
+                    VaParaFrenteAgora vPF = new VaParaFrenteAgora((Frame)this.getOwner(), true);
+                    vPF.setLocationRelativeTo(null); //Deixar no centro da tela.
+                    vPF.setModal(true); //Impedir que a tela pai seja usada antes dessa.
+                    vPF.setResizable(true); //Impedi que maximize a janela 
+                    vPF.show();
                     model.remCarta(select);
                     break;
                 default:

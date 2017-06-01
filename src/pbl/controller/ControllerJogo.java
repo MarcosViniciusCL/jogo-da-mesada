@@ -110,12 +110,13 @@ public class ControllerJogo {
     public Carta pegarCartaCorreio() {
         return PilhaCartasCorreios.pegarCarta();
     }
-        
+
     /**
      * Caso o jogador queira a carta, ela vai ser adicionada na pilha;
+     *
      * @param c
      */
-    public void adicionarCartaCompra(Carta c){
+    public void adicionarCartaCompra(Carta c) {
         jogadorPrincipal.addCartaCompEntret(c);
     }
 
@@ -252,7 +253,7 @@ public class ControllerJogo {
             }
         }
         controllerConexao.felizAniversario(cFelizAniversario);
-        novaMensagemChat("Todos me deram $" + cFelizAniversario+", obrigado.");
+        novaMensagemChat("Todos me deram $" + cFelizAniversario + ", obrigado.");
     }
 
     /**
@@ -267,7 +268,7 @@ public class ControllerJogo {
             jogador.getConta().realizarEmprestimo(valorDado * cNegocioOcasiao); //realiza emprestimo
             jogador.getConta().sacar(valorDado * cNegocioOcasiao);
         }
-        novaMensagemChat("paguei "+cNegocioOcasiao+", negócio de ocasião.");
+        novaMensagemChat("paguei " + cNegocioOcasiao + ", negócio de ocasião.");
     }
 
     /**
@@ -339,7 +340,7 @@ public class ControllerJogo {
      * @param valor
      */
     public void moverPeao(int valor) {
-        if(valor == 6 && sorteGrande.temDinheiro()){ //Ganhou sorte grande
+        if (valor == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
             sorteGrande(jogadorPrincipal);
         }
         this.jogadorPrincipal.getPeao().andarCasas(valor);
@@ -350,7 +351,8 @@ public class ControllerJogo {
 
     /**
      * Metodo executado quando o jogador pede um emprestimo.
-     * @param valorEmprestimo 
+     *
+     * @param valorEmprestimo
      */
     public void pedirEmprestimo(double valorEmprestimo) {
         this.jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
@@ -359,7 +361,8 @@ public class ControllerJogo {
 
     /**
      * Metodo para depositar na conta do jogador.
-     * @param valor 
+     *
+     * @param valor
      */
     public void depositar(double valor) {
         jogadorPrincipal.getConta().depositar(valor);
@@ -367,14 +370,16 @@ public class ControllerJogo {
     }
 
     /**
-     * Metodo usado pelo controller conexão para adiciona valores no sorte grande.
-     * @param valor 
+     * Metodo usado pelo controller conexão para adiciona valores no sorte
+     * grande.
+     *
+     * @param valor
      */
     public void adicionarSorteGrande(double valor) {
         sorteGrande.adicionarDinheiro(valor);
     }
-    
-    public void zerarSorteGrande(){
+
+    public void zerarSorteGrande() {
         sorteGrande.pegarValor();
     }
 
@@ -591,10 +596,10 @@ public class ControllerJogo {
     public void irParaFrenteAgora(boolean irComprasEntretenimento) {
         if (irComprasEntretenimento) {
             jogadorPrincipal.getPeao().irParaProximaCasaComprasEntretenimento();
-            novaMensagemChat(jogadorPrincipal.getNome()+": Fui!!! Vou fazer uma grande Compra");
+            novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Compra");
         } else {
             jogadorPrincipal.getPeao().irParaProximaCasaAcheiComprador();
-            novaMensagemChat(jogadorPrincipal.getNome()+": Fui!!! Vou fazer uma grande Venda");
+            novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Venda");
         }
         atualizarTela();
     }
@@ -638,15 +643,15 @@ public class ControllerJogo {
      */
     public void adicionarMensChat(String[] mens) {
         String nome, mensagem;
-        if (mens[2].trim().length() <= 0) { //Testa se a mensagem veio sem a identificação;
+        if (mens[mens.length - 1].trim().length() <= 0) { //Testa se a mensagem veio sem a identificação;
             nome = "Anônimo disse: ";
             mensagem = mens[1];
-        } else if (!mens[2].trim().equals("#")) { //Testa se a mensagem foi enviada pelo servidor, caso não, é executado
+        } else if (!mens[mens.length - 1].trim().equals("#")) { //Testa se a mensagem foi enviada pelo servidor, caso não, é executado
             if (this.jogadorPrincipal.getIdentificacao() == Integer.parseInt(mens[2].trim())) { //Testa se o proprio jogador mandou a mensagem
                 nome = "Você disse: ";
                 mensagem = mens[1];
             } else { //Caso não tenha sido o proprio jogador, ele procura quem mandou a mensagem.
-                Jogador j = buscarJogador(Integer.parseInt(mens[2].trim()));
+                Jogador j = buscarJogador(Integer.parseInt(mens[mens.length - 1].trim()));
                 if (j != null) {
                     nome = j.getNome() + " disse: ";
                     mensagem = mens[1];
@@ -660,7 +665,9 @@ public class ControllerJogo {
             mensagem = mens[1];
         }
         chat.novaMensagem(nome + mensagem);
-        telaPrincipal.atualizarInformacoesTela();
+        if (telaPrincipal != null) {
+            telaPrincipal.atualizarInformacoesTela();
+        }
     }
 
     public Chat getChat() {
@@ -737,6 +744,5 @@ public class ControllerJogo {
     public double getValorSorteGrande() {
         return sorteGrande.getValor();
     }
-    
 
 }

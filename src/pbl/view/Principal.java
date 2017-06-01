@@ -295,7 +295,7 @@ public class Principal extends javax.swing.JFrame {
         try {
             int valor = controllerJogo.jogarDado();
             jButtonJogaDado.setText("Jogar dado: " + valor);
-            controllerJogo.moverPeao(1);
+            controllerJogo.moverPeao(valor);
         } catch (AguadarVezException ex) {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
