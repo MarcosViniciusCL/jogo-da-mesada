@@ -292,6 +292,7 @@
         </Component>
         <Container class="pbl.view.Tabuleiro" name="tabuleiro1">
           <Events>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tabuleiro1MouseExited"/>
             <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tabuleiro1MouseReleased"/>
           </Events>
 
@@ -345,6 +346,9 @@
                 <Property name="columns" type="int" value="20"/>
                 <Property name="rows" type="int" value="5"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="jTextAreaInfoCasas.setLineWrap(true);&#xa;jTextAreaInfoCasas.setWrapStyleWord(true);&#xa;jTextAreaInfoCasas.setText(&quot;CLICK SOBRE UMA CASA PARA OBTER INFORMA&#xc7;&#xc3;O&quot;);"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

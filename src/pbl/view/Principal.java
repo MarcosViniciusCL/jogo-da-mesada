@@ -189,6 +189,9 @@ public class Principal extends javax.swing.JFrame {
         });
 
         tabuleiro1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                tabuleiro1MouseExited(evt);
+            }
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 tabuleiro1MouseReleased(evt);
             }
@@ -209,6 +212,9 @@ public class Principal extends javax.swing.JFrame {
         jTextAreaInfoCasas.setEditable(false);
         jTextAreaInfoCasas.setColumns(20);
         jTextAreaInfoCasas.setRows(5);
+        jTextAreaInfoCasas.setLineWrap(true);
+        jTextAreaInfoCasas.setWrapStyleWord(true);
+        jTextAreaInfoCasas.setText("CLICK SOBRE UMA CASA PARA OBTER INFORMAÇÃO");
         jScrollPane3.setViewportView(jTextAreaInfoCasas);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -314,8 +320,13 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldChatActionPerformed
 
     private void tabuleiro1MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabuleiro1MouseReleased
-        System.out.println("X: " +evt.getX()+"\nY: "+evt.getY());
+        int x = evt.getX(), y = evt.getY();
+        mostrarInfoCasa(y, x);
     }//GEN-LAST:event_tabuleiro1MouseReleased
+
+    private void tabuleiro1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabuleiro1MouseExited
+        jTextAreaInfoCasas.setText("CLICK SOBRE UMA CASA PARA OBTER INFORMAÇÃO");
+    }//GEN-LAST:event_tabuleiro1MouseExited
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -350,7 +361,8 @@ public class Principal extends javax.swing.JFrame {
     //************************* METODOS PARA ABRIR NOVAS JANELAS ******************************
     /**
      * Abre a janela para jogador pegar as cartas correios e realizar a ação
-     * @param quantCarta 
+     *
+     * @param quantCarta
      */
     public void abrirJanelaPegarCartaCorreio(int quantCarta) {
         JanelaPegarCartaCorreio jpc = new JanelaPegarCartaCorreio("Pegar Carta", quantCarta);
@@ -359,11 +371,11 @@ public class Principal extends javax.swing.JFrame {
         jpc.setModal(true);
         jpc.setVisible(true);
     }
-    
+
     /**
      * Abre a janela para o jogador selecionar a carta que deseja vender
      */
-    public void abrirJanelaVendeCartaCE(){
+    public void abrirJanelaVendeCartaCE() {
         JanelaVendeCartaCompraEntre jvce = new JanelaVendeCartaCompraEntre(jTable1);
         jvce.setLocationRelativeTo(null);
         jvce.setResizable(false);
@@ -420,12 +432,95 @@ public class Principal extends javax.swing.JFrame {
 //        for (Carta carta : list) {
 //            this.modelCartas.addCarta(carta);
 //        }
-        
         tabuleiro1.atualizarTabuleiro();
     }
 
     public void mostrarMensagem(String mens) {
-        JOptionPane.showMessageDialog(null, mens);
+
+    }
+
+    private void mostrarInfoCasa(int x, int y) {
+        if (x >= 0 && x <= 97) {
+            if (y >= 0 && y <= 102) { //Casa 0
+                jTextAreaInfoCasas.setText("00 - CASA PARTIDA: Esta casa é onde todos os peoes ficam até que todos os jogadores entrem na sala".toUpperCase());
+            } else if (y >= 102 && y <= 204) { //Casa 1
+                jTextAreaInfoCasas.setText("01 - CASA CORREIO: NESTA CASA O JOGADOR DEVERÁ PEGAR 1 CARTA DO TIPO CORREIO, DEVE EXECUTAR A AÇÃO QUE ESTÁ ESCRITO NA CARTA");
+            } else if (y >= 205 && y <= 306) { //Casa 2
+                jTextAreaInfoCasas.setText("02 - CASA PRÊMIO: AO CAIR NESTA CASA VOCÊ GANHA $5.000 DO BANCO");
+            } else if (y >= 307 && y <= 408) { //Casa 3
+                jTextAreaInfoCasas.setText("03 - CASA CORREIO: VOCÊ DEVE PEGAR 3 CARTAS DO TIPO CORREIO, AS AÇÕES DEVE SER FEITA NA ORDEM DE SUA PREFERÊNCIA");
+            } else if (y >= 409 && y <= 510) { //Casa 4
+
+            } else if (y >= 511 && y <= 613) { //Casa 5
+
+            } else { //Casa 6
+
+            }
+        } else if (x >= 98 && x <= 191) {
+            if (y >= 0 && y <= 102) { //Casa 7
+
+            } else if (y >= 102 && y <= 204) { //Casa 8
+
+            } else if (y >= 205 && y <= 306) { //Casa 9
+
+            } else if (y >= 307 && y <= 408) { //Casa 10
+
+            } else if (y >= 409 && y <= 510) { //Casa 11
+
+            } else if (y >= 511 && y <= 613) { //Casa 12
+
+            } else { //Casa 13
+
+            }
+        } else if (x >= 192 && x <= 287) {
+            if (y >= 0 && y <= 102) { //Casa 14
+
+            } else if (y >= 102 && y <= 204) { //Casa 15
+
+            } else if (y >= 205 && y <= 306) { //Casa 16
+
+            } else if (y >= 307 && y <= 408) { //Casa 17
+
+            } else if (y >= 409 && y <= 510) { //Casa 18
+
+            } else if (y >= 511 && y <= 613) { //Casa 19
+
+            } else { //Casa 20
+
+            }
+        } else if (x >= 288 && x <= 384) {
+            if (y >= 0 && y <= 102) { //Casa 21
+
+            } else if (y >= 102 && y <= 204) { //Casa 22
+
+            } else if (y >= 205 && y <= 306) { //Casa 23
+
+            } else if (y >= 307 && y <= 408) { //Casa 24
+
+            } else if (y >= 409 && y <= 510) { //Casa 25
+
+            } else if (y >= 511 && y <= 613) { //Casa 26
+
+            } else { //Casa 27
+
+            }
+        } else if (x >= 385 && x <= 480) {
+            if (y >= 0 && y <= 102) { //Casa 28
+
+            } else if (y >= 102 && y <= 204) { //Casa 29
+
+            } else if (y >= 205 && y <= 306) { //Casa 30
+
+            } else if (y >= 307 && y <= 408) { //Casa 31
+
+            } else if (y >= 409 && y <= 510) { //Casa NULA
+
+            } else if (y >= 511 && y <= 613) { //Casa NULA
+
+            } else { //Casa NULA
+
+            }   
+        }
     }
 
 }

@@ -441,6 +441,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 23: //Você achou um comprador
+                telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 24: //Correio, 2 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(2);
@@ -449,12 +450,15 @@ public class ControllerJogo {
                 compraEntretenimento();
                 break;
             case 26: //Você achou um comprador
+                telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 27: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
                 break;
             case 28: //Compras no shopping
+                comprasShopping(jogadorPrincipal);
                 break;
             case 29: //Você achou um comprador
+                telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 30: //Maratona beneficiente, Os outros jogadores doam $100 X nº no dado
                 break;
@@ -476,6 +480,7 @@ public class ControllerJogo {
             jogador.getConta().realizarEmprestimo(cShopping);
             jogador.getConta().sacar(cShopping);
         }
+        atualizarTela();
     }
 
     /**
