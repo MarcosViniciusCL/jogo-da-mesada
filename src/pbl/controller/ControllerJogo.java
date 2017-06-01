@@ -520,16 +520,20 @@ public class ControllerJogo {
      * @param pagarAgora verifica se o jogador solicitou o pagamento imediato
      * @param codCarta codigo da carta que o jogador sortou
      */
-    public void contas(Jogador jogador, boolean pagarAgora, int codCarta) {
+    public void contas(boolean pagarAgora, int codCarta) {
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
         if (pagarAgora) { //se o jogador desejou pagar na hora
-            if (!jogador.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
-                jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
-                jogador.getConta().sacar(c.getValor()); //saca o valor
+            if (!jogadorPrincipal.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
+                jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
+                jogadorPrincipal.getConta().sacar(c.getValor()); //saca o valor
+                novaMensagemChat("Realizou um emprestimo de: $"+c.getValor());
             }
+            novaMensagemChat("Paguei a conta: "+c.getDescrição());
         } else { //caso o jogador prefira pagar depois
-            jogador.addCartaCorreio(c);
+            jogadorPrincipal.addCartaCorreio(c);
+            novaMensagemChat("Tem uma nova conta de : "+c.getDescrição()+", no valor de: $"+c.getValor());
         }
+        controllerConexao.pagarConta(codCarta, pagarAgora);
     }
 
     /**
@@ -601,6 +605,7 @@ public class ControllerJogo {
             jogadorPrincipal.getPeao().irParaProximaCasaAcheiComprador();
             novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Venda");
         }
+        controllerConexao.vaParaFrenteAgora(irComprasEntretenimento);
         atualizarTela();
     }
 
@@ -643,11 +648,11 @@ public class ControllerJogo {
      */
     public void adicionarMensChat(String[] mens) {
         String nome, mensagem;
-        if (mens[mens.length - 1].trim().length() <= 0) { //Testa se a mensagem veio sem a identificação;
+        if (mens[mens.length - 1].trim().length() <= 0 || mens.length < 3) { //Testa se a mensagem veio sem a identificação;
             nome = "Anônimo disse: ";
             mensagem = mens[1];
         } else if (!mens[mens.length - 1].trim().equals("#")) { //Testa se a mensagem foi enviada pelo servidor, caso não, é executado
-            if (this.jogadorPrincipal.getIdentificacao() == Integer.parseInt(mens[2].trim())) { //Testa se o proprio jogador mandou a mensagem
+            if (this.jogadorPrincipal.getIdentificacao() == Integer.parseInt(mens[mens.length - 1].trim())) { //Testa se o proprio jogador mandou a mensagem
                 nome = "Você disse: ";
                 mensagem = mens[1];
             } else { //Caso não tenha sido o proprio jogador, ele procura quem mandou a mensagem.

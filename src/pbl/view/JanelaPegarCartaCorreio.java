@@ -165,13 +165,13 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                 case 4:
                     model.remCarta(select);
                     break;
-                case 5: //Carta vá para frente agora
-                    VaParaFrenteAgora vPF = new VaParaFrenteAgora((Frame)this.getOwner(), true);
-                    vPF.setLocationRelativeTo(null); //Deixar no centro da tela.
-                    vPF.setModal(true); //Impedir que a tela pai seja usada antes dessa.
-                    vPF.setResizable(true); //Impedi que maximize a janela 
-                    vPF.show();
-                    model.remCarta(select);
+                case 5: //Carta contas a pagar
+                    int pagarAgora = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
+                    if(pagarAgora == JOptionPane.YES_OPTION){
+                        controllerJogo.contas(true, carta.getCodigo());
+                    }else{
+                        controllerJogo.contas(false, carta.getCodigo());
+                    }
                     break;
                 default:
                     break;
