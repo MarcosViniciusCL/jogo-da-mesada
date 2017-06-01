@@ -45,12 +45,13 @@ public abstract class PilhaCartasCorreios {
     }
     
     private static void criarCartas(){
-        cartas.add(new Carta("CONTAS", "", 0));
-        cartas.add(new Carta("PAGUE A UM VIZINHO AGORA", "", 500.00));
-        cartas.add(new Carta("DINHEIRO EXTRA", "", 800.00));
-        cartas.add(new Carta("DOAÇÕES", "", 300.00));
-        cartas.add(new Carta("COBRANÇA MOSTRO", "", 0));
-        cartas.add(new Carta("VÁ EM FRENTE AGORA", "", 0));
+        
+        cartas.add(new Carta(1, "PAGUE A UM VIZINHO AGORA", "", 500.00));
+        cartas.add(new Carta(2, "DINHEIRO EXTRA", "", 800.00));
+        cartas.add(new Carta(3, "DOAÇÕES", "", 300.00));
+        cartas.add(new Carta(4, "VÁ EM FRENTE AGORA", "", 0));
+        cartas.add(new Carta(5, "CONTAS", "", 0));
+        cartas.add(new Carta(6, "COBRANÇA MOSTRO", "", 0));
         embaralharCartas();
     }
     
