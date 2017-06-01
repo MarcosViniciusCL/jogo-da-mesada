@@ -596,6 +596,7 @@ public class ControllerJogo {
             jogadorPrincipal.getPeao().irParaProximaCasaAcheiComprador();
             novaMensagemChat(jogadorPrincipal.getNome()+": Fui!!! Vou fazer uma grande Venda");
         }
+        controllerConexao.vaParaFrenteAgora(irComprasEntretenimento);
         atualizarTela();
     }
 
