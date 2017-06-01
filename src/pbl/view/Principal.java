@@ -376,12 +376,16 @@ public class Principal extends javax.swing.JFrame {
      * Abre a janela para o jogador selecionar a carta que deseja vender
      */
     public void abrirJanelaVendeCartaCE() {
-        JanelaVendeCartaCompraEntre jvce = new JanelaVendeCartaCompraEntre(jTable1);
-        jvce.setLocationRelativeTo(null);
-        jvce.setResizable(false);
-        jvce.setModal(true);
-        jvce.setVisible(true);
-        atualizarInformacoesTela();
+        if (!modelCartas.estaVazia()) {
+            JanelaVendeCartaCompraEntre jvce = new JanelaVendeCartaCompraEntre(jTable1);
+            jvce.setLocationRelativeTo(null);
+            jvce.setResizable(false);
+            jvce.setModal(true);
+            jvce.setVisible(true);
+            atualizarInformacoesTela();
+        }else {
+            JOptionPane.showMessageDialog(null, "Você caiu na casa \"Achou um Comprador\", mas você não tem cartas para vender.");
+        }
     }
 
     public void acaoComprarCarta() {
@@ -519,7 +523,7 @@ public class Principal extends javax.swing.JFrame {
 
             } else { //Casa NULA
 
-            }   
+            }
         }
     }
 

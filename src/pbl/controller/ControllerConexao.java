@@ -49,7 +49,8 @@ public class ControllerConexao {
     private final int protDadoJogado = 201; //<- Protocolo que informa que o dado foi jogado;
     private final int protPagarVizinho = 4012; //<- Protocolo que informa a carta pagra vizinho agora;
     private final int protDinheiroExtra = 4013; //<- Protocolo que informa a carta dinheiro extra
-    private final int protDoacao = 4014; //Doação para o sorte grande
+    private final int protDoacao = 4014; // <- Doação para o sorte grande
+    private final int protFelizAniversario = 501; // <- Feliz aniversario;
 
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -73,6 +74,10 @@ public class ControllerConexao {
 
     public void doacao(double valor) {
         enviarMensagemGRP(protDoacao + ";" + valor);
+    }
+    
+    public void felizAniversario(double valor) {
+        enviarMensagemGRP(protFelizAniversario+";"+valor+";");
     }
 
     private void seletorAcao(String[] str) {
@@ -111,6 +116,11 @@ public class ControllerConexao {
             case protDoacao: //Protocolo doação, adiciona dinheiro no sorte grande
                 if (Integer.parseInt(str[2].trim()) != identificador) { //Caso tenha sido enviado por mim, não há necessidade de adicionar novamente
                     controllerJogo.adicionarSorteGrande(Double.parseDouble(str[1].trim()));
+                }
+                break;
+            case protFelizAniversario: //Protocolo feliz aniversario
+                if (Integer.parseInt(str[2].trim()) != identificador){ //Verifica se foi o proprio jogador que mandou a mensagem
+                    controllerJogo.sacar(Double.parseDouble(str[1].trim()));
                 }
                 break;
             default:
@@ -291,5 +301,7 @@ public class ControllerConexao {
     private boolean isMinhaVez() {
         return idJogAtual == identificador;
     }
+
+
 
 }

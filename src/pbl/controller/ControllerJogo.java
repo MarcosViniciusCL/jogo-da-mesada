@@ -251,6 +251,8 @@ public class ControllerJogo {
                 j.getConta().transferir(jogador.getConta(), cFelizAniversario);
             }
         }
+        controllerConexao.felizAniversario(cFelizAniversario);
+        novaMensagemChat("Todos me deram $" + cFelizAniversario+", obrigado.");
     }
 
     /**
@@ -406,6 +408,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
+                felizAniversario(jogadorPrincipal);
                 break;
             case 11: //Correio, 1 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);

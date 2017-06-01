@@ -97,6 +97,10 @@ public class CartasComprasEntretTableModel extends javax.swing.table.AbstractTab
         return cartas.get(indexLinha);
     }
     
+    public boolean estaVazia(){
+        return cartas.isEmpty();
+    }
+    
     public void limpar(){
         cartas.clear();
         fireTableDataChanged();
