@@ -588,11 +588,13 @@ public class ControllerJogo {
         }
     }
 
-    public void irParaFrenteAgora(Jogador jogador, boolean irComprasEntretenimento) {
+    public void irParaFrenteAgora(boolean irComprasEntretenimento) {
         if (irComprasEntretenimento) {
-            jogador.getPeao().irParaProximaCasaComprasEntretenimento();
+            jogadorPrincipal.getPeao().irParaProximaCasaComprasEntretenimento();
+            novaMensagemChat(jogadorPrincipal.getNome()+": Fui!!! Vou fazer uma grande Compra");
         } else {
-            jogador.getPeao().irParaProximaCasaAcheiComprador();
+            jogadorPrincipal.getPeao().irParaProximaCasaAcheiComprador();
+            novaMensagemChat(jogadorPrincipal.getNome()+": Fui!!! Vou fazer uma grande Venda");
         }
         atualizarTela();
     }

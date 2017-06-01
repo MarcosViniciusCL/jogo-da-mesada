@@ -5,6 +5,7 @@
  */
 package pbl.view;
 
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
@@ -161,7 +162,9 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     controllerJogo.doacao(carta.getCodigo());
                     model.remCarta(select);
                     break;
-                case 4:
+                case 4: //Carta vá para frente agora
+                    VaParaFrenteAgora vPF = new VaParaFrenteAgora((Frame)this.getOwner(), true);
+                    vPF.show();
                     model.remCarta(select);
                     break;
                 case 5:
