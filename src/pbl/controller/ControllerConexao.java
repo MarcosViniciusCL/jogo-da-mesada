@@ -81,7 +81,7 @@ public class ControllerConexao {
     }
 
     public void felizAniversario(double valor) {
-        enviarMensagemGRP(protFelizAniversario + ";" + valor + ";");
+        enviarMensagemGRP(protFelizAniversario + ";" + valor);
     }
     
 

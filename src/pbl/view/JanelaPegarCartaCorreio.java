@@ -162,9 +162,7 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     controllerJogo.doacao(carta.getCodigo());
                     model.remCarta(select);
                     break;
-                case 4: //Carta vá para frente agora
-                    VaParaFrenteAgora vPF = new VaParaFrenteAgora((Frame)this.getOwner(), true);
-                    vPF.show();
+                case 4:
                     model.remCarta(select);
                     break;
                 case 5: //Carta contas a pagar
