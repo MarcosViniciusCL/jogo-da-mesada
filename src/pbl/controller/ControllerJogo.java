@@ -243,7 +243,6 @@ public class ControllerJogo {
     /**
      * Transfere 100 de todos os jogadores para o jogador que caiu na casa.
      *
-     * @param jogador jogador que caiu na casa
      */
     public void felizAniversario(int idJogador) {
         Jogador jogador = buscarJogador(idJogador);
@@ -516,7 +515,8 @@ public class ControllerJogo {
             jogadorPrincipal.getConta().realizarEmprestimo(cLanchonete);
             jogadorPrincipal.getConta().sacar(cLanchonete);
         }
-        novaMensagemChat("LANCHONETE: PAGUEI " + cLanchonete + "");
+        novaMensagemChat("Paguei " + cLanchonete + " na lanchonete.");
+        controllerConexao.doacao(cLanchonete);
     }
 
     //*************************************** METODOS DA CARTA CORREIO
@@ -562,7 +562,7 @@ public class ControllerJogo {
             vizinho.getConta().transferir(jogadorPrincipal.getConta(), c.getValor()); //transfere o valor
         }
         controllerConexao.dinheiroExtra(idVizinho, c.getValor());
-        novaMensagemChat("\"DINHEIRO EXTRA\" PEGUEI " + c.getValor() + " DE " + vizinho.getNome());
+        novaMensagemChat("Peguei " + c.getValor() + " de " + vizinho.getNome());
     }
 
     /**
@@ -578,7 +578,7 @@ public class ControllerJogo {
             jogadorPrincipal.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
         }
         controllerConexao.pagueUmVizinhoAgora(idVizinho, c.getValor()); //Enviando valor para o vizinho;
-        novaMensagemChat("\"PAGUE A UM VIZINHO\" PAGUEI " + c.getValor() + " PARA " + vizinho.getNome()); //Adiciona a informação no chat
+        novaMensagemChat("Paguei " + c.getValor() + " para " + vizinho.getNome()); //Adiciona a informação no chat
     }
 
     /**
