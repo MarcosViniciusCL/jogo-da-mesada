@@ -116,7 +116,7 @@ public class VaParaFrenteAgora extends javax.swing.JDialog {
 
     private void irAgoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irAgoraActionPerformed
         ControllerJogo controllerJogo = ControllerJogo.getInstance();
-        controllerJogo.irParaFrenteAgora(comprasEnt.isSelected());
+        controllerJogo.irParaFrenteAgora(controllerJogo.getJogador().getIdentificacao(), comprasEnt.isSelected());
         this.dispose();
     }//GEN-LAST:event_irAgoraActionPerformed
 

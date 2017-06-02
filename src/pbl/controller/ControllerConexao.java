@@ -81,7 +81,7 @@ public class ControllerConexao {
     }
 
     public void felizAniversario(double valor) {
-        enviarMensagemGRP(protFelizAniversario + ";" + valor);
+        enviarMensagemGRP(protFelizAniversario + ";");
     }
     
 
@@ -159,7 +159,7 @@ public class ControllerConexao {
                 break;
             case protFelizAniversario: //Protocolo feliz aniversario
                 if (Integer.parseInt(str[2].trim()) != identificador) { //Verifica se foi o proprio jogador que mandou a mensagem
-                    controllerJogo.sacar(Double.parseDouble(str[1].trim()));
+                    controllerJogo.felizAniversario(Integer.parseInt(str[2]));
                 }
                 break;
             case protGanheiSorteGrande: //Informa que que ganhou sorte grande, os clientes devem tirar o dinheiro que tinha do sorte grande.
@@ -169,25 +169,25 @@ public class ControllerConexao {
             case protVaParaFrenteAgora: //atualiza o peão do jogador que tirou a carta sorte grande
                 if(Integer.parseInt(str[2].trim()) != identificador){ //verifica se sou eu
                     if(Integer.parseInt(str[1]) == 1) //verifica se o jogador selecionou ir para compras e entretimentos
-                        controllerJogo.irParaFrenteAgora(true);
+                        controllerJogo.irParaFrenteAgora(Integer.parseInt(str[2]),true);
                     else
-                        controllerJogo.irParaFrenteAgora(false);
+                        controllerJogo.irParaFrenteAgora(Integer.parseInt(str[2]), false);
                 }
                 break;
             case protContasPagar:
                 if(Integer.parseInt(str[3].trim()) != identificador){
                     if(Integer.parseInt(str[2]) == 1)
-                        controllerJogo.contas(true, Integer.parseInt(str[1]));
+                        controllerJogo.contas(Integer.parseInt(str[3]), true, Integer.parseInt(str[1]));
                     else
-                        controllerJogo.contas(false, Integer.parseInt(str[1]));
+                        controllerJogo.contas(Integer.parseInt(str[3]), false, Integer.parseInt(str[1]));
                 }
                 break;
             case protCobrancaMonstro:
                 if(Integer.parseInt(str[3].trim()) != identificador){
                     if(Integer.parseInt(str[2]) == 1)
-                        controllerJogo.cobrancaMonstro(true, Integer.parseInt(str[1]));
+                        controllerJogo.cobrancaMonstro(Integer.parseInt(str[3]),true, Integer.parseInt(str[1]));
                     else
-                        controllerJogo.cobrancaMonstro(false, Integer.parseInt(str[1]));
+                        controllerJogo.cobrancaMonstro(Integer.parseInt(str[3]), false, Integer.parseInt(str[1]));
                 }
                 break;
             default:

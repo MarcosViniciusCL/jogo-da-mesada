@@ -162,24 +162,25 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     controllerJogo.doacao(carta.getCodigo());
                     model.remCarta(select);
                     break;
-                case 4:
+                case 4: //Carta va para frente agora
+                    new VaParaFrenteAgora((Frame)this.getOwner(), true).show();
                     model.remCarta(select);
                     break;
                 case 5: //Carta contas a pagar
                     int pagarAgora = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
                     if(pagarAgora == JOptionPane.YES_OPTION){ //se o jogador desejar pagar no momento
-                        controllerJogo.contas(true, carta.getCodigo());
+                        controllerJogo.contas(controllerJogo.getJogador().getIdentificacao(), true, carta.getCodigo());
                     }else{
-                        controllerJogo.contas(false, carta.getCodigo());
+                        controllerJogo.contas(controllerJogo.getJogador().getIdentificacao(), false, carta.getCodigo());
                     }
                     model.remCarta(select);
                     break;
                 case 6: //carta cobraça monstro
                     int pagarAgora1 = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
                     if(pagarAgora1 == JOptionPane.YES_OPTION){ //se o jogador desejar pagar no momento
-                        controllerJogo.cobrancaMonstro(true, carta.getCodigo());
+                        controllerJogo.cobrancaMonstro(controllerJogo.getJogador().getIdentificacao(),true, carta.getCodigo());
                     }else{
-                        controllerJogo.cobrancaMonstro(false, carta.getCodigo());
+                        controllerJogo.cobrancaMonstro(controllerJogo.getJogador().getIdentificacao(),false, carta.getCodigo());
                     }
                     model.remCarta(select);
                     break;

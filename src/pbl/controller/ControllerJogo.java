@@ -245,7 +245,8 @@ public class ControllerJogo {
      *
      * @param jogador jogador que caiu na casa
      */
-    public void felizAniversario(Jogador jogador) {
+    public void felizAniversario(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
         for (Jogador j : jogadores) {
             if (!j.getConta().transferir(jogador.getConta(), cFelizAniversario)) { //se o jogador não possuir saldo suficiente
                 jogador.getConta().realizarEmprestimo(cFelizAniversario); //faz emprestimo
@@ -421,7 +422,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
-                felizAniversario(jogadorPrincipal);
+                felizAniversario(jogadorPrincipal.getIdentificacao());
                 break;
             case 11: //Correio, 1 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
@@ -520,18 +521,22 @@ public class ControllerJogo {
      * @param pagarAgora verifica se o jogador solicitou o pagamento imediato
      * @param codCarta codigo da carta que o jogador sortou
      */
-    public void contas(boolean pagarAgora, int codCarta) {
+    public void contas(int idJogador, boolean pagarAgora, int codCarta) {
+        Jogador jogadorPrincipal = buscarJogador(idJogador);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
         if (pagarAgora) { //se o jogador desejou pagar na hora
             if (!jogadorPrincipal.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
                 jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
                 jogadorPrincipal.getConta().sacar(c.getValor()); //saca o valor
-                novaMensagemChat("Realizei um emprestimo de: $"+c.getValor());
+                if(jogadorPrincipal != this.jogadorPrincipal)
+                    novaMensagemChat("Realizei um emprestimo de: $"+c.getValor());
             }
-            novaMensagemChat("Paguei a conta: "+c.getDescrição());
+            if(jogadorPrincipal != this.jogadorPrincipal)
+                novaMensagemChat("Paguei a conta: "+c.getDescrição());
         } else { //caso o jogador prefira pagar depois
             jogadorPrincipal.addCartaCorreio(c);
-            novaMensagemChat("Tenho uma nova conta de : "+c.getDescrição()+", no valor de: $"+c.getValor());
+            if(jogadorPrincipal != this.jogadorPrincipal)
+                novaMensagemChat("Tenho uma nova conta de : "+c.getDescrição()+", no valor de: $"+c.getValor());
         }
         controllerConexao.conta(codCarta, pagarAgora);
     }
@@ -585,29 +590,36 @@ public class ControllerJogo {
         novaMensagemChat("Adicionei " + c.getValor() + " no sorte grande");
     }
 
-    public void cobrancaMonstro(boolean pagarAgora, int codCarta) {
+    public void cobrancaMonstro(int idJogador, boolean pagarAgora, int codCarta) {
+        Jogador jogadorPrincipal = buscarJogador(idJogador);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
         if (pagarAgora) { //verifica se o jogador deseja pagar a carta agora
             if (!jogadorPrincipal.getConta().sacar((c.getValor() * 1.1))) { //verifica se o jogador tem saldo suficiente
                 jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um empretimo
                 jogadorPrincipal.getConta().sacar((c.getValor() * 1.1)); //saca o valor
-                novaMensagemChat("Realizei um emprestimo de: $"+c.getValor());
+                if(jogadorPrincipal != this.jogadorPrincipal)
+                    novaMensagemChat("Realizei um emprestimo de: $"+c.getValor());
             }
-            novaMensagemChat("Paguei a cobrança monstro: "+c.getDescrição()+", no valor de: $"+c.getValor()+
+            if(jogadorPrincipal != this.jogadorPrincipal)
+                novaMensagemChat("Paguei a cobrança monstro: "+c.getDescrição()+", no valor de: $"+c.getValor()+
                     "mais: $"+(c.getValor()*0.1)+"referente aos juros");
         } else { //caso o jogador decida pagar depois
             jogadorPrincipal.addCartaCorreio(c);
-            novaMensagemChat("Tenho uma nova cobrança monstro de: "+c.getDescrição()+", no valor de: $"+c.getValor());
+            if(jogadorPrincipal != this.jogadorPrincipal)
+                novaMensagemChat("Tenho uma nova cobrança monstro de: "+c.getDescrição()+", no valor de: $"+c.getValor());
         }
     }
 
-    public void irParaFrenteAgora(boolean irComprasEntretenimento) {
+    public void irParaFrenteAgora(int idJogador, boolean irComprasEntretenimento) {
+        Jogador jogadorPrincipal = buscarJogador(idJogador);
         if (irComprasEntretenimento) {
             jogadorPrincipal.getPeao().irParaProximaCasaComprasEntretenimento();
-            novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Compra");
+            if(jogadorPrincipal != this.jogadorPrincipal)
+                novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Compra");
         } else {
             jogadorPrincipal.getPeao().irParaProximaCasaAcheiComprador();
-            novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Venda");
+            if(jogadorPrincipal != this.jogadorPrincipal)
+                novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Venda");
         }
         controllerConexao.vaParaFrenteAgora(irComprasEntretenimento);
         atualizarTela();
