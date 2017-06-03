@@ -5,6 +5,7 @@
  */
 package pbl.controller;
 
+import pbl.exception.DinheiroInsuficienteException;
 import pbl.exception.AguadarVezException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,14 +93,8 @@ public class ControllerJogo {
      * @return valor - Valor final do dado
      * @throws AguadarVezException - Ainda não é a vez do jogador.
      */
-    public int jogarDado() throws AguadarVezException {
-        int valor;
-        if (minhaVez) {
-            valor = dado.jogarDado(); //Joga o dado e aguarda o valor sorteado.
-        } else {
-            throw new AguadarVezException(); //Caso não seja a vez  do jogador lança a exception
-        }
-        return valor;
+    public int jogarDado() {
+        return dado.jogarDado(); //Joga o dado e aguarda o valor sorteado.
     }
 
     /**
@@ -112,24 +107,25 @@ public class ControllerJogo {
     }
 
     /**
-     * Caso o jogador queira a carta, ela vai ser adicionada na pilha;
-     *
-     * @param c
-     */
-    public void adicionarCartaCompra(Carta c) {
-        jogadorPrincipal.addCartaCompEntret(c);
-    }
-
-    /**
      * Cria uma nova instancia da lista bolão de esportes
      */
     public void novoBolaoDeEsportes() {
         bilhetesBolao = new ArrayList<>();
     }
 
-    public void compraEntretenimento() {
-        telaPrincipal.acaoComprarCarta();
-        atualizarTela();
+    /**
+     * Salva a carta que o usuario comprou.
+     *
+     * @param c
+     * @throws pbl.exception.DinheiroInsuficienteException
+     */
+    public void compraEntretenimento(Carta c) throws DinheiroInsuficienteException {
+        if (jogadorPrincipal.getConta().sacar(c.getValor())) {
+            jogadorPrincipal.addCartaCompEntret(c);
+            atualizarTela();
+        } else {
+            throw new DinheiroInsuficienteException();
+        }
     }
 
     /**
@@ -232,12 +228,26 @@ public class ControllerJogo {
     }
 
     /**
-     * Deposita 1000 na conta do jogador que tirou 3 no dado
+     * Abre a tela para que o jogador jogue o dado.
      *
      * @param jogador jogador ganhador
      */
-    public void concursoBandaArrocha(Jogador jogador) {
-        jogador.getConta().depositar(cConcursoBandaArrocha);
+    public void concursoBandaArrocha() {
+        telaPrincipal.abrirJanelaBandaArrocha();
+    }
+
+    /**
+     * Metodo chamado pela interface para informar se o jogador ganhou o
+     * concurso.
+     *
+     * @param ganhou
+     */
+    public void resultadoBandaArrocha(boolean ganhou) {
+        if (ganhou) {
+            jogadorPrincipal.getConta().depositar(cConcursoBandaArrocha);
+            novaMensagemChat("Ganhei o concurso da banda de arrocha.");
+        }
+        controllerConexao.resultadoBandaArrocha(ganhou);
     }
 
     /**
@@ -268,7 +278,7 @@ public class ControllerJogo {
             jogador.getConta().realizarEmprestimo(valorDado * cNegocioOcasiao); //realiza emprestimo
             jogador.getConta().sacar(valorDado * cNegocioOcasiao);
         }
-        novaMensagemChat("paguei " + cNegocioOcasiao + ", negócio de ocasião.");
+        novaMensagemChat("Paguei " + cNegocioOcasiao + ", negócio de ocasião.");
     }
 
     /**
@@ -283,11 +293,13 @@ public class ControllerJogo {
         if (!jogador.getConta().sacar(valorDado * cMaratonaBeneficente)) {
             jogador.getConta().realizarEmprestimo(valorDado * cMaratonaBeneficente);
             jogador.getConta().sacar(valorDado * cMaratonaBeneficente);
-            if(jogador == jogadorPrincipal)
-                novaMensagemChat("Realizei um emprestimo no valor de: $"+valorDado*cMaratonaBeneficente);
+            if (jogador == jogadorPrincipal) {
+                novaMensagemChat("Realizei um emprestimo no valor de: $" + valorDado * cMaratonaBeneficente);
+            }
         }
-        if(jogador == jogadorPrincipal)
-            novaMensagemChat("Hoje é o dia de fazer uma boa ação amigos, obrigado pela contribuição, será destinada ao sorte grande de: $"+(valorDado*cMaratonaBeneficente));
+        if (jogador == jogadorPrincipal) {
+            novaMensagemChat("Hoje é o dia de fazer uma boa ação amigos, obrigado pela contribuição, será destinada ao sorte grande de: $" + (valorDado * cMaratonaBeneficente));
+        }
         sorteGrande.adicionarDinheiro(valorDado * 100);
     }
 
@@ -342,16 +354,18 @@ public class ControllerJogo {
     /**
      * Move o peão do jogador que pertence a esse cliente.
      *
-     * @param valor
+     * @param valorDado
      */
-    public void moverPeao(int valor) {
-        if (valor == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
+    public void moverPeao(int valorDado) {
+        if (valorDado == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
             sorteGrande(jogadorPrincipal);
         }
-        this.jogadorPrincipal.getPeao().andarCasas(valor);
+        this.jogadorPrincipal.getPeao().andarCasas(valorDado);
         atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
-        acaoCasa(valor); //Chama o metodo que será responsavel por executar uma ação de acordo com a casa que o peao caiu
-        controllerConexao.passaVez(valor); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
+        acaoCasa(valorDado); //Chama o metodo que será responsavel por executar uma ação de acordo com a casa que o peao caiu
+        if (jogadorPrincipal.getPeao().getPosicao() != 8) { //Caso o jogador tenha caido em concurso de banda  de arrocha não deve enviar a mensagem para passar a vez.
+            controllerConexao.passaVez(valorDado); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
+        }
     }
 
     /**
@@ -410,7 +424,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(3);
                 break;
             case 4: //Compras e entretenimento
-                compraEntretenimento();
+                telaPrincipal.acaoComprarCarta();
                 break;
             case 5: //Correio, 2 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(2);
@@ -420,7 +434,8 @@ public class ControllerJogo {
             case 7: //Domingo de praia, pague $500
                 praiaNoDomingo();
                 break;
-            case 8: //Concurso de Banda de Rock, o primeiro jogador que tirar um 3 ganha $1.000
+            case 8: //Concurso de Banda de Arrocha, o primeiro jogador que tirar um 3 ganha $1.000
+                concursoBandaArrocha();
                 break;
             case 9: //Você achou um comprador
                 telaPrincipal.abrirJanelaVendeCartaCE();
@@ -432,7 +447,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 12: //Compras e entretenimento
-                compraEntretenimento();
+                telaPrincipal.acaoComprarCarta();
                 break;
             case 13: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
                 break;
@@ -440,7 +455,7 @@ public class ControllerJogo {
                 florestaAmazonica();
                 break;
             case 15: //Compras e entretenimento
-                compraEntretenimento();
+                telaPrincipal.acaoComprarCarta();
                 break;
             case 16: //Correio, 3 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(3);
@@ -469,7 +484,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(2);
                 break;
             case 25: //Compras e entretenimento
-                compraEntretenimento();
+                telaPrincipal.acaoComprarCarta();
                 break;
             case 26: //Você achou um comprador
                 telaPrincipal.abrirJanelaVendeCartaCE();
@@ -534,15 +549,18 @@ public class ControllerJogo {
             if (!jogadorPrincipal.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
                 jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
                 jogadorPrincipal.getConta().sacar(c.getValor()); //saca o valor
-                if(jogadorPrincipal == this.jogadorPrincipal)
-                    novaMensagemChat("Realizei um emprestimo de: $"+c.getValor());
+                if (jogadorPrincipal == this.jogadorPrincipal) {
+                    novaMensagemChat("Realizei um emprestimo de: $" + c.getValor());
+                }
             }
-            if(jogadorPrincipal == this.jogadorPrincipal)
-                novaMensagemChat("Paguei a conta: "+c.getDescrição());
+            if (jogadorPrincipal == this.jogadorPrincipal) {
+                novaMensagemChat("Paguei a conta: " + c.getDescrição());
+            }
         } else { //caso o jogador prefira pagar depois
             jogadorPrincipal.addCartaCorreio(c);
-            if(jogadorPrincipal == this.jogadorPrincipal)
-                novaMensagemChat("Tenho uma nova conta de : "+c.getDescrição()+", no valor de: $"+c.getValor());
+            if (jogadorPrincipal == this.jogadorPrincipal) {
+                novaMensagemChat("Tenho uma nova conta de : " + c.getDescrição() + ", no valor de: $" + c.getValor());
+            }
         }
         controllerConexao.conta(codCarta, pagarAgora);
     }
@@ -603,16 +621,19 @@ public class ControllerJogo {
             if (!jogadorPrincipal.getConta().sacar((c.getValor() * 1.1))) { //verifica se o jogador tem saldo suficiente
                 jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um empretimo
                 jogadorPrincipal.getConta().sacar((c.getValor() * 1.1)); //saca o valor
-                if(jogadorPrincipal == this.jogadorPrincipal)
-                    novaMensagemChat("Realizei um emprestimo de: $"+c.getValor());
+                if (jogadorPrincipal == this.jogadorPrincipal) {
+                    novaMensagemChat("Realizei um emprestimo de: $" + c.getValor());
+                }
             }
-            if(jogadorPrincipal == this.jogadorPrincipal)
-                novaMensagemChat("Paguei a cobrança monstro: "+c.getDescrição()+", no valor de: $"+c.getValor()+
-                    "mais: $"+(c.getValor()*0.1)+"referente aos juros");
+            if (jogadorPrincipal == this.jogadorPrincipal) {
+                novaMensagemChat("Paguei a cobrança monstro: " + c.getDescrição() + ", no valor de: $" + c.getValor()
+                        + "mais: $" + (c.getValor() * 0.1) + "referente aos juros");
+            }
         } else { //caso o jogador decida pagar depois
             jogadorPrincipal.addCartaCorreio(c);
-            if(jogadorPrincipal == this.jogadorPrincipal)
-                novaMensagemChat("Tenho uma nova cobrança monstro de: "+c.getDescrição()+", no valor de: $"+c.getValor());
+            if (jogadorPrincipal == this.jogadorPrincipal) {
+                novaMensagemChat("Tenho uma nova cobrança monstro de: " + c.getDescrição() + ", no valor de: $" + c.getValor());
+            }
         }
     }
 
@@ -620,12 +641,14 @@ public class ControllerJogo {
         Jogador jogadorPrincipal = buscarJogador(idJogador);
         if (irComprasEntretenimento) {
             jogadorPrincipal.getPeao().irParaProximaCasaComprasEntretenimento();
-            if(jogadorPrincipal == this.jogadorPrincipal)
+            if (jogadorPrincipal == this.jogadorPrincipal) {
                 novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Compra");
+            }
         } else {
             jogadorPrincipal.getPeao().irParaProximaCasaAcheiComprador();
-            if(jogadorPrincipal == this.jogadorPrincipal)
+            if (jogadorPrincipal == this.jogadorPrincipal) {
                 novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Venda");
+            }
         }
         controllerConexao.vaParaFrenteAgora(irComprasEntretenimento);
         atualizarTela();
@@ -770,6 +793,10 @@ public class ControllerJogo {
 
     public double getValorSorteGrande() {
         return sorteGrande.getValor();
+    }
+
+    public int getValorDado() {
+        return dado.getValorDado();
     }
 
 }

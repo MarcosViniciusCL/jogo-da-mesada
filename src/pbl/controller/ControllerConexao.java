@@ -55,6 +55,7 @@ public class ControllerConexao {
     private final int protContasPagar = 4017; // <- jogador sorteou uma carta do tipo conta
     private final int protCobrancaMonstro = 4018; // <- jogador sorteou uma carta do tipo cobrança monstro 
     private final int protFelizAniversario = 501; // <- Feliz aniversario;
+    private final int protConcBandaArrocha = 601; //<- Deve jogar o dado para ver quem vai ganhar.
 
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -83,7 +84,6 @@ public class ControllerConexao {
     public void felizAniversario(double valor) {
         enviarMensagemGRP(protFelizAniversario + ";");
     }
-    
 
     /**
      * Envia mensagem para o grupo informando que ganhou o valor do sorte
@@ -92,26 +92,37 @@ public class ControllerConexao {
     public void ganheiSorteGrande() {
         enviarMensagemGRP(protGanheiSorteGrande + ";");
     }
-    
-    public void vaParaFrenteAgora(boolean compraEnt){
-        if(compraEnt)
-            enviarMensagemGRP(protVaParaFrenteAgora+";1");
-        else
-            enviarMensagemGRP(protVaParaFrenteAgora+";2");
+
+    public void vaParaFrenteAgora(boolean compraEnt) {
+        if (compraEnt) {
+            enviarMensagemGRP(protVaParaFrenteAgora + ";1");
+        } else {
+            enviarMensagemGRP(protVaParaFrenteAgora + ";2");
+        }
     }
-    
-    public void conta(int idCarta, boolean pagarAgora){
-        if(pagarAgora)
-            enviarMensagemGRP(protContasPagar+";"+idCarta+";1");
-        else
-            enviarMensagemGRP(protContasPagar+";"+idCarta+";2");
+
+    public void conta(int idCarta, boolean pagarAgora) {
+        if (pagarAgora) {
+            enviarMensagemGRP(protContasPagar + ";" + idCarta + ";1");
+        } else {
+            enviarMensagemGRP(protContasPagar + ";" + idCarta + ";2");
+        }
     }
-    
-    public void cobrancaMonstro(int idCarta, boolean pagarAgora){
-        if(pagarAgora)
-            enviarMensagemGRP(protCobrancaMonstro+";"+idCarta+";1");
-        else
-            enviarMensagemGRP(protCobrancaMonstro+";"+idCarta+";2");
+
+    public void cobrancaMonstro(int idCarta, boolean pagarAgora) {
+        if (pagarAgora) {
+            enviarMensagemGRP(protCobrancaMonstro + ";" + idCarta + ";1");
+        } else {
+            enviarMensagemGRP(protCobrancaMonstro + ";" + idCarta + ";2");
+        }
+    }
+
+    public void resultadoBandaArrocha(boolean ganhou) {
+        if (ganhou) {
+            enviarMensagemGRP(protConcBandaArrocha + ";1");
+        } else {
+            enviarMensagemGRP(protConcBandaArrocha + ";0");
+        }
     }
 
     /**
@@ -167,28 +178,49 @@ public class ControllerConexao {
                     controllerJogo.zerarSorteGrande();
                 }
             case protVaParaFrenteAgora: //atualiza o peão do jogador que tirou a carta sorte grande
-                if(Integer.parseInt(str[2].trim()) != identificador){ //verifica se sou eu
-                    if(Integer.parseInt(str[1]) == 1) //verifica se o jogador selecionou ir para compras e entretimentos
-                        controllerJogo.irParaFrenteAgora(Integer.parseInt(str[2]),true);
-                    else
+                if (Integer.parseInt(str[2].trim()) != identificador) { //verifica se sou eu
+                    if (Integer.parseInt(str[1]) == 1) //verifica se o jogador selecionou ir para compras e entretimentos
+                    {
+                        controllerJogo.irParaFrenteAgora(Integer.parseInt(str[2]), true);
+                    } else {
                         controllerJogo.irParaFrenteAgora(Integer.parseInt(str[2]), false);
+                    }
                 }
                 break;
             case protContasPagar:
-                if(Integer.parseInt(str[3].trim()) != identificador){
-                    if(Integer.parseInt(str[2]) == 1)
+                if (Integer.parseInt(str[3].trim()) != identificador) {
+                    if (Integer.parseInt(str[2]) == 1) {
                         controllerJogo.contas(Integer.parseInt(str[3]), true, Integer.parseInt(str[1]));
-                    else
+                    } else {
                         controllerJogo.contas(Integer.parseInt(str[3]), false, Integer.parseInt(str[1]));
+                    }
                 }
                 break;
             case protCobrancaMonstro:
-                if(Integer.parseInt(str[3].trim()) != identificador){
-                    if(Integer.parseInt(str[2]) == 1)
-                        controllerJogo.cobrancaMonstro(Integer.parseInt(str[3]),true, Integer.parseInt(str[1]));
-                    else
+                if (Integer.parseInt(str[3].trim()) != identificador) {
+                    if (Integer.parseInt(str[2]) == 1) {
+                        controllerJogo.cobrancaMonstro(Integer.parseInt(str[3]), true, Integer.parseInt(str[1]));
+                    } else {
                         controllerJogo.cobrancaMonstro(Integer.parseInt(str[3]), false, Integer.parseInt(str[1]));
+                    }
                 }
+                break;
+            case protConcBandaArrocha: //Receber mensagem da banda de arrocha.
+                if (isMinhaVezNaoRegular(Integer.parseInt(str[str.length - 1].trim()))) { //verifica se é o proximo a jogar o dado
+                    if (str[1].trim().equals("0")) { //Verifica se alguém ganhou o concurso da banda de arrocha
+                        controllerJogo.concursoBandaArrocha();
+                    } else {
+                         passaVez(controllerJogo.getValorDado()); //Caso seja minha vez, mas alguém ja tenha ganhado.
+                    }
+                } else if (str[1].trim().equals("1") && isMinhaVez()) {
+                    /*Verifica se algum jogador ganhou o concurso e se é minha vez
+                    OBS: isMinhaVez retorna sim, caso o id do jogadorAtual seja igual a identificação do cliente.
+                    O id do jogadorAtual só é mudado quando recebe um mesagem de "passar a vez". Dessa forma, se o
+                    ainda for a vez de jogar, logo, esse cliente é o que iniciou o concurso da banda de arrocha.
+                     */
+                    passaVez(controllerJogo.getValorDado());
+                }
+
                 break;
             default:
                 break;
@@ -367,6 +399,15 @@ public class ControllerConexao {
 
     private boolean isMinhaVez() {
         return idJogAtual == identificador;
+    }
+
+    private boolean isMinhaVezNaoRegular(int idUltQueJogou) {
+        if (idUltQueJogou == maxJogadores) {
+            idUltQueJogou = 1;
+        } else {
+            idUltQueJogou++;
+        }
+        return idUltQueJogou == identificador;
     }
 
 }

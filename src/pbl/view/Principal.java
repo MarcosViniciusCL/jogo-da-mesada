@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import pbl.controller.ControllerJogo;
 import pbl.exception.AguadarVezException;
+import pbl.exception.DinheiroInsuficienteException;
 import pbl.model.jogo.Carta;
 import pbl.model.jogo.Jogador;
 import pbl.model.jogo.Peao;
@@ -62,7 +63,7 @@ public class Principal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaInfJog = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        jButtonRealEmprestimo = new javax.swing.JButton();
         jTextFieldExibNome = new javax.swing.JTextField();
         jButtonJogaDado = new javax.swing.JButton();
         tabuleiro1 = new pbl.view.Tabuleiro();
@@ -133,10 +134,10 @@ public class Principal extends javax.swing.JFrame {
         jTextAreaInfJog.setRows(5);
         jScrollPane2.setViewportView(jTextAreaInfJog);
 
-        jButton1.setText("Emprestimo");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRealEmprestimo.setText("Emprestimo");
+        jButtonRealEmprestimo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonRealEmprestimoActionPerformed(evt);
             }
         });
 
@@ -146,17 +147,17 @@ public class Principal extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+            .addComponent(jScrollPane2)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldExibSaldoJogador)
-                    .addComponent(jTextFieldExibDividaJogador))
+                    .addComponent(jTextFieldExibDividaJogador)
+                    .addComponent(jTextFieldExibSaldoJogador, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jButtonRealEmprestimo, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel4)
                 .addGap(0, 0, Short.MAX_VALUE))
@@ -170,7 +171,7 @@ public class Principal extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextFieldExibSaldoJogador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jButtonRealEmprestimo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -292,16 +293,12 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonJogaDadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogaDadoActionPerformed
-        try {
-            int valor = controllerJogo.jogarDado();
-            jButtonJogaDado.setText("Jogar dado: " + valor);
-            controllerJogo.moverPeao(valor);
-        } catch (AguadarVezException ex) {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        int valor = controllerJogo.jogarDado();
+        jButtonJogaDado.setText("Jogar dado: " + valor);
+        controllerJogo.moverPeao(8);
     }//GEN-LAST:event_jButtonJogaDadoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonRealEmprestimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealEmprestimoActionPerformed
         String valor = JOptionPane.showInputDialog("Valor do emprestimo");
         if (valor != null | !valor.isEmpty()) {
             valor = valor.trim().replace(",", ".");
@@ -309,7 +306,7 @@ public class Principal extends javax.swing.JFrame {
         }
 
         atualizarInformacoesTela();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonRealEmprestimoActionPerformed
 
     private void jTextFieldChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldChatActionPerformed
         String text = jTextFieldChat.getText().trim();
@@ -330,8 +327,8 @@ public class Principal extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButtonJogaDado;
+    private javax.swing.JButton jButtonRealEmprestimo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -383,17 +380,38 @@ public class Principal extends javax.swing.JFrame {
             jvce.setModal(true);
             jvce.setVisible(true);
             atualizarInformacoesTela();
-        }else {
+        } else {
             JOptionPane.showMessageDialog(null, "Você caiu na casa \"Achou um Comprador\", mas você não tem cartas para vender.");
         }
+    }
+
+    public void abrirJanelaBandaArrocha() {
+        JanelaBandaArrocha jba = new JanelaBandaArrocha();
+        jba.setLocationRelativeTo(null);
+        jba.setResizable(false);
+        jba.setModal(true);
+        jba.setVisible(true);
     }
 
     public void acaoComprarCarta() {
         Carta c = PilhaCartasComprasEntretenimento.pegarCarta();
         JOptionPane.showMessageDialog(null, "Você caiu na casa \"Compras e Entretenimento\" informe se você vai querer a carta a seguir.");
+
         if (JOptionPane.showConfirmDialog(null, "Você quer a carta " + c.getNome() + " que vale $" + c.getValor()) == 0) {
-            controllerJogo.adicionarCartaCompra(c);
-            modelCartas.addCarta(c);
+            while (true) {
+                try {
+                    controllerJogo.compraEntretenimento(c);
+                    modelCartas.addCarta(c);
+                    break;
+                } catch (DinheiroInsuficienteException ex) {
+                    if (JOptionPane.showConfirmDialog(null, "Você não tem dinheiro suficiente, deseja realizar um emprestimo?") == 0) {
+                        jButtonRealEmprestimoActionPerformed(null);
+                    } else {
+                        break;
+                    }
+                }
+
+            }
         }
 
     }
