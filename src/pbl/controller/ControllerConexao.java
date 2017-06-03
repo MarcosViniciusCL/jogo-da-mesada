@@ -210,7 +210,7 @@ public class ControllerConexao {
                     if (str[1].trim().equals("0")) { //Verifica se alguém ganhou o concurso da banda de arrocha
                         controllerJogo.concursoBandaArrocha();
                     } else {
-                         passaVez(controllerJogo.getValorDado()); //Caso seja minha vez, mas alguém ja tenha ganhado.
+                         passaVez(controllerJogo.getJogador().getPeao().getUltimoValorCasa()); //Caso seja minha vez, mas alguém ja tenha ganhado.
                     }
                 } else if (str[1].trim().equals("1") && isMinhaVez()) {
                     /*Verifica se algum jogador ganhou o concurso e se é minha vez

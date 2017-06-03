@@ -24,6 +24,7 @@ public class Peao extends javax.swing.JLabel {
     private int posicao; //Casa do tabuleiro.
     private int mesAtual;
     private int quantMes; //Por padrão o valor é 1;
+    private int ultQuantCasaAndada; //Fica armazenada a ultima quantidade de casas que o peao andou; 
 
     public Peao() {
         this.cor = Color.red;
@@ -32,6 +33,14 @@ public class Peao extends javax.swing.JLabel {
         this.quantMes = 1;
         this.mesAtual = 1;
         configurar();
+    }
+    
+    public Peao(int quantMes){
+        this.cor = Color.blue;
+        this.x = 0;
+        this.y = 0;
+        this.quantMes = quantMes;
+        this.mesAtual = 1;
     }
 
     private void configurar() {
@@ -54,9 +63,10 @@ public class Peao extends javax.swing.JLabel {
      * @param casa
      */
     public void andarCasas(int casa) {
+        this.ultQuantCasaAndada = casa;
         int posicaoFutura = posicao + casa;
         if (posicaoFutura > 31) {
-            if (quantMes > mesAtual) {
+            if (mesAtual < quantMes) {
                 int resto = 31 - posicao;
                 posicao = casa - resto;
                 mesAtual++; //Vai para o proximo mes;
@@ -274,4 +284,20 @@ public class Peao extends javax.swing.JLabel {
         this.quantMes = quantMes;
     }
 
+    /**
+     * Retorna verdadeiro if o jogador chegou ao "dia da mesada" e o mes atual corresponde ao 
+     * maximo de mês da partida.
+     * @return 
+     */
+    public boolean chegouNoFim() {
+        return this.mesAtual == this.quantMes && this.posicao == 31;
+    }
+
+    /**
+     * Retorna a ultima quantidade de casas andadas pelo peão. 
+     * @return 
+     */
+    public int getUltimoValorCasa(){
+        return this.ultQuantCasaAndada;
+    }
 }

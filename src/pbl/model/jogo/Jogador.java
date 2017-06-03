@@ -23,10 +23,11 @@ public class Jogador {
     private Emprestimo cobrancaMonstro;
     private List<Carta> cartasCompEntret;
     private Conta conta;
+    
 
     public Jogador(int identificacao, String nome, Peao peao) {
         this.identificacao = identificacao;
-        this.mes = 1;
+        this.mes = peao.getQuantMes();
         this.nome = nome;
         this.peao = peao;
         this.contas = new ArrayList();

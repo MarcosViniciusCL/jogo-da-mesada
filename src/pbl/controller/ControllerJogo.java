@@ -71,7 +71,7 @@ public class ControllerJogo {
 
     //****************************************** METODOS RESPONSAVEIS PELA AÇÃO DO JOGO ************************************
     public void criarJogadorPrincipal(int identificador, String nome) {
-        Peao p = new Peao();
+        Peao p = new Peao(qntMeses);
         this.jogadorPrincipal = new Jogador(identificador, nome, p);
     }
 
@@ -500,7 +500,8 @@ public class ControllerJogo {
             case 30: //Maratona beneficiente, Os outros jogadores doam $100 X nº no dado
                 maratonaBeneficente(jogadorPrincipal.getIdentificacao(), valorDado);
                 break;
-            case 31: //Oba!!! Dia da Mesada, receba $3.500 
+            case 31: //Oba!!! Dia da Mesada, receba $3.500
+                diaDaMesada(jogadorPrincipal);
                 break;
             default:
                 break;
