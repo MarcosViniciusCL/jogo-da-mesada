@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import pbl.controller.ControllerConexao;
 import pbl.controller.ControllerJogo;
 import pbl.exception.ErroNaBuscaDeCartaOuVendedor;
 import pbl.model.jogo.Carta;
@@ -121,18 +122,18 @@ public class JanelaVendeCartaCompraEntre extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try {
-            int select = table.getSelectedRow();
-            if (select > -1) {
-                Carta c = model.getCarta(select);
-                controllerJogo.achouUmComprador(c.getCodigo());
-                model.remCarta(select);
-                JOptionPane.showMessageDialog(null, "Você vendeu a carta.");
-            } else {
-                JOptionPane.showMessageDialog(null, "Selecione uma carta antes.");
-            }
-        } catch (ErroNaBuscaDeCartaOuVendedor ex) {
-            Logger.getLogger(JanelaVendeCartaCompraEntre.class.getName()).log(Level.SEVERE, null, ex);
+
+        int select = table.getSelectedRow();
+        if (select > -1) {
+            Carta c = model.getCarta(select);
+            ControllerConexao controllerConexao = controllerJogo.getControllerConexao();
+            int codigoCarta = c.getCodigo();
+
+            controllerConexao.acheiUmComprador(codigoCarta);
+            model.remCarta(select);
+            JOptionPane.showMessageDialog(null, "Você vendeu a carta.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione uma carta antes.");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

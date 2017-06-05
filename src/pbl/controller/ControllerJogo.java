@@ -96,6 +96,11 @@ public class ControllerJogo {
     public int jogarDado() {
         return dado.jogarDado(); //Joga o dado e aguarda o valor sorteado.
     }
+    
+    public boolean verificarSeJogadorPrincipalTemSaldo(double valor){
+        
+        return jogadorPrincipal.getConta().consultarSaldo()>=valor;
+    }
 
     /**
      * Pega uma carta correio aleatoria;
@@ -119,13 +124,14 @@ public class ControllerJogo {
      * @param c
      * @throws pbl.exception.DinheiroInsuficienteException
      */
-    public void compraEntretenimento(Carta c) throws DinheiroInsuficienteException {
-        if (jogadorPrincipal.getConta().sacar(c.getValor())) {
-            jogadorPrincipal.addCartaCompEntret(c);
-            atualizarTela();
-        } else {
-            throw new DinheiroInsuficienteException();
-        }
+    public void compraEntretenimento(int idJogador, int codigoCarta){
+        Carta c = PilhaCartasComprasEntretenimento.buscarCarta(codigoCarta);
+        Jogador jogador = buscarJogador(idJogador);
+        
+        jogador.getConta().sacar(c.getValor());
+        jogador.addCartaCompEntret(c);
+        atualizarTela();
+        novaMensagemConsole(jogador, "Fiz um otimo negocio comprei "+c.getNome());
     }
 
     /**
@@ -136,13 +142,16 @@ public class ControllerJogo {
      * @throws NumeroBilheteJaEscolhidoException caso o jogador escolha um
      * numero que já foi escolhido
      */
-    public void participarBolao(int numero, int idJogador) throws NumeroBilheteJaEscolhidoException {
+    public void participarBolao(int idJogador, int numero) throws NumeroBilheteJaEscolhidoException {
+        Jogador jogador = buscarJogador(idJogador);
+        
         for (BilheteBolao b : bilhetesBolao) { //verifica se o numero já foi escolhido
             if (b.getNumero() == numero) {
                 throw new NumeroBilheteJaEscolhidoException(); //exceção para caso o numero já tenha sido escolhido
             }
         }
         bilhetesBolao.add(new BilheteBolao(numero, idJogador)); //adiciona o bilhete a lista
+        novaMensagemConsole(jogador, "Escolhi o numero "+numero);
     }
 
     /**
@@ -171,28 +180,27 @@ public class ControllerJogo {
     /**
      * Metodo em que o jogador vende um propriedade
      *
+     * @param idJogador
      * @param codigoCarta
      * @throws ErroNaBuscaDeCartaOuVendedor
      */
-    public void achouUmComprador(int codigoCarta) throws ErroNaBuscaDeCartaOuVendedor {
+    public void achouUmComprador(int idJogador, int codigoCarta){
+        Jogador jogador = buscarJogador(idJogador);
         Carta carta = PilhaCartasComprasEntretenimento.buscarCarta(codigoCarta);
 
-        if (jogadorPrincipal == null || carta == null) {
-            throw new ErroNaBuscaDeCartaOuVendedor();
-        }
-        jogadorPrincipal.removerCartaCompEntret(codigoCarta);
-        jogadorPrincipal.getConta().depositar(carta.getValor() * 1.5);
-        novaMensagemChat("Vendi uma carta.");
-        atualizarTela();
+        jogador.removerCartaCompEntret(codigoCarta);
+        jogador.getConta().depositar(carta.getValor() * 1.5);
+        novaMensagemConsole(jogador, "Fiz um otimo negocio vendi "+carta.getNome());
     }
 
     /**
      * O jogador que caiu na casa recebe 5000 do banco;
      *
      */
-    public void premio() {
-        jogadorPrincipal.getConta().depositar(cPremio);
-        novaMensagemChat("Ganhei $5.000,00 HUHU");
+    public void premio(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
+        jogador.getConta().depositar(cPremio);
+        novaMensagemConsole(jogador, "Ganhei $5.000,00 HUHU");
     }
 
     /**
@@ -210,6 +218,7 @@ public class ControllerJogo {
             }
         }
         ganhador.getConta().depositar(1000); //banco deposita 1000 para o ganhador
+        novaMensagemConsole(ganhador, "Ganhei o bolão HUHU");
     }
 
     /**
@@ -217,14 +226,15 @@ public class ControllerJogo {
      * saldo
      *
      */
-    public void praiaNoDomingo() {
-        if (!jogadorPrincipal.getConta().sacar(cDomingoPraia)) { //verifica se o jogador tem saldo suficiente
-            jogadorPrincipal.getConta().realizarEmprestimo(cDomingoPraia); //se não realiza um emprestimo
-            jogadorPrincipal.getConta().sacar(cDomingoPraia);
+    public void praiaNoDomingo(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
+        if (!jogador.getConta().sacar(cDomingoPraia)) { //verifica se o jogador tem saldo suficiente
+            jogador.getConta().realizarEmprestimo(cDomingoPraia); //se não realiza um emprestimo
+            jogador.getConta().sacar(cDomingoPraia);
+            novaMensagemConsole(jogador, "Fiz um emprestimo no valor de "+cDomingoPraia);
         }
         sorteGrande.adicionarDinheiro(cDomingoPraia); //adiciona o valor a sorte grande
-        controllerConexao.doacao(cDomingoPraia);
-        novaMensagemChat("Paguei " + cDomingoPraia + " para sorte grande");
+        novaMensagemConsole(jogador, "Após a diversão a conta, paguei $"+cDomingoPraia);
     }
 
     /**
@@ -262,8 +272,7 @@ public class ControllerJogo {
                 j.getConta().transferir(jogador.getConta(), cFelizAniversario);
             }
         }
-        controllerConexao.felizAniversario(cFelizAniversario);
-        novaMensagemChat("Todos me deram $" + cFelizAniversario + ", obrigado.");
+        novaMensagemConsole(jogador, "todos me deram $" + cFelizAniversario + ", obrigado.");
     }
 
     /**
@@ -273,12 +282,15 @@ public class ControllerJogo {
      * @param jogador que caiu na casa
      * @param valorDado
      */
-    public void vendeNegocioOcasiao(Jogador jogador, int valorDado) {
+    public void vendeNegocioOcasiao(int idJogador, int valorDado) {
+        Jogador jogador = buscarJogador(idJogador);
+        
         if (!jogador.getConta().sacar(valorDado * cNegocioOcasiao)) { //se o jogador não possuir saldo suficiente
             jogador.getConta().realizarEmprestimo(valorDado * cNegocioOcasiao); //realiza emprestimo
             jogador.getConta().sacar(valorDado * cNegocioOcasiao);
+            novaMensagemConsole(jogador, "Realizei um emprestimo de $"+cNegocioOcasiao);
         }
-        novaMensagemChat("Paguei " + cNegocioOcasiao + ", negócio de ocasião.");
+        novaMensagemConsole(jogador, "Paguei "+cNegocioOcasiao+", negócio de ocasião.");
     }
 
     /**
@@ -290,16 +302,13 @@ public class ControllerJogo {
      */
     public void maratonaBeneficente(int idJogador, int valorDado) {
         Jogador jogador = buscarJogador(idJogador);
+        
         if (!jogador.getConta().sacar(valorDado * cMaratonaBeneficente)) {
             jogador.getConta().realizarEmprestimo(valorDado * cMaratonaBeneficente);
             jogador.getConta().sacar(valorDado * cMaratonaBeneficente);
-            if (jogador == jogadorPrincipal) {
-                novaMensagemChat("Realizei um emprestimo no valor de: $" + valorDado * cMaratonaBeneficente);
-            }
+            novaMensagemConsole(jogador, "Realizei um emprestimo no valor de $"+(valorDado * cMaratonaBeneficente));
         }
-        if (jogador == jogadorPrincipal) {
-            novaMensagemChat("Hoje é o dia de fazer uma boa ação amigos, obrigado pela contribuição, será destinada ao sorte grande de: $" + (valorDado * cMaratonaBeneficente));
-        }
+        novaMensagemConsole(jogador, "Hoje é o dia de fazer uma boa ação amigos, obrigado pela contribuição, será destinada ao sorte grande de: $" + (valorDado * cMaratonaBeneficente));
         sorteGrande.adicionarDinheiro(valorDado * 100);
     }
 
@@ -309,17 +318,20 @@ public class ControllerJogo {
      *
      * @param jogador
      */
-    public void sorteGrande(Jogador jogador) {
+    public void sorteGrande(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
         jogador.getConta().depositar(sorteGrande.pegarValor());
+        novaMensagemConsole(jogador, "Meu dia de sorte, conseguir sorte grande");
     }
 
-    public void florestaAmazonica() {
-        if (!jogadorPrincipal.getConta().sacar(cFlorestaAmazonica)) { //verifica se o jogador tem saldo para pagar a carta
-            jogadorPrincipal.getConta().realizarEmprestimo(cFlorestaAmazonica); //se não realiza um emprestimo
+    public void florestaAmazonica(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
+        
+        if (!jogador.getConta().sacar(cFlorestaAmazonica)) { //verifica se o jogador tem saldo para pagar a carta
+            jogador.getConta().realizarEmprestimo(cFlorestaAmazonica); //se não realiza um emprestimo
         }
         sorteGrande.adicionarDinheiro(cFlorestaAmazonica);  //deposita o valor no campo sorte grande
-        controllerConexao.doacao(cFlorestaAmazonica);
-        novaMensagemChat("Adicionei " + cFlorestaAmazonica + " no sorte grande");
+        novaMensagemConsole(jogador, "Adicionei "+cFlorestaAmazonica+" no sorte grande");
     }
 
     /**
@@ -358,7 +370,7 @@ public class ControllerJogo {
      */
     public void moverPeao(int valorDado) {
         if (valorDado == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
-            sorteGrande(jogadorPrincipal);
+            sorteGrande(jogadorPrincipal.getIdentificacao());
         }
         this.jogadorPrincipal.getPeao().andarCasas(valorDado);
         atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
@@ -373,9 +385,10 @@ public class ControllerJogo {
      *
      * @param valorEmprestimo
      */
-    public void pedirEmprestimo(double valorEmprestimo) {
-        this.jogadorPrincipal.getConta().realizarEmprestimo(valorEmprestimo);
-        atualizarTela();
+    public void pedirEmprestimo(int idJogador, double valorEmprestimo) {
+        Jogador jogador = buscarJogador(idJogador);
+        jogador.getConta().realizarEmprestimo(valorEmprestimo);
+        novaMensagemConsole(jogador, "Realizei um emprestimo no valor de $: "+valorEmprestimo);
     }
 
     /**
@@ -402,11 +415,6 @@ public class ControllerJogo {
         sorteGrande.pegarValor();
     }
 
-    public void sacar(double valor) {
-        jogadorPrincipal.getConta().sacar(valor);
-        atualizarTela();
-    }
-
     /**
      * Veirifica qual casa o jogador se encontra e realiza as funções
      * necessarias
@@ -418,7 +426,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 2: //Prêmio! Você ganhou $5.000
-                premio();
+                premio(jogadorPrincipal.getIdentificacao());
                 break;
             case 3: //Correio, 3 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(3);
@@ -432,7 +440,7 @@ public class ControllerJogo {
             case 6: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
                 break;
             case 7: //Domingo de praia, pague $500
-                praiaNoDomingo();
+                praiaNoDomingo(jogadorPrincipal.getIdentificacao());
                 break;
             case 8: //Concurso de Banda de Arrocha, o primeiro jogador que tirar um 3 ganha $1.000
                 concursoBandaArrocha();
@@ -452,7 +460,7 @@ public class ControllerJogo {
             case 13: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
                 break;
             case 14: //Ajude a floresta amazonica, doe $400
-                florestaAmazonica();
+                florestaAmazonica(jogadorPrincipal.getIdentificacao());
                 break;
             case 15: //Compras e entretenimento
                 telaPrincipal.acaoComprarCarta();
@@ -464,7 +472,7 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 18: //Lanchonete, pague $600
-                lanchonete();
+                lanchonete(jogadorPrincipal.getIdentificacao());
                 break;
             case 19: //Correio, 1 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
@@ -472,7 +480,7 @@ public class ControllerJogo {
             case 20: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
                 break;
             case 21: //Negócios de ocasião seu por apenas $100 mais X nº dado
-                vendeNegocioOcasiao(jogadorPrincipal, valorDado);
+                vendeNegocioOcasiao(jogadorPrincipal.getIdentificacao(), valorDado);
                 break;
             case 22: //Correio, 1 carta
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
@@ -492,7 +500,7 @@ public class ControllerJogo {
             case 27: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
                 break;
             case 28: //Compras no shopping
-                comprasShopping(jogadorPrincipal);
+                comprasShopping(jogadorPrincipal.getIdentificacao());
                 break;
             case 29: //Você achou um comprador
                 telaPrincipal.abrirJanelaVendeCartaCE();
@@ -514,25 +522,28 @@ public class ControllerJogo {
      *
      * @param jogador jogador que caiu na casa
      */
-    public void comprasShopping(Jogador jogador) {
+    public void comprasShopping(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
+        
         if (!jogador.getConta().sacar(cShopping)) { //verifica se o jogador tem saldo para pagar
             jogador.getConta().realizarEmprestimo(cShopping);
             jogador.getConta().sacar(cShopping);
         }
-        atualizarTela();
+        novaMensagemConsole(jogador, "Dia de compras no shopping gastei: "+cShopping);
     }
 
     /**
      * O jogador que caiu na casa paga de conta da lanchonete
      *
      */
-    public void lanchonete() {
-        if (!jogadorPrincipal.getConta().sacar(cLanchonete)) { //verifica se o jogador tem saldo para pagar
-            jogadorPrincipal.getConta().realizarEmprestimo(cLanchonete);
-            jogadorPrincipal.getConta().sacar(cLanchonete);
+    public void lanchonete(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
+        
+        if (!jogador.getConta().sacar(cLanchonete)) { //verifica se o jogador tem saldo para pagar
+            jogador.getConta().realizarEmprestimo(cLanchonete);
+            jogador.getConta().sacar(cLanchonete);
         }
-        novaMensagemChat("Paguei " + cLanchonete + " na lanchonete.");
-        controllerConexao.doacao(cLanchonete);
+        novaMensagemConsole(jogador, "Paguei " + cLanchonete + " na lanchonete.");
     }
 
     //*************************************** METODOS DA CARTA CORREIO
@@ -544,26 +555,19 @@ public class ControllerJogo {
      * @param codCarta codigo da carta que o jogador sortou
      */
     public void contas(int idJogador, boolean pagarAgora, int codCarta) {
-        Jogador jogadorPrincipal = buscarJogador(idJogador);
+        Jogador jogador = buscarJogador(idJogador);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
         if (pagarAgora) { //se o jogador desejou pagar na hora
-            if (!jogadorPrincipal.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
-                jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
-                jogadorPrincipal.getConta().sacar(c.getValor()); //saca o valor
-                if (jogadorPrincipal == this.jogadorPrincipal) {
-                    novaMensagemChat("Realizei um emprestimo de: $" + c.getValor());
-                }
+            if (!jogador.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo
+                jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
+                jogador.getConta().sacar(c.getValor()); //saca o valor
+                novaMensagemConsole(jogador, "Realizei um emprestimo de: $" + c.getValor());
             }
-            if (jogadorPrincipal == this.jogadorPrincipal) {
-                novaMensagemChat("Paguei a conta: " + c.getDescrição());
-            }
+            novaMensagemConsole(jogador, "Paguei a conta: " + c.getDescrição());
         } else { //caso o jogador prefira pagar depois
-            jogadorPrincipal.addCartaCorreio(c);
-            if (jogadorPrincipal == this.jogadorPrincipal) {
-                novaMensagemChat("Tenho uma nova conta de : " + c.getDescrição() + ", no valor de: $" + c.getValor());
-            }
+            jogador.addCartaCorreio(c);
+            novaMensagemConsole(jogador, "Tenho uma nova conta de : " + c.getDescrição() + ", no valor de: $" + c.getValor());
         }
-        controllerConexao.conta(codCarta, pagarAgora);
     }
 
     /**
@@ -573,15 +577,17 @@ public class ControllerJogo {
      * @param idVizinho
      * @param codCarta codigo da carta sorteada
      */
-    public void dinheiroExtra(int idVizinho, int codCarta) {
+    public void dinheiroExtra(int idJogador, int idVizinho, int codCarta) {
+        Jogador jogador = buscarJogador(idJogador);
         Jogador vizinho = buscarJogador(idVizinho);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if (!vizinho.getConta().transferir(jogadorPrincipal.getConta(), c.getValor())) { //verifica se o vizinho tem saldo para transferir para o vizinho
+        
+        if (!vizinho.getConta().transferir(jogador.getConta(), c.getValor())) { //verifica se o vizinho tem saldo para transferir para o vizinho
             vizinho.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
-            vizinho.getConta().transferir(jogadorPrincipal.getConta(), c.getValor()); //transfere o valor
+            vizinho.getConta().transferir(jogador.getConta(), c.getValor()); //transfere o valor
+            novaMensagemConsole(vizinho, "Realizei um emprestimo no valor de $: "+c.getValor());
         }
-        controllerConexao.dinheiroExtra(idVizinho, c.getValor());
-        novaMensagemChat("Peguei " + c.getValor() + " de " + vizinho.getNome());
+        novaMensagemConsole(vizinho, "Dinheiro extra, paguei $"+c.getValor()+"para o vizinho"+jogador.getNome());
     }
 
     /**
@@ -589,15 +595,17 @@ public class ControllerJogo {
      * @param idVizinho
      * @param codCarta
      */
-    public void pagueUmVizinhoAgora(int idVizinho, int codCarta) {
+    public void pagueUmVizinhoAgora(int idJogador, int idVizinho, int codCarta) {
         Jogador vizinho = buscarJogador(idVizinho);
+        Jogador jogador = buscarJogador(idJogador);
+        
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if (!jogadorPrincipal.getConta().transferir(vizinho.getConta(), c.getValor())) { //verifica se o jogador tem saldo para transferir para o vizinho
-            jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
-            jogadorPrincipal.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
+        if (!jogador.getConta().transferir(vizinho.getConta(), c.getValor())) { //verifica se o jogador tem saldo para transferir para o vizinho
+            jogador.getConta().realizarEmprestimo(c.getValor()); //caso não realiza um emprestimo
+            jogador.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
+            novaMensagemConsole(jogador, "Realizei um emprestimo no valor $: "+c.getValor());
         }
-        controllerConexao.pagueUmVizinhoAgora(idVizinho, c.getValor()); //Enviando valor para o vizinho;
-        novaMensagemChat("Paguei " + c.getValor() + " para " + vizinho.getNome()); //Adiciona a informação no chat
+        novaMensagemChat("Paguei " + c.getValor() + " para o vizinho" + vizinho.getNome()); //Adiciona a informação no chat
     }
 
     /**
@@ -605,54 +613,45 @@ public class ControllerJogo {
      *
      * @param codCarta codigo da carta sorteada
      */
-    public void doacao(int codCarta) {
+    public void doacao(int idJogador, int codCarta) {
+        Jogador jogador = buscarJogador(idJogador);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
-        if (!jogadorPrincipal.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo para pagar a carta
-            jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
+        
+        if (!jogador.getConta().sacar(c.getValor())) { //verifica se o jogador tem saldo para pagar a carta
+            jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um emprestimo
+            novaMensagemConsole(jogador, "Realizei um emprestimo no valor de $: "+c.getValor());
         }
         sorteGrande.adicionarDinheiro(c.getValor());  //deposita o valor no campo sorte grande
-        controllerConexao.doacao(c.getValor());
-        novaMensagemChat("Adicionei " + c.getValor() + " no sorte grande");
+        novaMensagemConsole(jogador, "Adicionei " + c.getValor() + " no sorte grande");
     }
 
     public void cobrancaMonstro(int idJogador, boolean pagarAgora, int codCarta) {
-        Jogador jogadorPrincipal = buscarJogador(idJogador);
+        Jogador jogador = buscarJogador(idJogador);
         Carta c = PilhaCartasCorreios.buscarCarta(codCarta);
+        
         if (pagarAgora) { //verifica se o jogador deseja pagar a carta agora
-            if (!jogadorPrincipal.getConta().sacar((c.getValor() * 1.1))) { //verifica se o jogador tem saldo suficiente
-                jogadorPrincipal.getConta().realizarEmprestimo(c.getValor()); //se não realiza um empretimo
-                jogadorPrincipal.getConta().sacar((c.getValor() * 1.1)); //saca o valor
-                if (jogadorPrincipal == this.jogadorPrincipal) {
-                    novaMensagemChat("Realizei um emprestimo de: $" + c.getValor());
-                }
+            if (!jogador.getConta().sacar((c.getValor() * 1.1))) { //verifica se o jogador tem saldo suficiente
+                jogador.getConta().realizarEmprestimo(c.getValor()); //se não realiza um empretimo
+                jogador.getConta().sacar((c.getValor() * 1.1)); //saca o valor
+                novaMensagemConsole(jogador, "Realizei um emprestimo de: $" + c.getValor());
             }
-            if (jogadorPrincipal == this.jogadorPrincipal) {
-                novaMensagemChat("Paguei a cobrança monstro: " + c.getDescrição() + ", no valor de: $" + c.getValor()
-                        + "mais: $" + (c.getValor() * 0.1) + "referente aos juros");
-            }
+            novaMensagemConsole(jogador, "Paguei a cobrança monstro: " + c.getDescrição() + ", no valor de: $" + c.getValor()
+                    + "mais: $" + (c.getValor() * 0.1) + "referente aos juros");
         } else { //caso o jogador decida pagar depois
-            jogadorPrincipal.addCartaCorreio(c);
-            if (jogadorPrincipal == this.jogadorPrincipal) {
-                novaMensagemChat("Tenho uma nova cobrança monstro de: " + c.getDescrição() + ", no valor de: $" + c.getValor());
-            }
+            jogador.addCartaCorreio(c);
+            novaMensagemConsole(jogador, "Tenho uma nova cobrança monstro de: " + c.getDescrição() + ", no valor de: $" + c.getValor());
         }
     }
 
     public void irParaFrenteAgora(int idJogador, boolean irComprasEntretenimento) {
-        Jogador jogadorPrincipal = buscarJogador(idJogador);
+        Jogador jogador = buscarJogador(idJogador);
         if (irComprasEntretenimento) {
-            jogadorPrincipal.getPeao().irParaProximaCasaComprasEntretenimento();
-            if (jogadorPrincipal == this.jogadorPrincipal) {
-                novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Compra");
-            }
+            jogador.getPeao().irParaProximaCasaComprasEntretenimento();
+            novaMensagemConsole(jogador, "Fui!!! Vou fazer uma grande Compra");
         } else {
-            jogadorPrincipal.getPeao().irParaProximaCasaAcheiComprador();
-            if (jogadorPrincipal == this.jogadorPrincipal) {
-                novaMensagemChat(jogadorPrincipal.getNome() + ": Fui!!! Vou fazer uma grande Venda");
-            }
+            jogador.getPeao().irParaProximaCasaAcheiComprador();
+            novaMensagemChat("Fui!!! Vou fazer uma grande Venda");
         }
-        controllerConexao.vaParaFrenteAgora(irComprasEntretenimento);
-        atualizarTela();
     }
 
     //****************************************** METODOS RESPONSAVEIS PELA COMUNICAÇÃO ************************************
@@ -798,6 +797,22 @@ public class ControllerJogo {
 
     public int getValorDado() {
         return dado.getValorDado();
+    }
+
+    private void novaMensagemConsole(Jogador jogador, String mensagem) {
+        String nome = jogador.getNome()+": ";
+        
+        if(jogador.equals(jogadorPrincipal)){
+            nome = "Eu: ";
+        }
+        
+        chat.novaMensagem(nome+mensagem);
+        
+        atualizarTela();
+    }
+    
+    public ControllerConexao getControllerConexao(){
+        return controllerConexao;
     }
 
 }

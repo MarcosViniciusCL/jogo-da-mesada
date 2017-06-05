@@ -19,6 +19,8 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import pbl.exception.DinheiroInsuficienteException;
+import pbl.exception.ErroNaBuscaDeCartaOuVendedor;
 
 /**
  *
@@ -49,14 +51,16 @@ public class ControllerConexao {
     private final int protPassaVez = 201; //<- Protocolo que informa que o dado foi jogado;
     private final int protPagarVizinho = 4012; //<- Protocolo que informa a carta pagra vizinho agora;
     private final int protDinheiroExtra = 4013; //<- Protocolo que informa a carta dinheiro extra
-    private final int protDoacaoSorteGrande = 4014; // <- Doação para o sorte grande
-    private final int protGanheiSorteGrande = 4015; // <- Informa que ganhou sorte grande;
+    private final int protDoacao = 4014; // <- Doação para o sorte grande
+    private final int sorteGrande = 4015; // <- Informa que ganhou sorte grande;
     private final int protVaParaFrenteAgora = 4016; // <- Informa que o jogador tirou a casa va para frente agora
     private final int protContasPagar = 4017; // <- jogador sorteou uma carta do tipo conta
     private final int protCobrancaMonstro = 4018; // <- jogador sorteou uma carta do tipo cobrança monstro 
     private final int protFelizAniversario = 501; // <- Feliz aniversario;
     private final int protConcBandaArrocha = 601; //<- Deve jogar o dado para ver quem vai ganhar.
-
+    private final int protAcheiUmComprador = 701; // <- Achei um comprador
+    private final int protComprasEntretenimentos = 801; // <- compras e entretenimentos
+    
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
         this.monitorMensGRP = null;
@@ -64,57 +68,49 @@ public class ControllerConexao {
         this.identificador = 0;
     }
 
-    //********************************* METODOS DO JOGO ******************************************************************
+    //********************************* METODOS DE ENVIO DE MENSAGENS DO JOGO ******************************************************************
     public void passaVez(int valorDado) {
         enviarMensagemGRP(protPassaVez + ";" + valorDado);
     }
 
-    public void pagueUmVizinhoAgora(int idVizinho, double valor) {
-        enviarMensagemGRP(protPagarVizinho + ";" + idVizinho + ";" + valor);
+    public void pagueUmVizinhoAgora(int idVizinho, int codCarta) {
+        enviarMensagemGRP(protPagarVizinho+";"+idVizinho+";"+"codCarta");
     }
 
-    public void dinheiroExtra(int idVizinho, double valor) {
-        enviarMensagemGRP(protDinheiroExtra + ";" + idVizinho + ";" + valor);
-    }
-
-    public void doacao(double valor) {
-        enviarMensagemGRP(protDoacaoSorteGrande + ";" + valor);
+    public void dinheiroExtra(int idVizinho, int codCarta) {
+        enviarMensagemGRP(protDinheiroExtra+";"+idVizinho+";"+codCarta);
     }
 
     public void felizAniversario(double valor) {
-        enviarMensagemGRP(protFelizAniversario + ";");
+        enviarMensagemGRP(protFelizAniversario+"");
     }
 
     /**
      * Envia mensagem para o grupo informando que ganhou o valor do sorte
      * grande, todos os outros clientes devem zerar o sorte grande.
      */
-    public void ganheiSorteGrande() {
-        enviarMensagemGRP(protGanheiSorteGrande + ";");
+    public void sorteGrande() {
+        enviarMensagemGRP(sorteGrande+"");
     }
 
     public void vaParaFrenteAgora(boolean compraEnt) {
         if (compraEnt) {
+            enviarMensagemGRP(protVaParaFrenteAgora + ";0");
+        } else {
             enviarMensagemGRP(protVaParaFrenteAgora + ";1");
-        } else {
-            enviarMensagemGRP(protVaParaFrenteAgora + ";2");
         }
     }
 
-    public void conta(int idCarta, boolean pagarAgora) {
-        if (pagarAgora) {
-            enviarMensagemGRP(protContasPagar + ";" + idCarta + ";1");
-        } else {
-            enviarMensagemGRP(protContasPagar + ";" + idCarta + ";2");
-        }
+    public void conta(int idCarta, int pagarAgora) {
+        enviarMensagemGRP(protContasPagar+";"+pagarAgora+";"+idCarta);
     }
 
-    public void cobrancaMonstro(int idCarta, boolean pagarAgora) {
-        if (pagarAgora) {
-            enviarMensagemGRP(protCobrancaMonstro + ";" + idCarta + ";1");
-        } else {
-            enviarMensagemGRP(protCobrancaMonstro + ";" + idCarta + ";2");
-        }
+    public void cobrancaMonstro(int idCarta, int pagarAgora) {
+        enviarMensagemGRP(protCobrancaMonstro+";"+pagarAgora+";"+idCarta);
+    }
+    
+    public void doacao(int codigoCarta){
+        enviarMensagemGRP(protDoacao+";"+codigoCarta);
     }
 
     public void resultadoBandaArrocha(boolean ganhou) {
@@ -124,14 +120,105 @@ public class ControllerConexao {
             enviarMensagemGRP(protConcBandaArrocha + ";0");
         }
     }
+    
+    public void acheiUmComprador(int codigoCarta){
+        enviarMensagemGRP(protAcheiUmComprador+";"+codigoCarta);
+    }
+    
+    public void compraEntrenimentos(int codigoCarta){
+        enviarMensagemGRP(protComprasEntretenimentos+";"+codigoCarta);
+    }
+    
+    //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
 
+    private void pagueUmVizinhoAgoraR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int idVizinho = Integer.parseInt(str[2]);
+        int codCarta = Integer.parseInt(str[3]);
+        
+        controllerJogo.pagueUmVizinhoAgora(idJogador, idVizinho, codCarta);
+    }
+    
+    private void dinheiroExtraR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int idVizinho = Integer.parseInt(str[2]);
+        int codCarta = Integer.parseInt(str[3]);
+        
+        controllerJogo.dinheiroExtra(idJogador, idVizinho, codCarta);
+    }
+    
+    private void doacaoR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int codigoCarta = Integer.parseInt(str[2]);
+        
+        controllerJogo.doacao(idJogador, codigoCarta);
+    }
+    
+    private void felizAniversarioR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        
+        controllerJogo.felizAniversario(idJogador);
+    }
+    
+    private void sorteGrandeR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        
+        controllerJogo.sorteGrande(idJogador);
+    }
+    
+    private void vaParaFrenteAgoraR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        boolean irCompraEnt = false;
+        
+        if(str[2].equals("0"))
+            irCompraEnt = true;
+            
+        controllerJogo.irParaFrenteAgora(idJogador, irCompraEnt);
+    }
+    
+    private void contaPagarR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        boolean pagarAgora = false;
+        int codCarta = Integer.parseInt(str[3]);
+        
+        if(str[2].equals("0"))
+            pagarAgora = true;
+        
+        controllerJogo.contas(idJogador, pagarAgora, codCarta);
+    }
+    
+    private void cobrancaMonstroR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        boolean pagarAgora = false;
+        int codCarta = Integer.parseInt(str[3]);
+        
+        if(str[2].equals("0"))
+            pagarAgora = true;
+        
+        controllerJogo.cobrancaMonstro(idJogador, pagarAgora, codCarta);
+    }
+    
+    private void acheiUmCompradorR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int codCarta = Integer.parseInt(str[2]);
+        
+        controllerJogo.achouUmComprador(idJogador, codCarta);
+    }
+    
+    private void comprasEntretenimentosR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int codigoCarta = Integer.parseInt(str[2]);
+        
+        controllerJogo.compraEntretenimento(idJogador, codigoCarta);
+    }
+    
     /**
      * Seleciona o que será feito de acordo com a mensagem recebida pelo grupo.
      *
      * @param str
      */
     private void seletorAcao(String[] str) {
-        int aux = Integer.parseInt(str[0]);
+        int aux = Integer.parseInt(str[1]);
         switch (aux) {
             case protMensChat: //Apenas mensagem para chat.
                 controllerJogo.adicionarMensChat(str); //Adiciona a mensagem recebida no chat;
@@ -154,56 +241,28 @@ public class ControllerConexao {
                 controllerJogo.setMinhaVez(isMinhaVez());
                 break;
             case protPagarVizinho: //Protocolo para pagar a um vizinho;
-                if (Integer.parseInt(str[1].trim()) == identificador) { //Testa se o dinheiro foi para mim
-                    controllerJogo.depositar(Double.parseDouble(str[2].trim()));
-                }
+                pagueUmVizinhoAgoraR(str);
                 break;
             case protDinheiroExtra: //Protocolo dinheiro extra, tomar do vizinho ameaçando;
-                if (Integer.parseInt(str[1].trim()) == identificador) { //Testa se o dinheiro foi para mim
-                    controllerJogo.sacar(Double.parseDouble(str[2].trim()));
-                }
+                dinheiroExtraR(str);
                 break;
-            case protDoacaoSorteGrande: //Protocolo doação, adiciona dinheiro no sorte grande
-                if (Integer.parseInt(str[2].trim()) != identificador) { //Caso tenha sido enviado por mim, não há necessidade de adicionar novamente
-                    controllerJogo.adicionarSorteGrande(Double.parseDouble(str[1].trim()));
-                }
+            case protDoacao:
+                doacaoR(str);
                 break;
             case protFelizAniversario: //Protocolo feliz aniversario
-                if (Integer.parseInt(str[2].trim()) != identificador) { //Verifica se foi o proprio jogador que mandou a mensagem
-                    controllerJogo.felizAniversario(Integer.parseInt(str[2]));
-                }
+                felizAniversarioR(str);
                 break;
-            case protGanheiSorteGrande: //Informa que que ganhou sorte grande, os clientes devem tirar o dinheiro que tinha do sorte grande.
-                if (Integer.parseInt(str[2].trim()) != identificador) {
-                    controllerJogo.zerarSorteGrande();
-                }
+            case sorteGrande: //Informa que que ganhou sorte grande, os clientes devem tirar o dinheiro que tinha do sorte grande.
+                sorteGrandeR(str);
+                break;
             case protVaParaFrenteAgora: //atualiza o peão do jogador que tirou a carta sorte grande
-                if (Integer.parseInt(str[2].trim()) != identificador) { //verifica se sou eu
-                    if (Integer.parseInt(str[1]) == 1) //verifica se o jogador selecionou ir para compras e entretimentos
-                    {
-                        controllerJogo.irParaFrenteAgora(Integer.parseInt(str[2]), true);
-                    } else {
-                        controllerJogo.irParaFrenteAgora(Integer.parseInt(str[2]), false);
-                    }
-                }
+                vaParaFrenteAgoraR(str);
                 break;
             case protContasPagar:
-                if (Integer.parseInt(str[3].trim()) != identificador) {
-                    if (Integer.parseInt(str[2]) == 1) {
-                        controllerJogo.contas(Integer.parseInt(str[3]), true, Integer.parseInt(str[1]));
-                    } else {
-                        controllerJogo.contas(Integer.parseInt(str[3]), false, Integer.parseInt(str[1]));
-                    }
-                }
+                contaPagarR(str);
                 break;
             case protCobrancaMonstro:
-                if (Integer.parseInt(str[3].trim()) != identificador) {
-                    if (Integer.parseInt(str[2]) == 1) {
-                        controllerJogo.cobrancaMonstro(Integer.parseInt(str[3]), true, Integer.parseInt(str[1]));
-                    } else {
-                        controllerJogo.cobrancaMonstro(Integer.parseInt(str[3]), false, Integer.parseInt(str[1]));
-                    }
-                }
+                cobrancaMonstroR(str);
                 break;
             case protConcBandaArrocha: //Receber mensagem da banda de arrocha.
                 if (isMinhaVezNaoRegular(Integer.parseInt(str[str.length - 1].trim()))) { //verifica se é o proximo a jogar o dado
@@ -221,6 +280,12 @@ public class ControllerConexao {
                     passaVez(controllerJogo.getValorDado());
                 }
 
+                break;
+            case protAcheiUmComprador:
+                acheiUmCompradorR(str);
+                break;
+            case protComprasEntretenimentos:
+                comprasEntretenimentosR(str);
                 break;
             default:
                 break;
@@ -320,7 +385,7 @@ public class ControllerConexao {
      * @throws java.net.SocketException
      */
     public void enviarMensagemGRP(String mens) {
-        mens = mens + ";" + identificador;
+        mens = identificador + ";" + mens;
         if (mens != null) {
             DatagramPacket env;
             try {
@@ -381,7 +446,6 @@ public class ControllerConexao {
     private void novaMensReceb(String mens) {
         String[] str = mens.split(";");
 
-        //controllerJogo.seletorAcao(str);
         this.seletorAcao(str);
 
     }

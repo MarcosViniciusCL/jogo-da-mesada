@@ -68,7 +68,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jScrollPane1" pref="227" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel7" min="-2" pref="213" max="-2" attributes="0"/>
@@ -193,7 +193,7 @@
                           <Component id="jTextFieldExibSaldoJogador" min="-2" pref="79" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButtonRealEmprestimo" pref="91" max="32767" attributes="0"/>
+                      <Component id="jButtonRealEmprestimo" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>

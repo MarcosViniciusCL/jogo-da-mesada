@@ -5,6 +5,7 @@
  */
 package pbl.view;
 
+import pbl.controller.ControllerConexao;
 import pbl.controller.ControllerJogo;
 
 /**
@@ -116,7 +117,8 @@ public class VaParaFrenteAgora extends javax.swing.JDialog {
 
     private void irAgoraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_irAgoraActionPerformed
         ControllerJogo controllerJogo = ControllerJogo.getInstance();
-        controllerJogo.irParaFrenteAgora(controllerJogo.getJogador().getIdentificacao(), comprasEnt.isSelected());
+        ControllerConexao controllerConexao = controllerJogo.getControllerConexao();
+        controllerConexao.vaParaFrenteAgora(comprasEnt.isSelected());
         this.dispose();
     }//GEN-LAST:event_irAgoraActionPerformed
 

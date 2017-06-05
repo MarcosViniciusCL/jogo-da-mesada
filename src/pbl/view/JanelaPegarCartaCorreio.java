@@ -22,7 +22,9 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
 
     private int quantCarta;
     private ControllerJogo controllerJogo;
+    private ControllerConexao controllerConexao;
     private CartasCorreioTableModel modelTable;
+    private int meuId;
 
     /**
      * Creates new form JanelaPegarCarta
@@ -33,7 +35,9 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
     public JanelaPegarCartaCorreio(String title, int quantCarta) {
         super();
         this.controllerJogo = ControllerJogo.getInstance();
+        this.controllerConexao = controllerJogo.getControllerConexao();
         this.quantCarta = quantCarta;
+        this.meuId = controllerJogo.getJogador().getIdentificacao();
         initComponents();
         botaoX();
 
@@ -146,20 +150,25 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
         if (select > -1) {
             CartasCorreioTableModel model = (CartasCorreioTableModel) jTable1.getModel();
             Carta carta = model.getCarta(select);
-            switch (carta.getCodigo()) {
+            int codigoCarta = carta.getCodigo();
+            switch (codigoCarta) {
                 case 0:
                     model.remCarta(select);
                     break;
                 case 1: //pague a um vizinho agora
-                    controllerJogo.pagueUmVizinhoAgora(Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO")), carta.getCodigo());
+                    int idVizinhoP = Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO"));
+                    
+                    controllerConexao.pagueUmVizinhoAgora(idVizinhoP, codigoCarta);
                     model.remCarta(select);
                     break;
-                case 2:
-                    controllerJogo.dinheiroExtra(Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO")), carta.getCodigo());
+                case 2: //Dinheiro extra
+                    int idVizinhoD = Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO"));
+                    
+                    controllerConexao.dinheiroExtra(idVizinhoD, codigoCarta);
                     model.remCarta(select);
                     break;
                 case 3: //Carta doação
-                    controllerJogo.doacao(carta.getCodigo());
+                    controllerConexao.doacao(codigoCarta);
                     model.remCarta(select);
                     break;
                 case 4: //Carta va para frente agora
@@ -168,20 +177,14 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     break;
                 case 5: //Carta contas a pagar
                     int pagarAgora = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
-                    if(pagarAgora == JOptionPane.YES_OPTION){ //se o jogador desejar pagar no momento
-                        controllerJogo.contas(controllerJogo.getJogador().getIdentificacao(), true, carta.getCodigo());
-                    }else{
-                        controllerJogo.contas(controllerJogo.getJogador().getIdentificacao(), false, carta.getCodigo());
-                    }
+                  
+                    controllerConexao.conta(codigoCarta, pagarAgora);
                     model.remCarta(select);
                     break;
                 case 6: //carta cobraça monstro
                     int pagarAgora1 = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
-                    if(pagarAgora1 == JOptionPane.YES_OPTION){ //se o jogador desejar pagar no momento
-                        controllerJogo.cobrancaMonstro(controllerJogo.getJogador().getIdentificacao(),true, carta.getCodigo());
-                    }else{
-                        controllerJogo.cobrancaMonstro(controllerJogo.getJogador().getIdentificacao(),false, carta.getCodigo());
-                    }
+                    
+                    controllerConexao.cobrancaMonstro(codigoCarta, pagarAgora1);
                     model.remCarta(select);
                     break;
                 default:

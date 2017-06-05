@@ -302,7 +302,7 @@ public class Principal extends javax.swing.JFrame {
         String valor = JOptionPane.showInputDialog("Valor do emprestimo");
         if (valor != null | !valor.isEmpty()) {
             valor = valor.trim().replace(",", ".");
-            controllerJogo.pedirEmprestimo(Integer.parseInt(valor));
+            controllerJogo.pedirEmprestimo(controllerJogo.getJogador().getIdentificacao(), Integer.parseInt(valor));
         }
 
         atualizarInformacoesTela();
@@ -399,11 +399,11 @@ public class Principal extends javax.swing.JFrame {
 
         if (JOptionPane.showConfirmDialog(null, "Você quer a carta " + c.getNome() + " que vale $" + c.getValor()) == 0) {
             while (true) {
-                try {
-                    controllerJogo.compraEntretenimento(c);
+                if(controllerJogo.verificarSeJogadorPrincipalTemSaldo(c.getValor())){
+                    controllerJogo.compraEntretenimento(controllerJogo.getJogador().getIdentificacao(), c.getCodigo());
                     modelCartas.addCarta(c);
                     break;
-                } catch (DinheiroInsuficienteException ex) {
+                }else{
                     if (JOptionPane.showConfirmDialog(null, "Você não tem dinheiro suficiente, deseja realizar um emprestimo?") == 0) {
                         jButtonRealEmprestimoActionPerformed(null);
                     } else {
