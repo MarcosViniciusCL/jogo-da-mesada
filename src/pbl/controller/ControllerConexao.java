@@ -225,9 +225,9 @@ public class ControllerConexao {
                 break;
             case 111: //Informando que a sala está cheia.
                 controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
-                int i = Integer.parseInt(str[1]); //Numero de jogadores
-                int iId = 2,
-                 iNome = 3;
+                int i = Integer.parseInt(str[2]); //Numero de jogadores
+                int iId = 3,
+                 iNome = 4;
                 for (int j = 0; j < i; j++) {
                     controllerJogo.adicionarJogadores(Integer.parseInt(str[iId].trim()), str[iNome].trim()); //Adicionando jogadores;
                     iId += 2;
