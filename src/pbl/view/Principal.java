@@ -479,7 +479,7 @@ public class Principal extends javax.swing.JFrame {
     public void mostrarMensagem(String mens) {
 
     }
-
+    
     private void mostrarInfoCasa(int x, int y) {
         if (x >= 0 && x <= 97) {
             if (y >= 0 && y <= 102) { //Casa 0
