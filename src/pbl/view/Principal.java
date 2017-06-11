@@ -371,6 +371,22 @@ public class Principal extends javax.swing.JFrame {
         jpc.setModal(true);
         jpc.setVisible(true);
     }
+    
+    /**
+     * Janela que o jogador opta por participar do bolão de esportes
+     */
+    public void escolheParticiparBolaoEsportes(){
+        if(JOptionPane.showConfirmDialog(null, "Deseja Participar do bolão de esportes?") == 0){
+            participarBolaoEsportes();
+        }
+    }
+    
+    /**
+     * abre a janela o jogador desejar participar do bolão de esportes 
+     */
+    public void participarBolaoEsportes(){
+        new BolaoDeEsportes(this, true).show();
+    }
 
     /**
      * Abre a janela para o jogador selecionar a carta que deseja vender

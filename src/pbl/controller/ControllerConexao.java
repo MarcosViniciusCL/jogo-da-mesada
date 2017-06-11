@@ -63,6 +63,9 @@ public class ControllerConexao {
     private final int protJogada = 901;
     private final int protJogadaEspecial = 1001;
     private final int protPassarVez = 1101;
+    private final int protParticiparBolaoEsportes = 2101;
+    private final int protFinalizarBolaoEsportes = 2102;
+    
     
     
     public ControllerConexao(ControllerJogo controllerJogo) {
@@ -144,6 +147,10 @@ public class ControllerConexao {
     
     public void compraEntrenimentos(int codigoCarta){
         enviarMensagemGRP(protComprasEntretenimentos+";"+codigoCarta);
+    }
+    
+    public void participarBolaoEsportes(int numero){
+        enviarMensagemGRP(protParticiparBolaoEsportes+";"+numero);
     }
     
     //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
@@ -247,6 +254,13 @@ public class ControllerConexao {
         controllerJogo.compraEntretenimento(idJogador, codigoCarta);
     }
     
+    private void participarBolaoEsportesR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int numero = Integer.parseInt(str[2]);
+        
+        controllerJogo.participarBolao(idJogador, numero);
+    }
+    
     /**
      * Seleciona o que será feito de acordo com a mensagem recebida pelo grupo.
      *
@@ -256,7 +270,7 @@ public class ControllerConexao {
         int aux = Integer.parseInt(str[1]);
         switch (aux) {
             case protJogada:
-                
+                novaJogadaR(str);
                 break;
             case protJogadaEspecial:
                 break;
@@ -328,6 +342,9 @@ public class ControllerConexao {
                 break;
             case protComprasEntretenimentos:
                 comprasEntretenimentosR(str);
+                break;
+            case protParticiparBolaoEsportes:
+                participarBolaoEsportesR(str);
                 break;
             default:
                 break;

@@ -112,13 +112,6 @@ public class ControllerJogo {
     }
 
     /**
-     * Cria uma nova instancia da lista bolão de esportes
-     */
-    public void novoBolaoDeEsportes() {
-        bilhetesBolao = new ArrayList<>();
-    }
-
-    /**
      * Salva a carta que o usuario comprou.
      *
      * @param c
@@ -133,6 +126,27 @@ public class ControllerJogo {
         atualizarTela();
         novaMensagemConsole(jogador, "Fiz um otimo negocio comprei "+c.getNome());
     }
+    
+    /**
+     * Cria uma nova instancia da lista bolão de esportes
+     */
+    public void novoBolaoDeEsportes() {
+        bilhetesBolao = new ArrayList<>();
+    }
+    
+    /**
+     * Procura um bilhete do bolão de esportes pelo numero
+     * @param numero do bilhete
+     * @return 
+     */
+    public BilheteBolao buscarBilheteBolao(int numero){
+        for (BilheteBolao b : bilhetesBolao) { //procura o numero do bilhete
+            if (b.getNumero() == numero) {
+                return b;
+            }
+        }
+        return null;
+    }
 
     /**
      * Adiciona um participante para um bolão
@@ -142,14 +156,8 @@ public class ControllerJogo {
      * @throws NumeroBilheteJaEscolhidoException caso o jogador escolha um
      * numero que já foi escolhido
      */
-    public void participarBolao(int idJogador, int numero) throws NumeroBilheteJaEscolhidoException {
+    public void participarBolao(int idJogador, int numero) {
         Jogador jogador = buscarJogador(idJogador);
-        
-        for (BilheteBolao b : bilhetesBolao) { //verifica se o numero já foi escolhido
-            if (b.getNumero() == numero) {
-                throw new NumeroBilheteJaEscolhidoException(); //exceção para caso o numero já tenha sido escolhido
-            }
-        }
         bilhetesBolao.add(new BilheteBolao(numero, idJogador)); //adiciona o bilhete a lista
         novaMensagemConsole(jogador, "Escolhi o numero "+numero);
     }
@@ -164,17 +172,36 @@ public class ControllerJogo {
     public void finalizarBolao(int numeroSorteado) throws NenhumJogadorGanhouBolaoException {
         List<Jogador> participantes = new ArrayList<>();
         Jogador ganhador = null;
-        for (BilheteBolao b : bilhetesBolao) { //percorre a lista de bilhetes buscando o numero sortedo
-            if (b.getNumero() == numeroSorteado) { //caso encontre o numero sorteado
-                ganhador = buscarJogador(b.getIdJogador());
-            } else { //caso nao adiciona a lista de participantes do bolão
-                participantes.add(buscarJogador(b.getIdJogador()));
+        BilheteBolao premiado = buscarBilheteBolao(numeroSorteado); //busca o bilhete premiado
+        
+        for(BilheteBolao b: bilhetesBolao){ //cria a lista de participante e busca o ganhador
+            Jogador jogador = buscarJogador(b.getIdJogador());
+            if(!b.equals(premiado)){ //se o bilhete não foi premiado
+                participantes.add(jogador);  //adiciona o jogador a lista de participantes
+            }else{
+                ganhador = jogador; //caso seja premiado seta o ganhador
             }
         }
-        if (ganhador == null) {
-            throw new NenhumJogadorGanhouBolaoException();
-        }
+        
         bolaoEsportes(ganhador, participantes); //realiza o deposito e as transferencias de valores para a conta do ganhador
+    }
+
+    /**
+     * todos os jogadores que participaram do bolão pagam 100 para o ganhador o
+     * banco paga 1000 para o ganhador
+     *
+     * @param ganhador
+     * @param participantes
+     */        
+    public void bolaoEsportes(Jogador ganhador, List<Jogador> participantes) {
+        for (Jogador j : participantes) { // cada participante paga 100 reais ao jogador que ganhou o bolao
+            if (!j.getConta().transferir(ganhador.getConta(), cBolao)) { //se o jogador não tiver saldo suficiente
+                j.getConta().realizarEmprestimo(cBolao); //realiza um emprestimo
+                j.getConta().transferir(ganhador.getConta(), cBolao);
+            }
+        }
+        ganhador.getConta().depositar(1000); //banco deposita 1000 para o ganhador
+        novaMensagemConsole(ganhador, "Ganhei o bolão HUHU");
     }
 
     /**
@@ -201,24 +228,6 @@ public class ControllerJogo {
         Jogador jogador = buscarJogador(idJogador);
         jogador.getConta().depositar(cPremio);
         novaMensagemConsole(jogador, "Ganhei $5.000,00 HUHU");
-    }
-
-    /**
-     * todos os jogadores que participaram do bolão pagam 100 para o ganhador o
-     * banco paga 1000 para o ganhador
-     *
-     * @param ganhador
-     * @param participantes
-     */
-    public void bolaoEsportes(Jogador ganhador, List<Jogador> participantes) {
-        for (Jogador j : participantes) { // cada participante paga 100 reais ao jogador que ganhou o bolao
-            if (!j.getConta().transferir(ganhador.getConta(), cBolao)) { //se o jogador não tiver saldo suficiente
-                j.getConta().realizarEmprestimo(cBolao); //realiza um emprestimo
-                j.getConta().transferir(ganhador.getConta(), cBolao);
-            }
-        }
-        ganhador.getConta().depositar(1000); //banco deposita 1000 para o ganhador
-        novaMensagemConsole(ganhador, "Ganhei o bolão HUHU");
     }
 
     /**
@@ -364,6 +373,8 @@ public class ControllerJogo {
             sorteGrande(jogador.getIdentificacao());
         }
         
+        atualizarTela();
+        
         if(jogador == jogadorPrincipal){ //se o jogador for eu
             acaoCasa(valorDado);
         }else{ //demais jogadores
@@ -448,6 +459,8 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(2);
                 break;
             case 6: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                novoBolaoDeEsportes();
+                telaPrincipal.participarBolaoEsportes();
                 break;
             case 7: //Domingo de praia, pague $500
                 praiaNoDomingo(jogadorPrincipal.getIdentificacao());
@@ -468,6 +481,8 @@ public class ControllerJogo {
                 telaPrincipal.acaoComprarCarta();
                 break;
             case 13: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                novoBolaoDeEsportes();
+                telaPrincipal.participarBolaoEsportes();
                 break;
             case 14: //Ajude a floresta amazonica, doe $400
                 florestaAmazonica(jogadorPrincipal.getIdentificacao());
@@ -488,6 +503,8 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaPegarCartaCorreio(1);
                 break;
             case 20: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                novoBolaoDeEsportes();
+                telaPrincipal.participarBolaoEsportes();
                 break;
             case 21: //Negócios de ocasião seu por apenas $100 mais X nº dado
                 vendeNegocioOcasiao(jogadorPrincipal.getIdentificacao(), valorDado);
@@ -508,6 +525,8 @@ public class ControllerJogo {
                 telaPrincipal.abrirJanelaVendeCartaCE();
                 break;
             case 27: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                novoBolaoDeEsportes();
+                telaPrincipal.participarBolaoEsportes();
                 break;
             case 28: //Compras no shopping
                 comprasShopping(jogadorPrincipal.getIdentificacao());
@@ -534,6 +553,7 @@ public class ControllerJogo {
                 premio(jogador.getIdentificacao());
                 break;
             case 6: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                novoBolaoDeEsportes();
                 break;
             case 7: //Domingo de praia, pague $500
                 praiaNoDomingo(jogador.getIdentificacao());
@@ -545,6 +565,7 @@ public class ControllerJogo {
                 felizAniversario(jogador.getIdentificacao());
                 break;
             case 13: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                novoBolaoDeEsportes();
                 break;
             case 14: //Ajude a floresta amazonica, doe $400
                 florestaAmazonica(jogador.getIdentificacao());
@@ -553,11 +574,13 @@ public class ControllerJogo {
                 lanchonete(jogador.getIdentificacao());
                 break;
             case 20: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                novoBolaoDeEsportes();
                 break;
             case 21: //Negócios de ocasião seu por apenas $100 mais X nº dado
                 vendeNegocioOcasiao(jogador.getIdentificacao(), valorDado);
                 break;
             case 27: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                novoBolaoDeEsportes();
                 break;
             case 28: //Compras no shopping
                 comprasShopping(jogador.getIdentificacao());
