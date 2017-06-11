@@ -355,12 +355,22 @@ public class ControllerJogo {
      * @param idJogador
      * @param casas
      */
-    public void moverPeao(int idJogador, int casas) {
+    public void moverPeao(int idJogador, int valorDado) {
         Jogador jogador = buscarJogador(idJogador);
-        if (jogador != null) {
-            jogador.getPeao().andarCasas(casas);
-            atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
+        
+        jogador.getPeao().andarCasas(valorDado); //jogador anda o numero de casas correspondente ao valor do dado
+        
+        if (valorDado == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
+            sorteGrande(jogador.getIdentificacao());
         }
+        
+        if(jogador == jogadorPrincipal){ //se o jogador for eu
+            acaoCasa(valorDado);
+        }else{ //demais jogadores
+            acaoCasaOutroJogador(jogador, valorDado);
+        }
+        
+        atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
     }
 
     /**
@@ -368,7 +378,7 @@ public class ControllerJogo {
      *
      * @param valorDado
      */
-    public void moverPeao(int valorDado) {
+    /*public void moverPeao(int valorDado) {
         if (valorDado == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
             sorteGrande(jogadorPrincipal.getIdentificacao());
         }
@@ -378,7 +388,7 @@ public class ControllerJogo {
         if (jogadorPrincipal.getPeao().getPosicao() != 8) { //Caso o jogador tenha caido em concurso de banda  de arrocha não deve enviar a mensagem para passar a vez.
             controllerConexao.passaVez(valorDado); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
         }
-    }
+    }*/
 
     /**
      * Metodo executado quando o jogador pede um emprestimo.
@@ -510,6 +520,53 @@ public class ControllerJogo {
                 break;
             case 31: //Oba!!! Dia da Mesada, receba $3.500
                 diaDaMesada(jogadorPrincipal);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    private void acaoCasaOutroJogador(Jogador jogador, int valorDado){
+        int posicao = jogador.getPeao().getPosicao();
+        
+        switch(posicao){
+            case 2: //Prêmio! Você ganhou $5.000
+                premio(jogador.getIdentificacao());
+                break;
+            case 6: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                break;
+            case 7: //Domingo de praia, pague $500
+                praiaNoDomingo(jogador.getIdentificacao());
+                break;
+            case 8: //Concurso de Banda de Arrocha, o primeiro jogador que tirar um 3 ganha $1.000
+                concursoBandaArrocha();
+                break;
+            case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
+                felizAniversario(jogador.getIdentificacao());
+                break;
+            case 13: //Bolão de esportes, O banco aplica 1000 e cada jogador aplica 100
+                break;
+            case 14: //Ajude a floresta amazonica, doe $400
+                florestaAmazonica(jogador.getIdentificacao());
+                break;
+            case 18: //Lanchonete, pague $600
+                lanchonete(jogador.getIdentificacao());
+                break;
+            case 20: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                break;
+            case 21: //Negócios de ocasião seu por apenas $100 mais X nº dado
+                vendeNegocioOcasiao(jogador.getIdentificacao(), valorDado);
+                break;
+            case 27: //Bolão de esportes, o banco entra com $1.000 cada um entra com $100
+                break;
+            case 28: //Compras no shopping
+                comprasShopping(jogador.getIdentificacao());
+                break;
+            case 30: //Maratona beneficiente, Os outros jogadores doam $100 X nº no dado
+                maratonaBeneficente(jogador.getIdentificacao(), valorDado);
+                break;
+            case 31: //Oba!!! Dia da Mesada, receba $3.500
+                diaDaMesada(jogador);
                 break;
             default:
                 break;

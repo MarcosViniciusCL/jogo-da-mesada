@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import pbl.controller.ControllerConexao;
 import pbl.controller.ControllerJogo;
 import pbl.exception.AguadarVezException;
 import pbl.exception.DinheiroInsuficienteException;
@@ -32,12 +33,14 @@ public class Principal extends javax.swing.JFrame {
      */
     private Principal tela;
     private final ControllerJogo controllerJogo;
+    private final ControllerConexao controllerConexao;
     private CartasComprasEntretTableModel modelCartas;
 
     public Principal(String title) {
         super(title);
         initComponents();
         controllerJogo = ControllerJogo.getInstance();
+        controllerConexao = controllerJogo.getControllerConexao();
     }
 
     /**
@@ -295,7 +298,7 @@ public class Principal extends javax.swing.JFrame {
     private void jButtonJogaDadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogaDadoActionPerformed
         int valor = controllerJogo.jogarDado();
         jButtonJogaDado.setText("Jogar dado: " + valor);
-        controllerJogo.moverPeao(8);
+        controllerConexao.novaJogada(valor);
     }//GEN-LAST:event_jButtonJogaDadoActionPerformed
 
     private void jButtonRealEmprestimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealEmprestimoActionPerformed

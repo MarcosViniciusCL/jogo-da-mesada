@@ -60,6 +60,10 @@ public class ControllerConexao {
     private final int protConcBandaArrocha = 601; //<- Deve jogar o dado para ver quem vai ganhar.
     private final int protAcheiUmComprador = 701; // <- Achei um comprador
     private final int protComprasEntretenimentos = 801; // <- compras e entretenimentos
+    private final int protJogada = 901;
+    private final int protJogadaEspecial = 1001;
+    private final int protPassarVez = 1101;
+    
     
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -69,6 +73,19 @@ public class ControllerConexao {
     }
 
     //********************************* METODOS DE ENVIO DE MENSAGENS DO JOGO ******************************************************************
+    
+    public void novaJogada(int valorDado){
+        enviarMensagemGRP(protJogada+";"+valorDado);
+    }
+    
+    public void novaJogadaEspecial(int valorDado){
+        enviarMensagemGRP(protJogada+";"+valorDado);
+    }
+    
+    public void passarVez(){
+        enviarMensagemGRP(protPassarVez+"");
+    }
+    
     public void passaVez(int valorDado) {
         enviarMensagemGRP(protPassaVez + ";" + valorDado);
     }
@@ -130,7 +147,25 @@ public class ControllerConexao {
     }
     
     //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
+    
+    private void novaJogadaR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int valorDado = Integer.parseInt(str[2]);
+        
+        controllerJogo.moverPeao(idJogador, valorDado);
+    }
+    
+    private void novaJogadaEspecialR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        int valorDado = Integer.parseInt(str[2]);
 
+    }
+    
+    private void passarVezR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        
+    }
+    
     private void pagueUmVizinhoAgoraR(String [] str){
         int idJogador = Integer.parseInt(str[0]);
         int idVizinho = Integer.parseInt(str[2]);
@@ -220,6 +255,13 @@ public class ControllerConexao {
     private void seletorAcao(String[] str) {
         int aux = Integer.parseInt(str[1]);
         switch (aux) {
+            case protJogada:
+                
+                break;
+            case protJogadaEspecial:
+                break;
+            case protPassarVez:
+                break;
             case protMensChat: //Apenas mensagem para chat.
                 controllerJogo.adicionarMensChat(str); //Adiciona a mensagem recebida no chat;
                 break;
