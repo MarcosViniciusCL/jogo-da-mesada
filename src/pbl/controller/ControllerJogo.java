@@ -459,13 +459,17 @@ public class ControllerJogo {
 
         novaMensagemConsole(jogador, "Cheguei ao final, mas ainda posso participar do bolão de esportes e concurso de banda de arrocha");
 
-        if (jogadoresFinalizaram.size() == jogadores.size()) { //se todos os jogadores estiverem finalizado
+        if (todosFinalizaram()) { //se todos os jogadores estiverem finalizado
             String mensagemFinalServer = "";
             for (Jogador j : jogadores) { //pega o id, nome e saldo de todos os jogadores
                 mensagemFinalServer += j.getIdentificacao() + ";" + j.getNome() + ";" + j.getSaldoFinal() + ";";
             }
             controllerConexao.finalizarPartida(mensagemFinalServer); //envia as informações para o servidor
         }
+    }
+    
+    public boolean todosFinalizaram(){
+        return jogadoresFinalizaram.size() == jogadores.size();
     }
 
     public void finalGeralPartida(String[] ids, String[] nomes, String[] saldos) {
