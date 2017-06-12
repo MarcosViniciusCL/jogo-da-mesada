@@ -351,6 +351,16 @@ public class ControllerJogo {
             jogador.pagarDividasFimRodada();
         }
     }
+    
+    public boolean jogadorFinalizou(int idJogador){
+        Jogador jogador = buscarJogador(idJogador);
+        for(Jogador j: jogadores){
+            if(j.getIdentificacao()==jogador.getIdentificacao()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Move o peão de qualquer jogador na partida.
