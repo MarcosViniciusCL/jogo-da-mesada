@@ -308,7 +308,8 @@ public class ControllerConexao {
             if (isMinhaVez()) { //Verifica se esse cliente é o jogador que caiu na casa, caso seja, ele passa a vez para o proximo.
                 passarVez();
             }
-        } else if (resulConc == 0 && isMinhaVezNaoRegular(str[0].trim())) { //Se ninguem ganhou e é minha vez.
+        }
+        if (resulConc == 0 && isMinhaVezNaoRegular(str[0].trim())) { //Se ninguem ganhou e é minha vez.
             controllerJogo.getTelaPrincipal().abrirJanelaBandaArrocha();
         }
     }
