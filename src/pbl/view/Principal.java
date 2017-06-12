@@ -413,6 +413,14 @@ public class Principal extends javax.swing.JFrame {
         jba.setModal(true);
         jba.setVisible(true);
     }
+    
+    public void abrirJanelaJogarDadoBolaEsporte(){
+        JanelaJogaDadoBolaoEspO jjdbe = new JanelaJogaDadoBolaoEspO();
+        jjdbe.setLocationRelativeTo(null);
+        jjdbe.setResizable(false);
+        jjdbe.setVisible(true);
+        
+    }
 
     public void acaoComprarCarta() {
         Carta c = PilhaCartasComprasEntretenimento.pegarCarta();
