@@ -490,6 +490,14 @@ public class Principal extends javax.swing.JFrame {
 
     }
     
+    public void abrirRanking(String []ids, String [] nomes, String []saldos){
+        Ranking ranking = new Ranking(this, true);
+        
+        ranking.setValores(ids, nomes, saldos);
+        
+        ranking.show();
+    }
+    
     private void mostrarInfoCasa(int x, int y) {
         if (x >= 0 && x <= 97) {
             if (y >= 0 && y <= 102) { //Casa 0

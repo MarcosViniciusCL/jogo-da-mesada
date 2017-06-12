@@ -458,7 +458,7 @@ public class ControllerJogo {
     }
 
     public void finalGeralPartida(String[] ids, String[] nomes, String[] saldos) {
-
+         telaPrincipal.abrirRanking(ids, nomes, saldos);
     }
 
     /**
