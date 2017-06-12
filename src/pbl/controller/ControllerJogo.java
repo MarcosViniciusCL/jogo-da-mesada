@@ -355,7 +355,7 @@ public class ControllerJogo {
 
     public boolean jogadorFinalizou(int idJogador) {
         Jogador jogador = buscarJogador(idJogador);
-        for (Jogador j : jogadores) {
+        for (Jogador j : jogadoresFinalizaram) {
             if (j.getIdentificacao() == jogador.getIdentificacao()) {
                 return true;
             }
