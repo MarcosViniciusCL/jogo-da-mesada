@@ -298,7 +298,7 @@ public class Principal extends javax.swing.JFrame {
     private void jButtonJogaDadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogaDadoActionPerformed
         int valor = controllerJogo.jogarDado();
         jButtonJogaDado.setText("Jogar dado: " + valor);
-        controllerConexao.novaJogada(valor);
+        controllerConexao.novaJogada(6);
     }//GEN-LAST:event_jButtonJogaDadoActionPerformed
 
     private void jButtonRealEmprestimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealEmprestimoActionPerformed
@@ -378,6 +378,8 @@ public class Principal extends javax.swing.JFrame {
     public void escolheParticiparBolaoEsportes(){
         if(JOptionPane.showConfirmDialog(null, "Deseja Participar do bolão de esportes?") == 0){
             participarBolaoEsportes();
+        } else {
+            controllerConexao.participarBolaoEsportes(0); //Manda zero, numero fora do intervalo, para informar que não participará do bolão. 
         }
     }
     

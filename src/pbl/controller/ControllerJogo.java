@@ -878,6 +878,10 @@ public class ControllerJogo {
     public int getValorDado() {
         return dado.getValorDado();
     }
+    
+    public Principal getTelaPrincipal(){
+        return this.telaPrincipal;
+    }
 
     private void novaMensagemConsole(Jogador jogador, String mensagem) {
         String nome = jogador.getNome()+": ";
