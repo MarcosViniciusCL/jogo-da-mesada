@@ -7,6 +7,7 @@ package pbl.view;
 
 import java.awt.Color;
 import javax.swing.JOptionPane;
+import pbl.controller.ControllerConexao;
 import pbl.controller.ControllerJogo;
 
 /**
@@ -93,17 +94,18 @@ public class JanelaBandaArrocha extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ControllerJogo controllerJogo = ControllerJogo.getInstance();
+        ControllerConexao controllerConexao = controllerJogo.getControllerConexao();
         int valor = controllerJogo.jogarDado();
         if (valor == 3) {
             jTextField1.setForeground(Color.green);
             jTextField1.setText(valor + "");
-            controllerJogo.resultadoBandaArrocha(true);
+            controllerConexao.resultadoBandaArrocha(true);
             JOptionPane.showMessageDialog(null, "Parabéns, você ganhou $1.000,00 do banco.");
             dispose();
         } else {
             jTextField1.setForeground(Color.red);
             jTextField1.setText(valor + "");
-            controllerJogo.resultadoBandaArrocha(false);
+            controllerConexao.resultadoBandaArrocha(false);
             JOptionPane.showMessageDialog(null, "Infelizmente não foi dessa vez, mais sorte na próxima.");
             dispose();
         }

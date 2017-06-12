@@ -152,8 +152,8 @@ public class ControllerConexao {
     public void participarBolaoEsportes(int numero) {
         enviarMensagemGRP(protParticiparBolaoEsportes + ";" + numero);
     }
-    
-    public void encerrarBolaoEsporte(int idGanhador){
+
+    public void encerrarBolaoEsporte(int idGanhador) {
         enviarMensagemGRP(protFinalizarBolaoEsportes + ";" + idGanhador);
     }
 
@@ -172,6 +172,16 @@ public class ControllerConexao {
         int idJogador = Integer.parseInt(str[0]);
         int valorDado = Integer.parseInt(str[2]);
 
+    }
+
+    public void cadastrarJogadores(String[] str) {
+        int i = Integer.parseInt(str[2]); //Numero de jogadores
+        int iId = 3, iNome = 4;
+        for (int j = 0; j < i; j++) {
+            controllerJogo.adicionarJogadores(Integer.parseInt(str[iId].trim()), str[iNome].trim()); //Adicionando jogadores;
+            iId += 2;
+            iNome += 2;
+        }
     }
 
     private void passarVezR(String[] str) {
@@ -279,13 +289,27 @@ public class ControllerConexao {
         }
 
     }
-    
-    private void finalizarBolaoEsportesR(String[] str){
+
+    private void finalizarBolaoEsportesR(String[] str) {
         int idGanhador = Integer.parseInt(str[2].trim());
         try {
             controllerJogo.finalizarBolao(idGanhador);
         } catch (NenhumJogadorGanhouBolaoException ex) {
             Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void concursoBandaArrochaR(String[] str) {
+        int idJogador = Integer.parseInt(str[0].trim());
+        int resulConc = Integer.parseInt(str[2].trim());
+
+        if (resulConc == 1) { //Verifica se alguem ganhou o concurso;
+            controllerJogo.concursoBandaArrocha(idJogador);
+            if (isMinhaVez()) { //Verifica se esse cliente é o jogador que caiu na casa, caso seja, ele passa a vez para o proximo.
+                passarVez();
+            }
+        } else if (resulConc == 0 && isMinhaVezNaoRegular(str[0].trim())) { //Se ninguem ganhou e é minha vez.
+            controllerJogo.getTelaPrincipal().abrirJanelaBandaArrocha();
         }
     }
 
@@ -340,14 +364,7 @@ public class ControllerConexao {
                 break;
             case 111: //Informando que a sala está cheia.
                 controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
-                int i = Integer.parseInt(str[2]); //Numero de jogadores
-                int iId = 3,
-                 iNome = 4;
-                for (int j = 0; j < i; j++) {
-                    controllerJogo.adicionarJogadores(Integer.parseInt(str[iId].trim()), str[iNome].trim()); //Adicionando jogadores;
-                    iId += 2;
-                    iNome += 2;
-                }
+                cadastrarJogadores(str);
                 controllerJogo.setMinhaVez(isMinhaVez());
                 break;
             case protPassaVez: //Informa que algum jogador jogou o dado.
@@ -380,21 +397,7 @@ public class ControllerConexao {
                 cobrancaMonstroR(str);
                 break;
             case protConcBandaArrocha: //Receber mensagem da banda de arrocha.
-                if (isMinhaVezNaoRegular(str[str.length - 1].trim())) { //verifica se é o proximo a jogar o dado
-                    if (str[1].trim().equals("0")) { //Verifica se alguém ganhou o concurso da banda de arrocha
-                        controllerJogo.concursoBandaArrocha();
-                    } else {
-                        passaVez(controllerJogo.getJogador().getPeao().getUltimoValorCasa()); //Caso seja minha vez, mas alguém ja tenha ganhado.
-                    }
-                } else if (str[1].trim().equals("1") && isMinhaVez()) {
-                    /*Verifica se algum jogador ganhou o concurso e se é minha vez
-                    OBS: isMinhaVez retorna sim, caso o id do jogadorAtual seja igual a identificação do cliente.
-                    O id do jogadorAtual só é mudado quando recebe um mesagem de "passar a vez". Dessa forma, se o
-                    ainda for a vez de jogar, logo, esse cliente é o que iniciou o concurso da banda de arrocha.
-                     */
-                    passaVez(controllerJogo.getValorDado());
-                }
-
+                concursoBandaArrochaR(str);
                 break;
             case protAcheiUmComprador:
                 acheiUmCompradorR(str);

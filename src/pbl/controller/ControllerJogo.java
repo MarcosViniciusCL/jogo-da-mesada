@@ -253,26 +253,14 @@ public class ControllerJogo {
     }
 
     /**
-     * Abre a tela para que o jogador jogue o dado.
+     * Adiciona o dinheiro no jogador que ganhou o concurso da banda de arrocha.
      *
-     * @param jogador jogador ganhador
+     * @param idJogador
      */
-    public void concursoBandaArrocha() {
-        telaPrincipal.abrirJanelaBandaArrocha();
-    }
-
-    /**
-     * Metodo chamado pela interface para informar se o jogador ganhou o
-     * concurso.
-     *
-     * @param ganhou
-     */
-    public void resultadoBandaArrocha(boolean ganhou) {
-        if (ganhou) {
-            jogadorPrincipal.getConta().depositar(cConcursoBandaArrocha);
-            novaMensagemChat("Ganhei o concurso da banda de arrocha.");
-        }
-        controllerConexao.resultadoBandaArrocha(ganhou);
+    public void concursoBandaArrocha(int idJogador) {
+        Jogador jogador = buscarJogador(idJogador);
+        jogador.getConta().depositar(cConcursoBandaArrocha);
+        novaMensagemConsole(jogador, "Ganhei $" + cConcursoBandaArrocha + " no concurso da banda de arrocha.");
     }
 
     /**
@@ -383,7 +371,7 @@ public class ControllerJogo {
 
         if (jogador.getIdentificacao() == jogadorPrincipal.getIdentificacao()) { //se o jogador for eu
             acaoCasa(valorDado);
-            if (jogador.getPeao().getPosicao() != 6) { //Bolão de esporte so deve passar a vez no fim.
+            if (enviarPassaVez(jogador.getPeao().getPosicao())) { //Verifica se é uma jogada especial.
                 controllerConexao.passarVez();
             }
         } else { //demais jogadores
@@ -391,6 +379,15 @@ public class ControllerJogo {
         }
 
         atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
+    }
+
+    private boolean enviarPassaVez(int posicao) {
+        if (posicao == 6 || posicao == 13 || posicao == 20 || posicao == 27) { //Especial, bolao de esporte.
+            return false;
+        } else if (posicao == 8) { //Especial, Banda de arrocha
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -494,7 +491,7 @@ public class ControllerJogo {
                 praiaNoDomingo(jogadorPrincipal.getIdentificacao());
                 break;
             case 8: //Concurso de Banda de Arrocha, o primeiro jogador que tirar um 3 ganha $1.000
-                concursoBandaArrocha();
+                telaPrincipal.abrirJanelaBandaArrocha();
                 break;
             case 9: //Você achou um comprador
                 telaPrincipal.abrirJanelaVendeCartaCE();
@@ -588,7 +585,7 @@ public class ControllerJogo {
                 praiaNoDomingo(jogador.getIdentificacao());
                 break;
             case 8: //Concurso de Banda de Arrocha, o primeiro jogador que tirar um 3 ganha $1.000
-                concursoBandaArrocha();
+                telaPrincipal.abrirJanelaBandaArrocha();
                 break;
             case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
                 felizAniversario(jogador.getIdentificacao());
