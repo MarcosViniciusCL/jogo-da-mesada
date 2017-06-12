@@ -68,7 +68,7 @@ public class ControllerJogo {
         this.dado = new Dado();
         this.jogadores = new ArrayList<>();
         this.chat = new Chat();
-        PilhaCartasCorreios.start();
+        this.jogadoresFinalizaram = new ArrayList<>();
     }
 
     //****************************************** METODOS RESPONSAVEIS PELA AÇÃO DO JOGO ************************************
