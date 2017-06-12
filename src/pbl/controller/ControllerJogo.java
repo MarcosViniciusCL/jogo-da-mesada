@@ -68,6 +68,7 @@ public class ControllerJogo {
         this.dado = new Dado();
         this.jogadores = new ArrayList<>();
         this.chat = new Chat();
+        PilhaCartasCorreios.start();
     }
 
     //****************************************** METODOS RESPONSAVEIS PELA AÇÃO DO JOGO ************************************
@@ -351,11 +352,11 @@ public class ControllerJogo {
             jogador.pagarDividasFimRodada();
         }
     }
-    
-    public boolean jogadorFinalizou(int idJogador){
+
+    public boolean jogadorFinalizou(int idJogador) {
         Jogador jogador = buscarJogador(idJogador);
-        for(Jogador j: jogadores){
-            if(j.getIdentificacao()==jogador.getIdentificacao()){
+        for (Jogador j : jogadores) {
+            if (j.getIdentificacao() == jogador.getIdentificacao()) {
                 return true;
             }
         }
@@ -468,7 +469,7 @@ public class ControllerJogo {
     }
 
     public void finalGeralPartida(String[] ids, String[] nomes, String[] saldos) {
-         telaPrincipal.abrirRanking(ids, nomes, saldos);
+        telaPrincipal.abrirRanking(ids, nomes, saldos);
     }
 
     /**
@@ -721,7 +722,8 @@ public class ControllerJogo {
             jogador.getConta().transferir(vizinho.getConta(), c.getValor()); //transfere o valor
             novaMensagemConsole(jogador, "Realizei um emprestimo no valor $: " + c.getValor());
         }
-        novaMensagemChat("Paguei " + c.getValor() + " para o vizinho" + vizinho.getNome()); //Adiciona a informação no chat
+        novaMensagemConsole(jogador, "Paguei " + c.getValor() + " para o vizinho" + vizinho.getNome()); //Adiciona a informação no chat
+        atualizarTela();
     }
 
     /**
@@ -739,6 +741,7 @@ public class ControllerJogo {
         }
         sorteGrande.adicionarDinheiro(c.getValor());  //deposita o valor no campo sorte grande
         novaMensagemConsole(jogador, "Adicionei " + c.getValor() + " no sorte grande");
+        atualizarTela();
     }
 
     public void cobrancaMonstro(int idJogador, boolean pagarAgora, int codCarta) {
@@ -805,34 +808,15 @@ public class ControllerJogo {
     /**
      * Metodo chamado quando chega uma nova mensagem pelo grupo
      *
+     * @param idJogador
      * @param mens
      */
-    public void adicionarMensChat(String[] mens) {
-        String nome, mensagem;
-        if (mens[mens.length - 1].trim().length() <= 0 || mens.length < 3) { //Testa se a mensagem veio sem a identificação;
-            nome = "Anônimo disse: ";
-            mensagem = mens[1];
-        } else if (!mens[mens.length - 1].trim().equals("#")) { //Testa se a mensagem foi enviada pelo servidor, caso não, é executado
-            if (this.jogadorPrincipal.getIdentificacao() == Integer.parseInt(mens[mens.length - 1].trim())) { //Testa se o proprio jogador mandou a mensagem
-                nome = "Você disse: ";
-                mensagem = mens[1];
-            } else { //Caso não tenha sido o proprio jogador, ele procura quem mandou a mensagem.
-                Jogador j = buscarJogador(Integer.parseInt(mens[mens.length - 1].trim()));
-                if (j != null) {
-                    nome = j.getNome() + " disse: ";
-                    mensagem = mens[1];
-                } else {
-                    nome = "Anônimo disse: ";
-                    mensagem = mens[1];
-                }
-            }
-        } else { //Se foi enviada pelo servidor
-            nome = "Servidor disse: ";
-            mensagem = mens[1];
-        }
-        chat.novaMensagem(nome + mensagem);
-        if (telaPrincipal != null) {
-            telaPrincipal.atualizarInformacoesTela();
+    public void adicionarMensChat(int idJogador, String mens) {
+        if (idJogador == 0) {
+            chat.novaMensagem("Servidor disse: " + mens);
+        } else {
+            Jogador jogador = buscarJogador(idJogador);
+            chat.novaMensagem(jogador.getNome() + " disse: " + mens);
         }
     }
 

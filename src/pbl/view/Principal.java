@@ -307,7 +307,6 @@ public class Principal extends javax.swing.JFrame {
             valor = valor.trim().replace(",", ".");
             controllerJogo.pedirEmprestimo(controllerJogo.getJogador().getIdentificacao(), Integer.parseInt(valor));
         }
-
         atualizarInformacoesTela();
     }//GEN-LAST:event_jButtonRealEmprestimoActionPerformed
 

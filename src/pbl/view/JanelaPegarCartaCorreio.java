@@ -151,19 +151,18 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
             CartasCorreioTableModel model = (CartasCorreioTableModel) jTable1.getModel();
             Carta carta = model.getCarta(select);
             int codigoCarta = carta.getCodigo();
+            codigoCarta = 3; // <--- PARA TESTES, DEVE-SE SER REMOVIDO POSTERIORMENTE.
             switch (codigoCarta) {
                 case 0:
                     model.remCarta(select);
                     break;
                 case 1: //pague a um vizinho agora
                     int idVizinhoP = Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO"));
-                    
                     controllerConexao.pagueUmVizinhoAgora(idVizinhoP, codigoCarta);
                     model.remCarta(select);
                     break;
                 case 2: //Dinheiro extra
                     int idVizinhoD = Integer.parseInt(JOptionPane.showInputDialog("ID VIZINHO"));
-                    
                     controllerConexao.dinheiroExtra(idVizinhoD, codigoCarta);
                     model.remCarta(select);
                     break;

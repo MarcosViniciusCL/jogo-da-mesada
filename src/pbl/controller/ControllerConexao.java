@@ -94,7 +94,7 @@ public class ControllerConexao {
     }
 
     public void pagueUmVizinhoAgora(int idVizinho, int codCarta) {
-        enviarMensagemGRP(protPagarVizinho + ";" + idVizinho + ";" + "codCarta");
+        enviarMensagemGRP(protPagarVizinho + ";" + idVizinho + ";" + codCarta);
     }
 
     public void dinheiroExtra(int idVizinho, int codCarta) {
@@ -192,9 +192,9 @@ public class ControllerConexao {
     }
 
     private void pagueUmVizinhoAgoraR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
-        int idVizinho = Integer.parseInt(str[2]);
-        int codCarta = Integer.parseInt(str[3]);
+        int idJogador = Integer.parseInt(str[0].trim());
+        int idVizinho = Integer.parseInt(str[2].trim());
+        int codCarta = Integer.parseInt(str[3].trim());
 
         controllerJogo.pagueUmVizinhoAgora(idJogador, idVizinho, codCarta);
     }
@@ -208,29 +208,29 @@ public class ControllerConexao {
     }
 
     private void doacaoR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
-        int codigoCarta = Integer.parseInt(str[2]);
+        int idJogador = Integer.parseInt(str[0].trim());
+        int codigoCarta = Integer.parseInt(str[2].trim());
 
         controllerJogo.doacao(idJogador, codigoCarta);
     }
 
     private void felizAniversarioR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
+        int idJogador = Integer.parseInt(str[0].trim());
 
         controllerJogo.felizAniversario(idJogador);
     }
 
     private void sorteGrandeR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
+        int idJogador = Integer.parseInt(str[0].trim());
 
         controllerJogo.sorteGrande(idJogador);
     }
 
     private void vaParaFrenteAgoraR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
+        int idJogador = Integer.parseInt(str[0].trim());
         boolean irCompraEnt = false;
 
-        if (str[2].equals("0")) {
+        if (str[2].trim().equals("0")) {
             irCompraEnt = true;
         }
 
@@ -238,11 +238,11 @@ public class ControllerConexao {
     }
 
     private void contaPagarR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
+        int idJogador = Integer.parseInt(str[0].trim());
         boolean pagarAgora = false;
-        int codCarta = Integer.parseInt(str[3]);
+        int codCarta = Integer.parseInt(str[3].trim());
 
-        if (str[2].equals("0")) {
+        if (str[2].trim().equals("0")) {
             pagarAgora = true;
         }
 
@@ -262,15 +262,15 @@ public class ControllerConexao {
     }
 
     private void acheiUmCompradorR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
-        int codCarta = Integer.parseInt(str[2]);
+        int idJogador = Integer.parseInt(str[0].trim());
+        int codCarta = Integer.parseInt(str[2].trim());
 
         controllerJogo.achouUmComprador(idJogador, codCarta);
     }
 
     private void comprasEntretenimentosR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
-        int codigoCarta = Integer.parseInt(str[2]);
+        int idJogador = Integer.parseInt(str[0].trim());
+        int codigoCarta = Integer.parseInt(str[2].trim());
 
         controllerJogo.compraEntretenimento(idJogador, codigoCarta);
     }
@@ -336,6 +336,13 @@ public class ControllerConexao {
 
         controllerJogo.finalGeralPartida(ids, nomes, saldos);
     }
+    
+    private void adicionarMensChatR(String str[]){
+        int idJogador = Integer.parseInt(str[0].trim());
+        String mensagem = str[2].trim();
+        
+        controllerJogo.adicionarMensChat(idJogador, mensagem);
+    }
 
     private void participarConcursoArrocha(String[] str) {
 
@@ -361,10 +368,10 @@ public class ControllerConexao {
                 passarVezR(str);
                 break;
             case protMensChat: //Apenas mensagem para chat.
-                controllerJogo.adicionarMensChat(str); //Adiciona a mensagem recebida no chat;
+                adicionarMensChatR(str); //Adiciona a mensagem recebida no chat;
                 break;
             case 111: //Informando que a sala está cheia.
-                controllerJogo.adicionarMensChat("111;SALA CHEIA; #".split(";")); //Adiciona a mensagem no chat;
+                controllerJogo.adicionarMensChat(0, "SALA CHEIA"); //Adiciona a mensagem no chat;
                 cadastrarJogadores(str);
                 controllerJogo.setMinhaVez(isMinhaVez());
                 break;
