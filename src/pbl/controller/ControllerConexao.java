@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import pbl.exception.DinheiroInsuficienteException;
 import pbl.exception.ErroNaBuscaDeCartaOuVendedor;
+import pbl.exception.NenhumJogadorGanhouBolaoException;
 
 /**
  *
@@ -152,8 +153,12 @@ public class ControllerConexao {
         enviarMensagemGRP(protParticiparBolaoEsportes + ";" + numero);
     }
     
-    public void finalizarPartida(){
-        enviarMensagemGRP(protFinalizarPartida+"");
+    public void encerrarBolaoEsporte(int idGanhador){
+        enviarMensagemGRP(protFinalizarBolaoEsportes + ";" + idGanhador);
+    }
+
+    public void finalizarPartida() {
+        enviarMensagemGRP(protFinalizarPartida + "");
     }
 
     //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
@@ -171,7 +176,7 @@ public class ControllerConexao {
 
     private void passarVezR(String[] str) {
         int idJogador = Integer.parseInt(str[0]);
-        
+
         incrementarJogador();
         controllerJogo.setMinhaVez(isMinhaVez());
     }
@@ -265,41 +270,50 @@ public class ControllerConexao {
         int numero = Integer.parseInt(str[2].trim());
 
         controllerJogo.participarBolao(idJogador, numero);
-        if (isMinhaVezNaoRegular(str[0].trim())) { //Verifica se é sua vez não regular
+
+        if (isMinhaVez() && isMinhaVezNaoRegular(str[0].trim())) { //Verifica se foi este cliente que iniciou o bolão e se todos ja escolheram o numero
+            /*Todos os jogadores ja escolheram, deve-se chamar o metodo para jogar o dado e ver o ganhador*/
+            controllerJogo.getTelaPrincipal().abrirJanelaJogarDadoBolaEsporte();
+        } else if (isMinhaVezNaoRegular(str[0].trim())) { //Verifica se é sua vez não regular
             controllerJogo.getTelaPrincipal().escolheParticiparBolaoEsportes(); //Caso seja, abre a janela para escolher se quer participar. 
         }
 
-        if (isMinhaVez() && isMinhaVezNaoRegular(str[0])) { //Verifica se foi este cliente que iniciou o bolão e se todos ja escolheram o numero
-            /*Todos os jogadores ja escolheram, deve-se chamar o metodo para jogar o dado e ver o ganhador*/
-
-        }
     }
     
-    private void finalizarPartidaR(String [] str){
+    private void finalizarBolaoEsportesR(String[] str){
+        int idGanhador = Integer.parseInt(str[2].trim());
+        try {
+            controllerJogo.finalizarBolao(idGanhador);
+        } catch (NenhumJogadorGanhouBolaoException ex) {
+            Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void finalizarPartidaR(String[] str) {
         int idJogador = Integer.parseInt(str[0]);
-        
+
         controllerJogo.finalizarPartida(idJogador);
     }
-    
-    private void finalizarPartidaGeralR(String [] str){
-        String [] ids = null;
-        String [] nomes = null;
-        String []saldos = null;
-        
-        int j=0;
-        
-        for(int i = 2; i<str.length; i = i+3){
+
+    private void finalizarPartidaGeralR(String[] str) {
+        String[] ids = null;
+        String[] nomes = null;
+        String[] saldos = null;
+
+        int j = 0;
+
+        for (int i = 2; i < str.length; i = i + 3) {
             ids[j] = str[i];
-            nomes[j] = str[i+1];
-            saldos[j] = str[i+2];
+            nomes[j] = str[i + 1];
+            saldos[j] = str[i + 2];
             j++;
         }
-        
+
         controllerJogo.finalGeralPartida(ids, nomes, saldos);
     }
 
     private void participarConcursoArrocha(String[] str) {
-        
+
     }
 
     /**
@@ -392,7 +406,7 @@ public class ControllerConexao {
                 participarBolaoEsportesR(str);
                 break;
             case protFinalizarPartida:
-                
+                finalizarBolaoEsportesR(str);
                 break;
             default:
                 break;
@@ -440,9 +454,9 @@ public class ControllerConexao {
         }
 
     }
-    
-    public void finalizarPartida(String mensagem){
-        enviarMensagemServidor(protFinalizarPartida+";"+this.endGrupo+";"+mensagem); //envia informaçoes para o servidor
+
+    public void finalizarPartida(String mensagem) {
+        enviarMensagemServidor(protFinalizarPartida + ";" + this.endGrupo + ";" + mensagem); //envia informaçoes para o servidor
     }
 
     private void enviarMensagemServidor(String mens) {
@@ -578,12 +592,13 @@ public class ControllerConexao {
 
     private boolean isMinhaVezNaoRegular(String idUltQueJogou) {
         int idUltJogador = Integer.parseInt(idUltQueJogou);
+        int idProx;
         if (idUltJogador == maxJogadores) {
-            idUltJogador = 1;
+            idProx = 1;
         } else {
-            idUltJogador++;
+            idProx = ++idUltJogador;
         }
-        return idUltJogador == identificador;
+        return idProx == identificador;
     }
 
 }

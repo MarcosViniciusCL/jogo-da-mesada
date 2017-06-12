@@ -86,7 +86,7 @@ public class ControllerJogo {
         Peao p = new Peao();
         Jogador j = new Jogador(identificador, nome, p);
         jogadores.add(j);
-        if(j.getIdentificacao() == jogadorPrincipal.getIdentificacao()){
+        if (j.getIdentificacao() == jogadorPrincipal.getIdentificacao()) {
             jogadorPrincipal = j;
         }
         telaPrincipal.atualizarInformacoesTela();
@@ -372,9 +372,9 @@ public class ControllerJogo {
      */
     public void moverPeao(int idJogador, int valorDado) {
         Jogador jogador = buscarJogador(idJogador);
-     
+
         jogador.getPeao().andarCasas(valorDado); //jogador anda o numero de casas correspondente ao valor do dado
-            
+
         if (valorDado == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
             sorteGrande(jogador.getIdentificacao());
         }
@@ -383,7 +383,9 @@ public class ControllerJogo {
 
         if (jogador.getIdentificacao() == jogadorPrincipal.getIdentificacao()) { //se o jogador for eu
             acaoCasa(valorDado);
-            controllerConexao.passarVez();
+            if (jogador.getPeao().getPosicao() != 6) { //Bolão de esporte so deve passar a vez no fim.
+                controllerConexao.passarVez();
+            }
         } else { //demais jogadores
             acaoCasaOutroJogador(jogador, valorDado);
         }
@@ -444,22 +446,22 @@ public class ControllerJogo {
 
     public void finalizarPartida(int idJogador) {
         Jogador jogador = buscarJogador(idJogador);
-        
+
         jogadoresFinalizaram.add(jogador); //adiciona o jogador a lista dos que finalizaram
-        
+
         novaMensagemConsole(jogador, "Cheguei ao final, mas ainda posso participar do bolão de esportes e concurso de banda de arrocha");
-        
-        if(jogadoresFinalizaram.size() == jogadores.size()){ //se todos os jogadores estiverem finalizado
+
+        if (jogadoresFinalizaram.size() == jogadores.size()) { //se todos os jogadores estiverem finalizado
             String mensagemFinalServer = "";
-            for(Jogador j: jogadores){ //pega o id, nome e saldo de todos os jogadores
-                mensagemFinalServer +=j.getIdentificacao()+";"+j.getNome()+";"+j.getSaldoFinal()+";";
+            for (Jogador j : jogadores) { //pega o id, nome e saldo de todos os jogadores
+                mensagemFinalServer += j.getIdentificacao() + ";" + j.getNome() + ";" + j.getSaldoFinal() + ";";
             }
             controllerConexao.finalizarPartida(mensagemFinalServer); //envia as informações para o servidor
         }
     }
-    
-    public void finalGeralPartida(String []ids, String []nomes, String []saldos){
-        
+
+    public void finalGeralPartida(String[] ids, String[] nomes, String[] saldos) {
+
     }
 
     /**
