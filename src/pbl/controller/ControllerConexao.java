@@ -185,9 +185,9 @@ public class ControllerConexao {
     }
 
     private void dinheiroExtraR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
-        int idVizinho = Integer.parseInt(str[2]);
-        int codCarta = Integer.parseInt(str[3]);
+        int idJogador = Integer.parseInt(str[0].trim());
+        int idVizinho = Integer.parseInt(str[2].trim());
+        int codCarta = Integer.parseInt(str[3].trim());
 
         controllerJogo.dinheiroExtra(idJogador, idVizinho, codCarta);
     }
@@ -235,11 +235,11 @@ public class ControllerConexao {
     }
 
     private void cobrancaMonstroR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
+        int idJogador = Integer.parseInt(str[0].trim());
         boolean pagarAgora = false;
-        int codCarta = Integer.parseInt(str[3]);
+        int codCarta = Integer.parseInt(str[3].trim());
 
-        if (str[2].equals("0")) {
+        if (str[2].trim().equals("0")) {
             pagarAgora = true;
         }
 
@@ -261,11 +261,11 @@ public class ControllerConexao {
     }
 
     private void participarBolaoEsportesR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
-        int numero = Integer.parseInt(str[2]);
+        int idJogador = Integer.parseInt(str[0].trim());
+        int numero = Integer.parseInt(str[2].trim());
 
         controllerJogo.participarBolao(idJogador, numero);
-        if (isMinhaVezNaoRegular(str[0])) { //Verifica se é sua vez não regular
+        if (isMinhaVezNaoRegular(str[0].trim())) { //Verifica se é sua vez não regular
             controllerJogo.getTelaPrincipal().escolheParticiparBolaoEsportes(); //Caso seja, abre a janela para escolher se quer participar. 
         }
 
@@ -308,7 +308,7 @@ public class ControllerConexao {
      * @param str
      */
     private void seletorAcao(String[] str) {
-        int aux = Integer.parseInt(str[1]);
+        int aux = Integer.parseInt(str[1].trim());
         switch (aux) {
             case protFinalizarPartidaGeral:
                 finalizarPartidaGeralR(str);
