@@ -186,7 +186,6 @@ public class ControllerConexao {
 
     private void passarVezR(String[] str) {
         int idJogador = Integer.parseInt(str[0]);
-
         incrementarJogador();
         controllerJogo.setMinhaVez(isMinhaVez());
     }

@@ -151,7 +151,7 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
             CartasCorreioTableModel model = (CartasCorreioTableModel) jTable1.getModel();
             Carta carta = model.getCarta(select);
             int codigoCarta = carta.getCodigo();
-            codigoCarta = 3; // <--- PARA TESTES, DEVE-SE SER REMOVIDO POSTERIORMENTE.
+            codigoCarta = 6; // <--- PARA TESTES, DEVE-SE SER REMOVIDO POSTERIORMENTE.
             switch (codigoCarta) {
                 case 0:
                     model.remCarta(select);
@@ -176,13 +176,11 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     break;
                 case 5: //Carta contas a pagar
                     int pagarAgora = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
-                  
                     controllerConexao.conta(codigoCarta, pagarAgora);
                     model.remCarta(select);
                     break;
                 case 6: //carta cobraça monstro
                     int pagarAgora1 = JOptionPane.showConfirmDialog(null, "Você deseja pagar agora?","Pagar Agora", JOptionPane.YES_NO_OPTION);
-                    
                     controllerConexao.cobrancaMonstro(codigoCarta, pagarAgora1);
                     model.remCarta(select);
                     break;

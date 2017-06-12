@@ -382,7 +382,7 @@ public class ControllerJogo {
 
         if (jogador.getIdentificacao() == jogadorPrincipal.getIdentificacao()) { //se o jogador for eu
             acaoCasa(valorDado);
-            if (enviarPassaVez(jogador.getPeao().getPosicao())) { //Verifica se é uma jogada especial.
+            if (!jogadaEspecial(jogador.getPeao().getPosicao())) { //Verifica se é uma jogada especial.
                 controllerConexao.passarVez();
             }
         } else { //demais jogadores
@@ -392,13 +392,13 @@ public class ControllerJogo {
         atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
     }
 
-    private boolean enviarPassaVez(int posicao) {
+    private boolean jogadaEspecial(int posicao) {
         if (posicao == 6 || posicao == 13 || posicao == 20 || posicao == 27) { //Especial, bolao de esporte.
-            return false;
+            return true;
         } else if (posicao == 8) { //Especial, Banda de arrocha
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
