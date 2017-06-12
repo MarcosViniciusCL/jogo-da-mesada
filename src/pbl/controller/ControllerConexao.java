@@ -335,11 +335,11 @@ public class ControllerConexao {
 
         controllerJogo.finalGeralPartida(ids, nomes, saldos);
     }
-    
-    private void adicionarMensChatR(String str[]){
+
+    private void adicionarMensChatR(String str[]) {
         int idJogador = Integer.parseInt(str[0].trim());
         String mensagem = str[2].trim();
-        
+
         controllerJogo.adicionarMensChat(idJogador, mensagem);
     }
 
@@ -590,12 +590,10 @@ public class ControllerConexao {
     }
 
     private void incrementarJogador() {
-        do{
-            this.idJogAtual++;
-            if (this.idJogAtual > this.maxJogadores) {
-                this.idJogAtual = 1;
-            }
-        }while(controllerJogo.jogadorFinalizou(idJogAtual));
+        this.idJogAtual++;
+        if (this.idJogAtual > this.maxJogadores) {
+            this.idJogAtual = 1;
+        }
     }
 
     private boolean isMinhaVez() {
