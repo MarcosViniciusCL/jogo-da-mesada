@@ -583,10 +583,12 @@ public class ControllerConexao {
     }
 
     private void incrementarJogador() {
-        this.idJogAtual++;
-        if (this.idJogAtual > this.maxJogadores) {
-            this.idJogAtual = 1;
-        }
+        do{
+            this.idJogAtual++;
+            if (this.idJogAtual > this.maxJogadores) {
+                this.idJogAtual = 1;
+            }
+        }while(controllerJogo.jogadorFinalizou(idJogAtual));
     }
 
     private boolean isMinhaVez() {
