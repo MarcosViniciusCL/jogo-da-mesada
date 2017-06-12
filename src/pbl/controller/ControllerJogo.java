@@ -39,6 +39,7 @@ public class ControllerJogo {
     private final Dado dado; //Dado do jogo
     private String ultimaMens; //Fica salva a ultima mensagem que foi enviada ao grupo para reenvio caso tenha perda.
     private List<Jogador> jogadores;
+    private List<Jogador> jogadoresFinalizaram;
     private int qntMeses;
     private Jogador jogadorPrincipal;
     private List<BilheteBolao> bilhetesBolao;
@@ -375,7 +376,7 @@ public class ControllerJogo {
         
         atualizarTela();
         
-        if(jogador == jogadorPrincipal){ //se o jogador for eu
+        if(jogador.equals(jogadorPrincipal)){ //se o jogador for eu
             acaoCasa(valorDado);
             controllerConexao.passarVez();
         }else{ //demais jogadores
@@ -435,6 +436,16 @@ public class ControllerJogo {
 
     public void zerarSorteGrande() {
         sorteGrande.pegarValor();
+    }
+    
+    public void finalizarPartida(int idJogador){
+        Jogador jogador = buscarJogador(idJogador);
+        
+        jogadoresFinalizaram.add(jogador);
+        
+        if(jogadoresFinalizaram.size() == jogadores.size()){
+            //enviar msg para do server
+        }
     }
 
     /**
