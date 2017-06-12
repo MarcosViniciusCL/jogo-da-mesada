@@ -382,7 +382,7 @@ public class ControllerJogo {
 
         if (jogador.getIdentificacao() == jogadorPrincipal.getIdentificacao()) { //se o jogador for eu
             acaoCasa(valorDado);
-            if (!jogadaEspecial(jogador.getPeao().getPosicao())) { //Verifica se é uma jogada especial.
+            if (!controllerJogo.todosFinalizaram()||!jogadaEspecial(jogador.getPeao().getPosicao())) { //Verifica se é uma jogada especial.
                 controllerConexao.passarVez();
             }
         } else { //demais jogadores

@@ -595,7 +595,7 @@ public class ControllerConexao {
             if (this.idJogAtual > this.maxJogadores) {
                 this.idJogAtual = 1;
             }
-        }while(controllerJogo.jogadorFinalizou(idJogAtual) || !controllerJogo.todosFinalizaram());
+        }while(controllerJogo.jogadorFinalizou(idJogAtual));
     }
 
     private boolean isMinhaVez() {
