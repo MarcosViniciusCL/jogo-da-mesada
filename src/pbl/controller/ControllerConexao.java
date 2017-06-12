@@ -165,7 +165,9 @@ public class ControllerConexao {
 
     private void passarVezR(String[] str) {
         int idJogador = Integer.parseInt(str[0]);
-
+        
+        incrementarJogador();
+        controllerJogo.setMinhaVez(isMinhaVez());
     }
 
     private void pagueUmVizinhoAgoraR(String[] str) {
@@ -285,6 +287,7 @@ public class ControllerConexao {
             case protJogadaEspecial:
                 break;
             case protPassarVez:
+                passarVezR(str);
                 break;
             case protMensChat: //Apenas mensagem para chat.
                 controllerJogo.adicionarMensChat(str); //Adiciona a mensagem recebida no chat;
