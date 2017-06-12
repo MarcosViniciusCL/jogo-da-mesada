@@ -47,6 +47,7 @@ public class ControllerConexao {
     private int maxJogadores; //Numero maximo de jogadores que deve ter na sala.
 
     //CONSTANTES COM PROTOCOLO DE COMUNICAÇÃO(GRUPOMULTCAST)
+    private final int protFinalizarPartidaGeral = 112; // <- mensagem para final da partida
     private final int protMensChat = 300; //<- Protocolo para envio de mensagem pelo chat
     private final int protPassaVez = 201; //<- Protocolo que informa que o dado foi jogado;
     private final int protPagarVizinho = 4012; //<- Protocolo que informa a carta pagra vizinho agora;
@@ -65,6 +66,7 @@ public class ControllerConexao {
     private final int protPassarVez = 1101;
     private final int protParticiparBolaoEsportes = 2101;
     private final int protFinalizarBolaoEsportes = 2102;
+    private final int protFinalizarPartida = 3102; //<-um jogador acaba a partida
 
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -148,6 +150,10 @@ public class ControllerConexao {
 
     public void participarBolaoEsportes(int numero) {
         enviarMensagemGRP(protParticiparBolaoEsportes + ";" + numero);
+    }
+    
+    public void finalizarPartida(){
+        enviarMensagemGRP(protFinalizarPartida+"");
     }
 
     //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
@@ -268,6 +274,29 @@ public class ControllerConexao {
 
         }
     }
+    
+    private void finalizarPartidaR(String [] str){
+        int idJogador = Integer.parseInt(str[0]);
+        
+        controllerJogo.finalizarPartida(idJogador);
+    }
+    
+    private void finalizarPartidaGeralR(String [] str){
+        String [] ids = null;
+        String [] nomes = null;
+        String []saldos = null;
+        
+        int j=0;
+        
+        for(int i = 2; i<str.length; i = i+3){
+            ids[j] = str[i];
+            nomes[j] = str[i+1];
+            saldos[j] = str[i+2];
+            j++;
+        }
+        
+        controllerJogo.finalGeralPartida(ids, nomes, saldos);
+    }
 
     private void participarConcursoArrocha(String[] str) {
         
@@ -281,6 +310,9 @@ public class ControllerConexao {
     private void seletorAcao(String[] str) {
         int aux = Integer.parseInt(str[1]);
         switch (aux) {
+            case protFinalizarPartidaGeral:
+                finalizarPartidaGeralR(str);
+                break;
             case protJogada:
                 novaJogadaR(str);
                 break;
@@ -359,6 +391,9 @@ public class ControllerConexao {
             case protParticiparBolaoEsportes:
                 participarBolaoEsportesR(str);
                 break;
+            case protFinalizarPartida:
+                
+                break;
             default:
                 break;
         }
@@ -404,6 +439,10 @@ public class ControllerConexao {
             monitorMensGRP();
         }
 
+    }
+    
+    public void finalizarPartida(String mensagem){
+        enviarMensagemServidor(protFinalizarPartida+";"+this.endGrupo+";"+mensagem); //envia informaçoes para o servidor
     }
 
     private void enviarMensagemServidor(String mens) {

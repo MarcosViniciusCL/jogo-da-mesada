@@ -441,11 +441,21 @@ public class ControllerJogo {
     public void finalizarPartida(int idJogador){
         Jogador jogador = buscarJogador(idJogador);
         
-        jogadoresFinalizaram.add(jogador);
+        jogadoresFinalizaram.add(jogador); //adiciona o jogador a lista dos que finalizaram
         
-        if(jogadoresFinalizaram.size() == jogadores.size()){
-            //enviar msg para do server
+        novaMensagemConsole(jogador, "Cheguei ao final, mas ainda posso participar do bolão de esportes e concurso de banda de arrocha");
+        
+        if(jogadoresFinalizaram.size() == jogadores.size()){ //se todos os jogadores estiverem finalizado
+            String mensagemFinalServer = "";
+            for(Jogador j: jogadores){ //pega o id, nome e saldo de todos os jogadores
+                mensagemFinalServer +=j.getIdentificacao()+";"+j.getNome()+";"+j.getSaldoFinal()+";";
+            }
+            controllerConexao.finalizarPartida(mensagemFinalServer); //envia as informações para o servidor
         }
+    }
+    
+    public void finalGeralPartida(String []ids, String []nomes, String []saldos){
+        
     }
 
     /**
@@ -551,6 +561,7 @@ public class ControllerJogo {
                 break;
             case 31: //Oba!!! Dia da Mesada, receba $3.500
                 diaDaMesada(jogadorPrincipal);
+                controllerConexao.finalizarPartida();
                 break;
             default:
                 break;
