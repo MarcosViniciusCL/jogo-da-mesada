@@ -377,6 +377,7 @@ public class ControllerJogo {
         
         if(jogador == jogadorPrincipal){ //se o jogador for eu
             acaoCasa(valorDado);
+            controllerConexao.passarVez();
         }else{ //demais jogadores
             acaoCasaOutroJogador(jogador, valorDado);
         }
