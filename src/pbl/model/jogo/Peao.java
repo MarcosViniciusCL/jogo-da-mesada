@@ -280,6 +280,10 @@ public class Peao extends javax.swing.JLabel {
     public int getQuantMes() {
         return quantMes;
     }
+    
+    public int getMesAtual(){
+        return mesAtual;
+    }
 
     public void setQuantMes(int quantMes) {
         this.quantMes = quantMes;

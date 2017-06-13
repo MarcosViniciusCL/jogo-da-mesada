@@ -68,7 +68,6 @@ public class ControllerConexao {
     private final int protPassarVez = 1101;
     private final int protParticiparBolaoEsportes = 2101;
     private final int protFinalizarBolaoEsportes = 2102;
-    private final int protFinalizarPartida = 3102; //<-um jogador acaba a partida
     private final int protPedirEmprestimo = 3202; //<-um jogador acaba a partida
 
     public ControllerConexao(ControllerJogo controllerJogo) {
@@ -157,10 +156,6 @@ public class ControllerConexao {
 
     public void encerrarBolaoEsporte(int idGanhador) {
         enviarMensagemGRP(protFinalizarBolaoEsportes + ";" + idGanhador);
-    }
-
-    public void finalizarPartida() {
-        enviarMensagemGRP(protFinalizarPartida + "");
     }
 
     public void pedirEmprestimo(double valor) {
@@ -321,12 +316,6 @@ public class ControllerConexao {
         }
     }
 
-    private void finalizarPartidaR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
-
-        controllerJogo.finalizarPartida(idJogador);
-    }
-
     private void finalizarPartidaGeralR(String[] str) {
         String[] ids = null;
         String[] nomes = null;
@@ -335,9 +324,9 @@ public class ControllerConexao {
         int j = 0;
 
         for (int i = 2; i < str.length; i = i + 3) {
-            ids[j] = str[i];
-            nomes[j] = str[i + 1];
-            saldos[j] = str[i + 2];
+            ids[j] = str[i].trim();
+            nomes[j] = str[i + 1].trim();
+            saldos[j] = str[i + 2].trim();
             j++;
         }
 
@@ -483,8 +472,8 @@ public class ControllerConexao {
 
     }
 
-    public void finalizarPartida(String mensagem) {
-        enviarMensagemServidor(protFinalizarPartida + ";" + this.endGrupo + ";" + mensagem); //envia informaçoes para o servidor
+    public void finalizarPartidaGeral(String mensagem) {
+        enviarMensagemServidor(protFinalizarPartidaGeral + ";" + this.endGrupo + ";" + mensagem); //envia informaçoes para o servidor
     }
 
     private void enviarMensagemServidor(String mens) {
