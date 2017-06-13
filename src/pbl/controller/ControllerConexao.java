@@ -162,6 +162,10 @@ public class ControllerConexao {
         enviarMensagemGRP(protPedirEmprestimo + ";" + valor);
     }
 
+    public void novaMensChat(String mens) {
+        enviarMensagemGRP(protMensChat + ";" + mens);
+    }
+
     //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
     private void novaJogadaR(String[] str) {
         int idJogador = Integer.parseInt(str[0].trim());
@@ -321,13 +325,16 @@ public class ControllerConexao {
         String[] nomes = new String[maxJogadores];
         String[] saldos = new String[maxJogadores];
 
-        int indexID=2, indexNome = 3, indexSaldo = 4;
-        int j=0;
+        int indexID = 2, indexNome = 3, indexSaldo = 4;
+        int j = 0;
         for (int i = 0; i < maxJogadores; i++) {
             ids[j] = str[indexID].trim();
             nomes[j] = str[indexNome].trim();
             saldos[j] = str[indexSaldo].trim();
-            j++; indexID += 3; indexNome += 3; indexSaldo += 3;
+            j++;
+            indexID += 3;
+            indexNome += 3;
+            indexSaldo += 3;
         }
 
         controllerJogo.finalGeralPartida(ids, nomes, saldos);
@@ -374,7 +381,7 @@ public class ControllerConexao {
                 adicionarMensChatR(str); //Adiciona a mensagem recebida no chat;
                 break;
             case 111: //Informando que a sala está cheia.
-                controllerJogo.adicionarMensChat(0, "SALA CHEIA"); //Adiciona a mensagem no chat;
+                controllerJogo.adicionarMensChat(0, "Sala Cheia. A partida vai começar."); //Adiciona a mensagem no chat;
                 cadastrarJogadoresR(str);
                 controllerJogo.setMinhaVez(isMinhaVez());
                 break;
@@ -590,10 +597,6 @@ public class ControllerConexao {
 
         this.seletorAcao(str);
 
-    }
-
-    public void novaMensChat(String mens) {
-        enviarMensagemGRP(protMensChat + ";" + mens);
     }
 
     private void incrementarJogador() {

@@ -84,7 +84,7 @@ public class ControllerJogo {
      * @param nome
      */
     public void adicionarJogadores(int identificador, String nome) {
-        Peao p = new Peao(this.qntMeses);
+        Peao p = new Peao(this.qntMeses, identificador);
         Jogador j = new Jogador(identificador, nome, p);
         jogadores.add(j);
         if (j.getIdentificacao() == jogadorPrincipal.getIdentificacao()) {
@@ -818,8 +818,17 @@ public class ControllerJogo {
             chat.novaMensagem("Servidor disse: " + mens);
         } else {
             Jogador jogador = buscarJogador(idJogador);
-            chat.novaMensagem(jogador.getNome() + " disse: " + mens);
+            if (jogador == null) {
+                chat.novaMensagem("Anonimo disse: " + mens);
+            } else {
+                if (jogador == jogadorPrincipal) {
+                    chat.novaMensagem("Voce disse: " + mens);
+                } else {
+                    chat.novaMensagem(jogador.getNome() + " disse: " + mens);
+                }
+            }
         }
+        atualizarTela();
     }
 
     public Chat getChat() {
@@ -866,7 +875,9 @@ public class ControllerJogo {
 
     public void setMinhaVez(boolean minhaVez) {
         this.minhaVez = minhaVez;
-        telaPrincipal.atualizarInformacoesTela();
+        if (telaPrincipal != null) {
+            telaPrincipal.atualizarInformacoesTela();
+        }
     }
 
     /**

@@ -25,7 +25,8 @@ public class Peao extends javax.swing.JLabel {
     private int mesAtual;
     private int quantMes; //Por padrão o valor é 1;
     private int ultQuantCasaAndada; //Fica armazenada a ultima quantidade de casas que o peao andou; 
-
+    private int idJogador;
+    
     public Peao() {
         this.cor = Color.red;
         this.x = 0;
@@ -34,8 +35,8 @@ public class Peao extends javax.swing.JLabel {
         this.mesAtual = 1;
         configurar();
     }
-    
-    public Peao(int quantMes){
+
+    public Peao(int quantMes) {
         this.cor = Color.blue;
         this.x = 0;
         this.y = 0;
@@ -44,19 +45,39 @@ public class Peao extends javax.swing.JLabel {
         configurar();
     }
 
-    private void configurar() {
-        this.setSize(30, 30);
-        this.setIcon(new ImageIcon(this.getClass().getResource("/pbl/view/icones/peaoT.png")));
+    public Peao(int qntMeses, int identificador) {
+        this.cor = Color.blue;
+        this.x = 0;
+        this.y = 0;
+        this.quantMes = qntMeses;
+        this.mesAtual = 1;
+        this.idJogador = identificador;
+        configurar();
     }
 
-    @Override
-    public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        super.paintComponent(g);
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
-        g.setColor(cor);
-        g.fillOval(0, 0, 15, 15);
+    private void configurar() {
+        this.setSize(100, 94);
+        this.setIcon(criarImageIcon("/pbl/view/icones/peao"+idJogador+".png",null));
     }
+
+    public ImageIcon criarImageIcon(String caminho, String descricao) {
+        java.net.URL imgURL = getClass().getResource(caminho);
+        if (imgURL != null) {
+            return new ImageIcon(imgURL, descricao);
+        } else {
+            System.err.println("Não foi possível carregar o arquivo de imagem: " + caminho);
+            return null;
+        }
+    }
+
+//    @Override
+//    public void paintComponent(Graphics g) {
+//        Graphics2D g2d = (Graphics2D) g;
+//        super.paintComponent(g);
+//        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
+//        g.setColor(cor);
+//        g.fillOval(0, 0, 15, 15);
+//    }
 
     /**
      * Caminha as casas do tabuleiro.
@@ -280,8 +301,8 @@ public class Peao extends javax.swing.JLabel {
     public int getQuantMes() {
         return quantMes;
     }
-    
-    public int getMesAtual(){
+
+    public int getMesAtual() {
         return mesAtual;
     }
 
@@ -290,19 +311,21 @@ public class Peao extends javax.swing.JLabel {
     }
 
     /**
-     * Retorna verdadeiro if o jogador chegou ao "dia da mesada" e o mes atual corresponde ao 
-     * maximo de mês da partida.
-     * @return 
+     * Retorna verdadeiro if o jogador chegou ao "dia da mesada" e o mes atual
+     * corresponde ao maximo de mês da partida.
+     *
+     * @return
      */
     public boolean chegouNoFim() {
         return this.mesAtual == this.quantMes && this.posicao == 31;
     }
 
     /**
-     * Retorna a ultima quantidade de casas andadas pelo peão. 
-     * @return 
+     * Retorna a ultima quantidade de casas andadas pelo peão.
+     *
+     * @return
      */
-    public int getUltimoValorCasa(){
+    public int getUltimoValorCasa() {
         return this.ultQuantCasaAndada;
     }
 }
