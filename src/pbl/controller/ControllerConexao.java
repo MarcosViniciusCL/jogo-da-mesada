@@ -282,8 +282,7 @@ public class ControllerConexao {
 
         if (isMinhaVez() && isMinhaVezNaoRegular(str[0].trim())) { //Verifica se foi este cliente que iniciou o bolão e se todos ja escolheram o numero
             /*Todos os jogadores ja escolheram, deve-se chamar o metodo para jogar o dado e ver o ganhador*/
-            controllerJogo.getTelaPrincipal().abrirJanelaJogarDadoBolaEsporte();
-            passarVez();
+            controllerJogo.getTelaPrincipal().abrirJanelaJogarDadoBolaoEsporte();
             return;
         }
         if (isMinhaVezNaoRegular(str[0].trim())) { //Verifica se é sua vez não regular
@@ -296,6 +295,7 @@ public class ControllerConexao {
         int idGanhador = Integer.parseInt(str[2].trim());
         try {
             controllerJogo.finalizarBolao(idGanhador);
+            passarVez();
         } catch (NenhumJogadorGanhouBolaoException ex) {
             Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -18,7 +18,7 @@ import pbl.model.jogo.Dado;
  *
  * @author marcos
  */
-public class JanelaJogaDadoBolaoEspO extends javax.swing.JFrame {
+public class JanelaJogaDadoBolaoEspO extends javax.swing.JDialog {
 
     /**
      * Creates new form JanelaJogaDadoBolaoEsp
@@ -48,7 +48,7 @@ public class JanelaJogaDadoBolaoEspO extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jButton1.setText("Jogar Dado");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -66,7 +66,8 @@ public class JanelaJogaDadoBolaoEspO extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -81,7 +82,9 @@ public class JanelaJogaDadoBolaoEspO extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,6 +103,7 @@ public class JanelaJogaDadoBolaoEspO extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Nenhum jogador ganhou o bolão. Jogue novamente o dado.");
         } else {
             controllerConexao.encerrarBolaoEsporte(bb.getIdJogador());
+            JOptionPane.showMessageDialog(null, "O jogador com ID ."+ bb.getIdJogador()+" ganhou.");
             dispose();
         }
     }//GEN-LAST:event_jButton1ActionPerformed

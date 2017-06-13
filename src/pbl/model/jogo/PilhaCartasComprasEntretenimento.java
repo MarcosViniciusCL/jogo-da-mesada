@@ -53,6 +53,9 @@ public abstract class PilhaCartasComprasEntretenimento {
     }
     
     public static Carta buscarCarta(int codigo){
+        if(cartas.isEmpty()){ //se não existirem cartas, cria-se
+            criarCartas();
+        }
         for(Carta c: cartas){
             if(c.getCodigo()==codigo){
                 return c;

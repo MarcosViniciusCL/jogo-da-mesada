@@ -191,6 +191,7 @@ public class ControllerJogo {
         }
 
         bolaoEsportes(ganhador, participantes); //realiza o deposito e as transferencias de valores para a conta do ganhador
+        atualizarTela();
     }
 
     /**

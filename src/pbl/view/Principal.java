@@ -413,10 +413,11 @@ public class Principal extends javax.swing.JFrame {
         jba.setVisible(true);
     }
     
-    public void abrirJanelaJogarDadoBolaEsporte(){
+    public void abrirJanelaJogarDadoBolaoEsporte(){
         JanelaJogaDadoBolaoEspO jjdbe = new JanelaJogaDadoBolaoEspO();
         jjdbe.setLocationRelativeTo(null);
         jjdbe.setResizable(false);
+        jjdbe.setModal(true);
         jjdbe.setVisible(true);
         
     }
