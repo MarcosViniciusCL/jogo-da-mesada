@@ -428,7 +428,7 @@ public class Principal extends javax.swing.JFrame {
         if (JOptionPane.showConfirmDialog(null, "Você quer a carta " + c.getNome() + " que vale $" + c.getValor()) == 0) {
             while (true) {
                 if(controllerJogo.verificarSeJogadorPrincipalTemSaldo(c.getValor())){
-                    controllerJogo.compraEntretenimento(controllerJogo.getJogador().getIdentificacao(), c.getCodigo());
+                    controllerConexao.compraEntrenimentos(c.getCodigo());
                     modelCartas.addCarta(c);
                     break;
                 }else{
@@ -476,12 +476,12 @@ public class Principal extends javax.swing.JFrame {
         //Habilitar botão para jogar dado
         jButtonJogaDado.setEnabled(controllerJogo.isMinhaVez());
 
-        //Atualizar cartas
-//        List<Carta> list = controllerJogo.getJogador().getCartasCompEntret();
-//        modelCartas.limpar();
-//        for (Carta carta : list) {
-//            this.modelCartas.addCarta(carta);
-//        }
+        //Atualizar cartas compras entreterimento.
+        List<Carta> list = controllerJogo.getJogador().getCartasCompEntret();
+        modelCartas.limpar();
+        for (Carta carta : list) {
+            this.modelCartas.addCarta(carta);
+        }
         tabuleiro1.atualizarTabuleiro();
     }
 
