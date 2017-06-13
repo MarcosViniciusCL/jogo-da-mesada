@@ -298,7 +298,7 @@ public class Principal extends javax.swing.JFrame {
     private void jButtonJogaDadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogaDadoActionPerformed
         int valor = controllerJogo.jogarDado();
         jButtonJogaDado.setText("Jogar dado: " + valor);
-        controllerConexao.novaJogada(6);
+        controllerConexao.novaJogada(8);
     }//GEN-LAST:event_jButtonJogaDadoActionPerformed
 
     private void jButtonRealEmprestimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealEmprestimoActionPerformed
@@ -498,7 +498,9 @@ public class Principal extends javax.swing.JFrame {
         Ranking ranking = new Ranking(this, true);
         
         ranking.setValores(ids, nomes, saldos);
-        
+        ranking.setLocationRelativeTo(null);
+        ranking.setResizable(false);
+        ranking.setModal(true);
         ranking.show();
     }
     

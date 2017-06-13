@@ -84,7 +84,7 @@ public class ControllerJogo {
      * @param nome
      */
     public void adicionarJogadores(int identificador, String nome) {
-        Peao p = new Peao();
+        Peao p = new Peao(this.qntMeses);
         Jogador j = new Jogador(identificador, nome, p);
         jogadores.add(j);
         if (j.getIdentificacao() == jogadorPrincipal.getIdentificacao()) {
@@ -261,6 +261,7 @@ public class ControllerJogo {
         Jogador jogador = buscarJogador(idJogador);
         jogador.getConta().depositar(cConcursoBandaArrocha);
         novaMensagemConsole(jogador, "Ganhei $" + cConcursoBandaArrocha + " no concurso da banda de arrocha.");
+        atualizarTela();
     }
 
     /**
@@ -796,6 +797,7 @@ public class ControllerJogo {
      * @throws IOException
      */
     public void entrarSala(String nome, int quantJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
+        this.qntMeses = quantMeses;
         controllerConexao.entraSala(nome, quantJogadores, quantMeses);
     }
 

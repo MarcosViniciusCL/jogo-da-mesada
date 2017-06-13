@@ -170,7 +170,11 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
                     model.remCarta(select);
                     break;
                 case 4: //Carta va para frente agora
-                    new VaParaFrenteAgora((Frame)this.getOwner(), true).show();
+                    VaParaFrenteAgora vpfa = new VaParaFrenteAgora((Frame)this.getOwner(), true);
+                    vpfa.setLocationRelativeTo(null);
+                    vpfa.setResizable(false);
+                    vpfa.setModal(true);
+                    vpfa.setVisible(true);
                     model.remCarta(select);
                     break;
                 case 5: //Carta contas a pagar

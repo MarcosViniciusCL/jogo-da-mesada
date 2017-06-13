@@ -134,7 +134,7 @@ public class ControllerConexao {
         enviarMensagemGRP(protDoacao + ";" + codigoCarta);
     }
 
-    public void resultadoBandaArrocha(boolean ganhou) {
+    public void concursoBandaArrocha(boolean ganhou) {
         if (ganhou) {
             enviarMensagemGRP(protConcBandaArrocha + ";1");
         } else {
@@ -313,6 +313,7 @@ public class ControllerConexao {
             if (isMinhaVez()) { //Verifica se esse cliente é o jogador que caiu na casa, caso seja, ele passa a vez para o proximo.
                 passarVez();
             }
+            return;
         }
         if (resulConc == 0 && isMinhaVezNaoRegular(str[0].trim())) { //Se ninguem ganhou e é minha vez.
             controllerJogo.getTelaPrincipal().abrirJanelaBandaArrocha();

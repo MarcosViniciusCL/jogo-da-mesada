@@ -99,13 +99,13 @@ public class JanelaBandaArrocha extends javax.swing.JDialog {
         if (valor == 3) {
             jTextField1.setForeground(Color.green);
             jTextField1.setText(valor + "");
-            controllerConexao.resultadoBandaArrocha(true);
+            controllerConexao.concursoBandaArrocha(true);
             JOptionPane.showMessageDialog(null, "Parabéns, você ganhou $1.000,00 do banco.");
             dispose();
         } else {
             jTextField1.setForeground(Color.red);
             jTextField1.setText(valor + "");
-            controllerConexao.resultadoBandaArrocha(false);
+            controllerConexao.concursoBandaArrocha(false);
             JOptionPane.showMessageDialog(null, "Infelizmente não foi dessa vez, mais sorte na próxima.");
             dispose();
         }
