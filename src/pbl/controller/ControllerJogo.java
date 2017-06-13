@@ -63,7 +63,7 @@ public class ControllerJogo {
     private final double cLanchonete = 600;
 
     private ControllerJogo() {
-        this.minhaVez = true; //TROCAR DEPOIS, CERTO É FALSE;
+        this.minhaVez = false;
         this.sorteGrande = new SorteGrande();
         this.dado = new Dado();
         this.jogadores = new ArrayList<>();
@@ -467,8 +467,8 @@ public class ControllerJogo {
             controllerConexao.finalizarPartida(mensagemFinalServer); //envia as informações para o servidor
         }
     }
-    
-    public boolean todosFinalizaram(){
+
+    public boolean todosFinalizaram() {
         return jogadoresFinalizaram.size() == jogadores.size();
     }
 
@@ -579,7 +579,9 @@ public class ControllerJogo {
                 break;
             case 31: //Oba!!! Dia da Mesada, receba $3.500
                 diaDaMesada(jogadorPrincipal);
-                controllerConexao.finalizarPartida();
+                if (jogadorPrincipal.getPeao().chegouNoFim()) {
+                    controllerConexao.finalizarPartida();
+                }
                 break;
             default:
                 break;

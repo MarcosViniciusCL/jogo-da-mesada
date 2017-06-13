@@ -74,7 +74,45 @@ public class Tabuleiro extends javax.swing.JPanel {
         g.drawLine(0, 192, 720, 192);
         g.drawLine(0, 288, 720, 288);
         g.drawLine(0, 384, 720, 384);
-
+        
+        //Escrevendo nomes
+        g.drawString("00", 1, 10);
+        g.drawString("01", 102, 10);
+        g.drawString("02", 205, 10);
+        g.drawString("03", 307, 10);
+        g.drawString("04", 409, 10);
+        g.drawString("05", 511, 10);
+        g.drawString("06", 613, 10);
+        
+        g.drawString("07", 1, 107);
+        g.drawString("08", 102, 107);
+        g.drawString("09", 205, 107);
+        g.drawString("10", 307, 107);
+        g.drawString("11", 409, 107);
+        g.drawString("12", 511, 107);
+        g.drawString("13", 613, 107);
+        
+        g.drawString("14", 1, 203);
+        g.drawString("15", 102, 203);
+        g.drawString("16", 205, 203);
+        g.drawString("17", 307, 203);
+        g.drawString("18", 409, 203);
+        g.drawString("19", 511, 203);
+        g.drawString("20", 613, 203);
+        
+        g.drawString("21", 1, 299);
+        g.drawString("22", 102, 299);
+        g.drawString("23", 205, 299);
+        g.drawString("24", 307, 299);
+        g.drawString("25", 409, 299);
+        g.drawString("26", 511, 299);
+        g.drawString("27", 613, 299);
+        
+        g.drawString("28", 1, 395);
+        g.drawString("29", 102, 395);
+        g.drawString("30", 205, 395);
+        g.drawString("31", 307, 395);
+       
     }
 
     private void gerarGUI() {

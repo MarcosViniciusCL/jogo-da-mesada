@@ -147,6 +147,7 @@ public class JanelaVendeCartaCompraEntre extends javax.swing.JDialog {
             controllerConexao.acheiUmComprador(codigoCarta);
             model.remCarta(select);
             JOptionPane.showMessageDialog(null, "Você vendeu a carta.");
+            dispose();
         } else {
             JOptionPane.showMessageDialog(null, "Selecione uma carta antes.");
         }
