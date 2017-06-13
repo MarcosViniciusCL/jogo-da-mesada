@@ -26,7 +26,7 @@ public class Peao extends javax.swing.JLabel {
     private int quantMes; //Por padrão o valor é 1;
     private int ultQuantCasaAndada; //Fica armazenada a ultima quantidade de casas que o peao andou; 
     private int idJogador;
-    
+
     public Peao() {
         this.cor = Color.red;
         this.x = 0;
@@ -57,7 +57,9 @@ public class Peao extends javax.swing.JLabel {
 
     private void configurar() {
         this.setSize(100, 94);
-        this.setIcon(criarImageIcon("/pbl/view/icones/peao"+idJogador+".png",null));
+//        if (idJogador != 0) {
+            this.setIcon(criarImageIcon("/pbl/view/icones/peao" + idJogador + ".png", null));
+//        }
     }
 
     public ImageIcon criarImageIcon(String caminho, String descricao) {
@@ -70,14 +72,14 @@ public class Peao extends javax.swing.JLabel {
         }
     }
 
-//    @Override
-//    public void paintComponent(Graphics g) {
-//        Graphics2D g2d = (Graphics2D) g;
-//        super.paintComponent(g);
-//        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
-//        g.setColor(cor);
-//        g.fillOval(0, 0, 15, 15);
-//    }
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        super.paintComponent(g);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
+        g.setColor(cor);
+        g.fillOval(0, 0, 15, 15);
+    }
 
     /**
      * Caminha as casas do tabuleiro.

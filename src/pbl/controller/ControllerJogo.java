@@ -348,7 +348,7 @@ public class ControllerJogo {
      */
     public void diaDaMesada(Jogador jogador) {
         jogador.getConta().depositar(cMesada);
-        if (jogador.getPeao().getMesAtual() == qntMeses) {
+        if (jogador.getPeao().chegouNoFim()) {
             jogador.pagarDividasFimJogo();
             finalizarPartida(jogador);
         } else {
@@ -404,22 +404,6 @@ public class ControllerJogo {
         return false;
     }
 
-    /**
-     * Move o peão do jogador que pertence a esse cliente.
-     *
-     * @param valorDado
-     */
-    /*public void moverPeao(int valorDado) {
-        if (valorDado == 6 && sorteGrande.temDinheiro()) { //Ganhou sorte grande
-            sorteGrande(jogadorPrincipal.getIdentificacao());
-        }
-        this.jogadorPrincipal.getPeao().andarCasas(valorDado);
-        atualizarTela(); //Informa a tela que é necessário uma atualizar pelo fato que houve alteração de estados dos objetos;
-        acaoCasa(valorDado); //Chama o metodo que será responsavel por executar uma ação de acordo com a casa que o peao caiu
-        if (jogadorPrincipal.getPeao().getPosicao() != 8) { //Caso o jogador tenha caido em concurso de banda  de arrocha não deve enviar a mensagem para passar a vez.
-            controllerConexao.passaVez(valorDado); //Informa ao grupo que o dado foi jogado e qual valor caiu. 
-        }
-    }*/
     /**
      * Metodo executado quando o jogador pede um emprestimo.
      *
