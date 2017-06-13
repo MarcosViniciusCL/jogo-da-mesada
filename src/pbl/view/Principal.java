@@ -438,7 +438,7 @@ public class Principal extends javax.swing.JFrame {
                     break;
                 }else{
                     if (JOptionPane.showConfirmDialog(null, "Você não tem dinheiro suficiente, deseja realizar um emprestimo?") == 0) {
-                        jButtonRealEmprestimoActionPerformed(null);
+                        controllerConexao.pedirEmprestimo(c.getValor());
                     } else {
                         break;
                     }
