@@ -346,8 +346,9 @@ public class ControllerJogo {
      */
     public void diaDaMesada(Jogador jogador) {
         jogador.getConta().depositar(cMesada);
-        if (jogador.getMes() == qntMeses) {
+        if (jogador.getPeao().getMesAtual() == qntMeses) {
             jogador.pagarDividasFimJogo();
+            finalizarPartida(jogador);
         } else {
             jogador.pagarDividasFimRodada();
         }
@@ -452,20 +453,11 @@ public class ControllerJogo {
         sorteGrande.pegarValor();
     }
 
-    public void finalizarPartida(int idJogador) {
-        Jogador jogador = buscarJogador(idJogador);
+    public void finalizarPartida(Jogador jogador) {
 
         jogadoresFinalizaram.add(jogador); //adiciona o jogador a lista dos que finalizaram
 
         novaMensagemConsole(jogador, "Cheguei ao final, mas ainda posso participar do bolão de esportes e concurso de banda de arrocha");
-
-        if (todosFinalizaram()) { //se todos os jogadores estiverem finalizado
-            String mensagemFinalServer = "";
-            for (Jogador j : jogadores) { //pega o id, nome e saldo de todos os jogadores
-                mensagemFinalServer += j.getIdentificacao() + ";" + j.getNome() + ";" + j.getSaldoFinal() + ";";
-            }
-            controllerConexao.finalizarPartida(mensagemFinalServer); //envia as informações para o servidor
-        }
     }
 
     public boolean todosFinalizaram() {
@@ -579,8 +571,12 @@ public class ControllerJogo {
                 break;
             case 31: //Oba!!! Dia da Mesada, receba $3.500
                 diaDaMesada(jogadorPrincipal);
-                if (jogadorPrincipal.getPeao().chegouNoFim()) {
-                    controllerConexao.finalizarPartida();
+                if (todosFinalizaram()) { //se todos os jogadores estiverem finalizado
+                    String mensagemFinalServer = "";
+                    for (Jogador j : jogadores) { //pega o id, nome e saldo de todos os jogadores
+                        mensagemFinalServer += j.getIdentificacao() + ";" + j.getNome() + ";" + j.getSaldoFinal() + ";";
+                    }
+                    controllerConexao.finalizarPartidaGeral(mensagemFinalServer); //envia as informações para o servidor
                 }
                 break;
             default:

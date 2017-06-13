@@ -431,20 +431,16 @@ public class Principal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Você caiu na casa \"Compras e Entretenimento\" informe se você vai querer a carta a seguir.");
 
         if (JOptionPane.showConfirmDialog(null, "Você quer a carta " + c.getNome() + " que vale $" + c.getValor()) == 0) {
-            while (true) {
                 if(controllerJogo.verificarSeJogadorPrincipalTemSaldo(c.getValor())){
                     controllerConexao.compraEntrenimentos(c.getCodigo());
                     modelCartas.addCarta(c);
-                    break;
                 }else{
                     if (JOptionPane.showConfirmDialog(null, "Você não tem dinheiro suficiente, deseja realizar um emprestimo?") == 0) {
                         controllerConexao.pedirEmprestimo(c.getValor());
-                    } else {
-                        break;
+                        controllerConexao.compraEntrenimentos(c.getCodigo());
                     }
                 }
 
-            }
         }
 
     }
