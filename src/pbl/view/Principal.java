@@ -305,7 +305,7 @@ public class Principal extends javax.swing.JFrame {
         String valor = JOptionPane.showInputDialog("Valor do emprestimo");
         if (valor != null | !valor.isEmpty()) {
             valor = valor.trim().replace(",", ".");
-            controllerJogo.pedirEmprestimo(controllerJogo.getJogador().getIdentificacao(), Integer.parseInt(valor));
+            controllerConexao.pedirEmprestimo(Double.parseDouble(valor));
         }
         atualizarInformacoesTela();
     }//GEN-LAST:event_jButtonRealEmprestimoActionPerformed

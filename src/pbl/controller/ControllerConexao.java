@@ -68,6 +68,7 @@ public class ControllerConexao {
     private final int protParticiparBolaoEsportes = 2101;
     private final int protFinalizarBolaoEsportes = 2102;
     private final int protFinalizarPartida = 3102; //<-um jogador acaba a partida
+    private final int protPedirEmprestimo = 3202; //<-um jogador acaba a partida
 
     public ControllerConexao(ControllerJogo controllerJogo) {
         this.controllerJogo = controllerJogo;
@@ -159,6 +160,10 @@ public class ControllerConexao {
 
     public void finalizarPartida() {
         enviarMensagemGRP(protFinalizarPartida + "");
+    }
+    
+    public void pedirEmprestimo(double valor){
+        enviarMensagemGRP(protPedirEmprestimo+ ";" + valor);
     }
 
     //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
@@ -349,6 +354,13 @@ public class ControllerConexao {
     private void participarConcursoArrocha(String[] str) {
 
     }
+    
+    private void pedirEmprestimoR(String[] str){
+        int idJogador = Integer.parseInt(str[0].trim());
+        double valor = Double.parseDouble(str[2].trim());
+        
+        controllerJogo.pedirEmprestimo(idJogador, valor);
+    }
 
     /**
      * Seleciona o que será feito de acordo com a mensagem recebida pelo grupo.
@@ -420,6 +432,9 @@ public class ControllerConexao {
                 break;
             case protFinalizarBolaoEsportes:
                 encerrarBolaoEsportesR(str);
+                break;
+            case protPedirEmprestimo:
+                pedirEmprestimoR(str);
                 break;
             default:
                 break;
