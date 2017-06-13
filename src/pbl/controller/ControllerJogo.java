@@ -797,7 +797,7 @@ public class ControllerJogo {
      * @throws IOException
      */
     public void entrarSala(String nome, int quantJogadores, int quantMeses) throws ErroComunicacaoServidorException, IOException {
-        this.qntMeses = quantMeses;
+       // this.qntMeses = quantMeses;
         controllerConexao.entraSala(nome, quantJogadores, quantMeses);
     }
 

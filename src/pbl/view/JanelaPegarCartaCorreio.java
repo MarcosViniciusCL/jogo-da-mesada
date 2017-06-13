@@ -193,6 +193,9 @@ public class JanelaPegarCartaCorreio extends javax.swing.JDialog {
         } else {
             JOptionPane.showMessageDialog(null, "Selecione uma carta antes.");
         }
+        if(jTable1.getRowCount() == 0){
+            this.dispose();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
 

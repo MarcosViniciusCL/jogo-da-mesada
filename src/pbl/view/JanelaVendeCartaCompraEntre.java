@@ -5,6 +5,8 @@
  */
 package pbl.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -30,12 +32,25 @@ public class JanelaVendeCartaCompraEntre extends javax.swing.JDialog {
      *
      * @param table
      */
-    public JanelaVendeCartaCompraEntre(JTable table) {
+    public JanelaVendeCartaCompraEntre() {
         initComponents();
-        jScrollPane1.setViewportView(table);
-        this.table = table;
-        this.model = (CartasComprasEntretTableModel) table.getModel();
+        carregarJanela();
+    }
+    
+    private void carregarJanela(){
+        this.table = new JTable();
+        
+        this.model = new CartasComprasEntretTableModel();
         this.controllerJogo = ControllerJogo.getInstance();
+        
+        List<Carta> list = controllerJogo.getJogador().getCartasCompEntret();
+        for (Carta carta : list) {
+            model.addCarta(carta);
+        }
+        
+        table.setModel(model);
+        jScrollPane1.setViewportView(table);
+        
     }
 
     /**

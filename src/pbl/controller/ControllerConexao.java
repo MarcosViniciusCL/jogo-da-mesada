@@ -60,6 +60,7 @@ public class ControllerConexao {
     private final int protCobrancaMonstro = 4018; // <- jogador sorteou uma carta do tipo cobrança monstro 
     private final int protFelizAniversario = 501; // <- Feliz aniversario;
     private final int protConcBandaArrocha = 601; //<- Deve jogar o dado para ver quem vai ganhar.
+    private final int protFinalizarConcBandaArrocha = 602;
     private final int protAcheiUmComprador = 701; // <- Achei um comprador
     private final int protComprasEntretenimentos = 801; // <- compras e entretenimentos
     private final int protJogada = 901;

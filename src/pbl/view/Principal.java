@@ -298,12 +298,12 @@ public class Principal extends javax.swing.JFrame {
     private void jButtonJogaDadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogaDadoActionPerformed
         int valor = controllerJogo.jogarDado();
         jButtonJogaDado.setText("Jogar dado: " + valor);
-        controllerConexao.novaJogada(8);
+        controllerConexao.novaJogada(1);
     }//GEN-LAST:event_jButtonJogaDadoActionPerformed
 
     private void jButtonRealEmprestimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealEmprestimoActionPerformed
         String valor = JOptionPane.showInputDialog("Valor do emprestimo");
-        if (valor != null | !valor.isEmpty()) {
+        if (valor != null && !valor.isEmpty()) {
             valor = valor.trim().replace(",", ".");
             controllerConexao.pedirEmprestimo(Double.parseDouble(valor));
         }
@@ -398,7 +398,7 @@ public class Principal extends javax.swing.JFrame {
      */
     public void abrirJanelaVendeCartaCE() {
         if (!modelCartas.estaVazia()) {
-            JanelaVendeCartaCompraEntre jvce = new JanelaVendeCartaCompraEntre(jTable1);
+            JanelaVendeCartaCompraEntre jvce = new JanelaVendeCartaCompraEntre();
             jvce.setLocationRelativeTo(null);
             jvce.setResizable(false);
             jvce.setModal(true);

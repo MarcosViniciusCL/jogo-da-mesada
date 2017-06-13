@@ -41,6 +41,7 @@ public class Peao extends javax.swing.JLabel {
         this.y = 0;
         this.quantMes = quantMes;
         this.mesAtual = 1;
+        configurar();
     }
 
     private void configurar() {
