@@ -599,9 +599,6 @@ public class ControllerJogo {
             case 7: //Domingo de praia, pague $500
                 praiaNoDomingo(jogador.getIdentificacao());
                 break;
-            case 8: //Concurso de Banda de Arrocha, o primeiro jogador que tirar um 3 ganha $1.000
-                telaPrincipal.abrirJanelaBandaArrocha();
-                break;
             case 10: //Feliz Aniversário, Ganhe $100 de cada jogador e parabens
                 felizAniversario(jogador.getIdentificacao());
                 break;
