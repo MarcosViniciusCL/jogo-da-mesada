@@ -298,7 +298,7 @@ public class Principal extends javax.swing.JFrame {
     private void jButtonJogaDadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonJogaDadoActionPerformed
         int valor = controllerJogo.jogarDado();
         jButtonJogaDado.setText("Jogar dado: " + valor);
-        controllerConexao.novaJogada(15);
+        controllerConexao.novaJogada(valor);
     }//GEN-LAST:event_jButtonJogaDadoActionPerformed
 
     private void jButtonRealEmprestimoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRealEmprestimoActionPerformed
@@ -370,22 +370,22 @@ public class Principal extends javax.swing.JFrame {
         jpc.setModal(true);
         jpc.setVisible(true);
     }
-    
+
     /**
      * Janela que o jogador opta por participar do bolão de esportes
      */
-    public void escolheParticiparBolaoEsportes(){
-        if(JOptionPane.showConfirmDialog(null, "Deseja Participar do bolão de esportes?") == 0){
+    public void escolheParticiparBolaoEsportes() {
+        if (JOptionPane.showConfirmDialog(null, "Deseja Participar do bolão de esportes?") == 0) {
             participarBolaoEsportes();
         } else {
             controllerConexao.participarBolaoEsportes(0); //Manda zero, numero fora do intervalo, para informar que não participará do bolão. 
         }
     }
-    
+
     /**
-     * abre a janela o jogador desejar participar do bolão de esportes 
+     * abre a janela o jogador desejar participar do bolão de esportes
      */
-    public void participarBolaoEsportes(){
+    public void participarBolaoEsportes() {
         BolaoDeEsportes be = new BolaoDeEsportes(this, true);
         be.setLocationRelativeTo(null);
         be.setResizable(false);
@@ -416,14 +416,14 @@ public class Principal extends javax.swing.JFrame {
         jba.setModal(true);
         jba.setVisible(true);
     }
-    
-    public void abrirJanelaJogarDadoBolaoEsporte(){
+
+    public void abrirJanelaJogarDadoBolaoEsporte() {
         JanelaJogaDadoBolaoEspO jjdbe = new JanelaJogaDadoBolaoEspO();
         jjdbe.setLocationRelativeTo(null);
         jjdbe.setResizable(false);
         jjdbe.setModal(true);
         jjdbe.setVisible(true);
-        
+
     }
 
     public void acaoComprarCarta() {
@@ -431,15 +431,15 @@ public class Principal extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(null, "Você caiu na casa \"Compras e Entretenimento\" informe se você vai querer a carta a seguir.");
 
         if (JOptionPane.showConfirmDialog(null, "Você quer a carta " + c.getNome() + " que vale $" + c.getValor()) == 0) {
-                if(controllerJogo.verificarSeJogadorPrincipalTemSaldo(c.getValor())){
+            if (controllerJogo.verificarSeJogadorPrincipalTemSaldo(c.getValor())) {
+                controllerConexao.compraEntrenimentos(c.getCodigo());
+                modelCartas.addCarta(c);
+            } else {
+                if (JOptionPane.showConfirmDialog(null, "Você não tem dinheiro suficiente, deseja realizar um emprestimo?") == 0) {
+                    controllerConexao.pedirEmprestimo(c.getValor());
                     controllerConexao.compraEntrenimentos(c.getCodigo());
-                    modelCartas.addCarta(c);
-                }else{
-                    if (JOptionPane.showConfirmDialog(null, "Você não tem dinheiro suficiente, deseja realizar um emprestimo?") == 0) {
-                        controllerConexao.pedirEmprestimo(c.getValor());
-                        controllerConexao.compraEntrenimentos(c.getCodigo());
-                    }
                 }
+            }
 
         }
 
@@ -489,17 +489,17 @@ public class Principal extends javax.swing.JFrame {
     public void mostrarMensagem(String mens) {
 
     }
-    
-    public void abrirRanking(String []ids, String [] nomes, String []saldos){
+
+    public void abrirRanking(String[] ids, String[] nomes, String[] saldos) {
         Ranking ranking = new Ranking(this, true);
-        
+
         ranking.setValores(ids, nomes, saldos);
         ranking.setLocationRelativeTo(null);
         ranking.setResizable(false);
         ranking.setModal(true);
         ranking.show();
     }
-    
+
     private void mostrarInfoCasa(int x, int y) {
         if (x >= 0 && x <= 97) {
             if (y >= 0 && y <= 102) { //Casa 0
@@ -511,69 +511,69 @@ public class Principal extends javax.swing.JFrame {
             } else if (y >= 307 && y <= 408) { //Casa 3
                 jTextAreaInfoCasas.setText("03 - CASA CORREIO: VOCÊ DEVE PEGAR 3 CARTAS DO TIPO CORREIO, AS AÇÕES DEVE SER FEITA NA ORDEM DE SUA PREFERÊNCIA");
             } else if (y >= 409 && y <= 510) { //Casa 4
-
+                jTextAreaInfoCasas.setText("04 - CASA COMPRAS E ENTRETENIMENTO: AQUI VOCÊ PODE COMPRAR UMA CARTA. ELA PODE SER MUITO UTIL DEPOIS QUANDO FOR VENDIDA PARA O BANCO.");
             } else if (y >= 511 && y <= 613) { //Casa 5
-
+                jTextAreaInfoCasas.setText("05 - CASA CORREIO: NESTA CASA VOCÊ VAI PEGAR DUAS CARTAS CORREIO. DEVE EXECUTAR A AÇÃO QUE ESTÁ ESCRITO NA CARTA.");
             } else { //Casa 6
-
+                jTextAreaInfoCasas.setText("06 - CASA BOLÃO DE ESPORTE: CADA JOGADOR APLICA $100 E O BANCO $1000. NO FINAL O JOGADOR QUE ESTA NA CASA JOGA O DADO E VERIFICA QUAL O NUMERO GANHADOR.");
             }
         } else if (x >= 98 && x <= 191) {
             if (y >= 0 && y <= 102) { //Casa 7
-
+                jTextAreaInfoCasas.setText("07 - CASA PRAIA NO DOMINGO: DEVE-SE APLICAR O VALOR PEDIDO NO SORTE GRANDE.");
             } else if (y >= 102 && y <= 204) { //Casa 8
-
+                jTextAreaInfoCasas.setText("08 - CASA CONCURSO BANDA DE ARROCHA: TODOS OS JOGADORES DEVEM JOGAR O DADO. O PRIMEIRO QUE TIRAR O NUMERO TRÊS GANHA $1.000,00.");
             } else if (y >= 205 && y <= 306) { //Casa 9
-
+                jTextAreaInfoCasas.setText("09 - CASA ACHOU UM COMPRADOR: VOCÊ PODE VENDER UMA CARTA QUE COMPROU ANTERIOMENTE.");
             } else if (y >= 307 && y <= 408) { //Casa 10
-
+                jTextAreaInfoCasas.setText("10 - CASA FELIZ ANIVERSARIO: TODOS JOGADORES PAGAM A VOCÊ $100,00.");
             } else if (y >= 409 && y <= 510) { //Casa 11
-
+                jTextAreaInfoCasas.setText("11 - CASA CORREIO: NESTA CASA VOCÊ VAI PEGAR UMA CARTAS CORREIO. DEVE EXECUTAR A AÇÃO QUE ESTÁ ESCRITO NA CARTA.");
             } else if (y >= 511 && y <= 613) { //Casa 12
-
+                jTextAreaInfoCasas.setText("12 - CASA COMPRAS E ENTRETENIMENTO: AQUI VOCÊ PODE COMPRAR UMA CARTA. ELA PODE SER MUITO UTIL DEPOIS QUANDO FOR VENDIDA PARA O BANCO.");
             } else { //Casa 13
-
+                jTextAreaInfoCasas.setText("13 - CASA BOLÃO DE ESPORTE: CADA JOGADOR APLICA $100 E O BANCO $1000. NO FINAL O JOGADOR QUE ESTA NA CASA JOGA O DADO E VERIFICA QUAL O NUMERO GANHADOR.");
             }
         } else if (x >= 192 && x <= 287) {
             if (y >= 0 && y <= 102) { //Casa 14
 
             } else if (y >= 102 && y <= 204) { //Casa 15
-
+                jTextAreaInfoCasas.setText("15 - CASA COMPRAS E ENTRETENIMENTO: AQUI VOCÊ PODE COMPRAR UMA CARTA. ELA PODE SER MUITO UTIL DEPOIS QUANDO FOR VENDIDA PARA O BANCO.");
             } else if (y >= 205 && y <= 306) { //Casa 16
-
+                jTextAreaInfoCasas.setText("16 - CASA CORREIO: NESTA CASA VOCÊ VAI PEGAR UMA CARTAS CORREIO. DEVE EXECUTAR A AÇÃO QUE ESTÁ ESCRITO NA CARTA.");
             } else if (y >= 307 && y <= 408) { //Casa 17
-
+                jTextAreaInfoCasas.setText("17 - CASA ACHOU UM COMPRADOR: VOCÊ PODE VENDER UMA CARTA QUE COMPROU ANTERIOMENTE.");
             } else if (y >= 409 && y <= 510) { //Casa 18
-
+                jTextAreaInfoCasas.setText("18 - CASA LANCHONETE: DEVE-SE APLICAR O VALOR PEDIDO NO SORTE GRANDE.");
             } else if (y >= 511 && y <= 613) { //Casa 19
-
+                jTextAreaInfoCasas.setText("19 - CASA CORREIO: NESTA CASA VOCÊ VAI PEGAR UMA CARTAS CORREIO. DEVE EXECUTAR A AÇÃO QUE ESTÁ ESCRITO NA CARTA.");
             } else { //Casa 20
-
+                jTextAreaInfoCasas.setText("20 - CASA BOLÃO DE ESPORTE: CADA JOGADOR APLICA $100 E O BANCO $1000. NO FINAL O JOGADOR QUE ESTA NA CASA JOGA O DADO E VERIFICA QUAL O NUMERO GANHADOR.");
             }
         } else if (x >= 288 && x <= 384) {
             if (y >= 0 && y <= 102) { //Casa 21
 
             } else if (y >= 102 && y <= 204) { //Casa 22
-
+                jTextAreaInfoCasas.setText("22 - CASA CORREIO: NESTA CASA VOCÊ VAI PEGAR UMA CARTAS CORREIO. DEVE EXECUTAR A AÇÃO QUE ESTÁ ESCRITO NA CARTA.");
             } else if (y >= 205 && y <= 306) { //Casa 23
-
+                jTextAreaInfoCasas.setText("23 - CASA ACHOU UM COMPRADOR: VOCÊ PODE VENDER UMA CARTA QUE COMPROU ANTERIOMENTE.");
             } else if (y >= 307 && y <= 408) { //Casa 24
-
+                jTextAreaInfoCasas.setText("24 - CASA CORREIO: NESTA CASA VOCÊ VAI PEGAR DUAS CARTAS CORREIO. DEVE EXECUTAR A AÇÃO QUE ESTÁ ESCRITO NA CARTA.");
             } else if (y >= 409 && y <= 510) { //Casa 25
-
+                jTextAreaInfoCasas.setText("25 - CASA COMPRAS E ENTRETENIMENTO: AQUI VOCÊ PODE COMPRAR UMA CARTA. ELA PODE SER MUITO UTIL DEPOIS QUANDO FOR VENDIDA PARA O BANCO.");
             } else if (y >= 511 && y <= 613) { //Casa 26
-
+                jTextAreaInfoCasas.setText("26 - CASA ACHOU UM COMPRADOR: VOCÊ PODE VENDER UMA CARTA QUE COMPROU ANTERIOMENTE.");
             } else { //Casa 27
-
+                jTextAreaInfoCasas.setText("27 - CASA BOLÃO DE ESPORTE: CADA JOGADOR APLICA $100 E O BANCO $1000. NO FINAL O JOGADOR QUE ESTA NA CASA JOGA O DADO E VERIFICA QUAL O NUMERO GANHADOR.");
             }
         } else if (x >= 385 && x <= 480) {
             if (y >= 0 && y <= 102) { //Casa 28
-
+                jTextAreaInfoCasas.setText("28 - CASA COMPRAS NO SHOPPING: DEVE-SE APLICAR O VALOR PEDIDO NO SORTE GRANDE.");
             } else if (y >= 102 && y <= 204) { //Casa 29
-
+                jTextAreaInfoCasas.setText("29 - CASA ACHOU UM COMPRADOR: VOCÊ PODE VENDER UMA CARTA QUE COMPROU ANTERIOMENTE.");
             } else if (y >= 205 && y <= 306) { //Casa 30
-
+                jTextAreaInfoCasas.setText("30 - CASA MARATONA BENEFICENTE: TODOS OS JOGADORES DEVEM PAGAR AO SORTE GRANDE 100x O VALOR SORTEADO NO DADO.");
             } else if (y >= 307 && y <= 408) { //Casa 31
-
+                jTextAreaInfoCasas.setText("30 - CASA DIA DA MESADA: VOCE DEVERÁ RETIRÁ SUA MESADA E PAGAR SUAS DIVIDAS AO BANCO. O DINHEIRO QUE SOBRAR É SEU LUCRO.");
             } else if (y >= 409 && y <= 510) { //Casa NULA
 
             } else if (y >= 511 && y <= 613) { //Casa NULA

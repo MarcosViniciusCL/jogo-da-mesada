@@ -57,9 +57,9 @@ public class Peao extends javax.swing.JLabel {
 
     private void configurar() {
         this.setSize(100, 94);
-//        if (idJogador != 0) {
+        if (idJogador != 0) {
             this.setIcon(criarImageIcon("/pbl/view/icones/peao" + idJogador + ".png", null));
-//        }
+        }
     }
 
     public ImageIcon criarImageIcon(String caminho, String descricao) {
@@ -73,12 +73,33 @@ public class Peao extends javax.swing.JLabel {
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paint(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); //Deixa mais bonitinho
-        g.setColor(cor);
-        g.fillOval(0, 0, 15, 15);
+        g.setColor(Color.black);
+        switch (idJogador) {
+            case 1:
+                g.drawString(idJogador + ":" + mesAtual, x + 15, y + 20);
+                break;
+            case 2:
+                g.drawString(idJogador + ":" + mesAtual, x + 70, y + 20);
+                break;
+            case 3:
+                g.drawString(idJogador + ":" + mesAtual, x + 15, y + 50);
+                break;
+            case 4:
+                g.drawString(idJogador + ":" + mesAtual, x + 70, y + 50);
+                break;
+            case 5:
+                g.drawString(idJogador + ":" + mesAtual, x + 15, y + 80);
+                break;
+            case 6:
+                g.drawString(idJogador + ":" + mesAtual, x + 70, y + 80);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -240,6 +261,7 @@ public class Peao extends javax.swing.JLabel {
         }
         x = col;
         y = lin;
+        repaint();
     }
 
     public int getPosicao() {

@@ -47,6 +47,7 @@ public class Tabuleiro extends javax.swing.JPanel {
             this.peoes = controllerJogo.getPeoes();
             for (Peao peao : peoes) {
                 this.add(peao);
+                peao.repaint();
             }
             this.validate();
             repaint();

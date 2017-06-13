@@ -829,7 +829,9 @@ public class ControllerJogo {
     }
 
     private void atualizarTela() {
-        telaPrincipal.atualizarInformacoesTela();
+        if (telaPrincipal != null) {
+            telaPrincipal.atualizarInformacoesTela();
+        }
     }
 
     public void setTelaPrincipal(Principal frame) {
