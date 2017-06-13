@@ -102,7 +102,7 @@ public class JanelaJogaDadoBolaoEspO extends javax.swing.JDialog {
         if (bb == null) {
             JOptionPane.showMessageDialog(null, "Nenhum jogador ganhou o bolão. Jogue novamente o dado.");
         } else {
-            controllerConexao.encerrarBolaoEsporte(bb.getIdJogador());
+            controllerConexao.encerrarBolaoEsporte(bb.getNumero());
             JOptionPane.showMessageDialog(null, "O jogador com ID ."+ bb.getIdJogador()+" ganhou.");
             dispose();
         }

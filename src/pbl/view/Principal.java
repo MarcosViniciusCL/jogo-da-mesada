@@ -386,7 +386,11 @@ public class Principal extends javax.swing.JFrame {
      * abre a janela o jogador desejar participar do bolão de esportes 
      */
     public void participarBolaoEsportes(){
-        new BolaoDeEsportes(this, true).show();
+        BolaoDeEsportes be = new BolaoDeEsportes(this, true);
+        be.setLocationRelativeTo(null);
+        be.setResizable(false);
+        be.setModal(true);
+        be.setVisible(true);
     }
 
     /**

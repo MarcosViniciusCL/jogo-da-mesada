@@ -418,7 +418,7 @@ public class ControllerConexao {
             case protParticiparBolaoEsportes:
                 participarBolaoEsportesR(str);
                 break;
-            case protFinalizarPartida:
+            case protFinalizarBolaoEsportes:
                 encerrarBolaoEsportesR(str);
                 break;
             default:
@@ -598,7 +598,7 @@ public class ControllerConexao {
             if (this.idJogAtual > this.maxJogadores) {
                 this.idJogAtual = 1;
             }
-        }while(controllerJogo.jogadorFinalizou(idJogAtual) || !controllerJogo.todosFinalizaram());
+        }while(controllerJogo.jogadorFinalizou(idJogAtual) /*|| !controllerJogo.todosFinalizaram()*/);
     }
 
     private boolean isMinhaVez() {
