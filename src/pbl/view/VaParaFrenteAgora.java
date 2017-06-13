@@ -119,6 +119,12 @@ public class VaParaFrenteAgora extends javax.swing.JDialog {
         ControllerJogo controllerJogo = ControllerJogo.getInstance();
         ControllerConexao controllerConexao = controllerJogo.getControllerConexao();
         controllerConexao.vaParaFrenteAgora(comprasEnt.isSelected());
+        Principal tela =  controllerJogo.getTelaPrincipal();
+        if(comprasEnt.isSelected()){
+            tela.acaoComprarCarta();
+        }else{
+            tela.abrirJanelaVendeCartaCE();
+        }
         this.dispose();
     }//GEN-LAST:event_irAgoraActionPerformed
 
