@@ -161,9 +161,9 @@ public class ControllerConexao {
     public void finalizarPartida() {
         enviarMensagemGRP(protFinalizarPartida + "");
     }
-    
-    public void pedirEmprestimo(double valor){
-        enviarMensagemGRP(protPedirEmprestimo+ ";" + valor);
+
+    public void pedirEmprestimo(double valor) {
+        enviarMensagemGRP(protPedirEmprestimo + ";" + valor);
     }
 
     //******************************** METODOS DE RECEPÇÃO DOS DADOS DO JOGO ****************************
@@ -297,12 +297,10 @@ public class ControllerConexao {
     }
 
     private void encerrarBolaoEsportesR(String[] str) {
-        int idGanhador = Integer.parseInt(str[2].trim());
-        try {
-            controllerJogo.finalizarBolao(idGanhador);
+        int idCarta = Integer.parseInt(str[2].trim());
+        controllerJogo.finalizarBolao(idCarta);
+        if (isMinhaVez()) {
             passarVez();
-        } catch (NenhumJogadorGanhouBolaoException ex) {
-            Logger.getLogger(ControllerConexao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -343,22 +341,22 @@ public class ControllerConexao {
 
         controllerJogo.finalGeralPartida(ids, nomes, saldos);
     }
-    
-    private void adicionarMensChatR(String str[]){
+
+    private void adicionarMensChatR(String str[]) {
         int idJogador = Integer.parseInt(str[0].trim());
         String mensagem = str[2].trim();
-        
+
         controllerJogo.adicionarMensChat(idJogador, mensagem);
     }
 
     private void participarConcursoArrocha(String[] str) {
 
     }
-    
-    private void pedirEmprestimoR(String[] str){
+
+    private void pedirEmprestimoR(String[] str) {
         int idJogador = Integer.parseInt(str[0].trim());
         double valor = Double.parseDouble(str[2].trim());
-        
+
         controllerJogo.pedirEmprestimo(idJogador, valor);
     }
 
@@ -608,12 +606,12 @@ public class ControllerConexao {
     }
 
     private void incrementarJogador() {
-        do{
-            this.idJogAtual++;
-            if (this.idJogAtual > this.maxJogadores) {
-                this.idJogAtual = 1;
-            }
-        }while(controllerJogo.jogadorFinalizou(idJogAtual) /*|| !controllerJogo.todosFinalizaram()*/);
+//        do{
+        this.idJogAtual++;
+        if (this.idJogAtual > this.maxJogadores) {
+            this.idJogAtual = 1;
+        }
+//        }while(controllerJogo.jogadorFinalizou(idJogAtual) /*|| !controllerJogo.todosFinalizaram()*/);
     }
 
     private boolean isMinhaVez() {

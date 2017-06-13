@@ -173,10 +173,8 @@ public class ControllerJogo {
      * Encerra um bolão de esportes
      *
      * @param numeroSorteado numero do bilhete sorteado
-     * @throws NenhumJogadorGanhouBolaoException Caso o numero sorteado não
-     * tenha sido escolhido por nenhum jogador
      */
-    public void finalizarBolao(int numeroSorteado) throws NenhumJogadorGanhouBolaoException {
+    public void finalizarBolao(int numeroSorteado) {
         List<Jogador> participantes = new ArrayList<>();
         Jogador ganhador = null;
         BilheteBolao premiado = buscarBilheteBolao(numeroSorteado); //busca o bilhete premiado
