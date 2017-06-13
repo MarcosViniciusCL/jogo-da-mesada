@@ -317,17 +317,17 @@ public class ControllerConexao {
     }
 
     private void finalizarPartidaGeralR(String[] str) {
-        String[] ids = null;
-        String[] nomes = null;
-        String[] saldos = null;
+        String[] ids = new String[maxJogadores];
+        String[] nomes = new String[maxJogadores];
+        String[] saldos = new String[maxJogadores];
 
-        int j = 0;
-
-        for (int i = 2; i < str.length; i = i + 3) {
-            ids[j] = str[i].trim();
-            nomes[j] = str[i + 1].trim();
-            saldos[j] = str[i + 2].trim();
-            j++;
+        int indexID=2, indexNome = 3, indexSaldo = 4;
+        int j=0;
+        for (int i = 0; i < maxJogadores; i++) {
+            ids[j] = str[indexID].trim();
+            nomes[j] = str[indexNome].trim();
+            saldos[j] = str[indexSaldo].trim();
+            j++; indexID += 3; indexNome += 3; indexSaldo += 3;
         }
 
         controllerJogo.finalGeralPartida(ids, nomes, saldos);

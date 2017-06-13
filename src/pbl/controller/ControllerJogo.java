@@ -90,7 +90,9 @@ public class ControllerJogo {
         if (j.getIdentificacao() == jogadorPrincipal.getIdentificacao()) {
             jogadorPrincipal = j;
         }
-        telaPrincipal.atualizarInformacoesTela();
+        if (telaPrincipal != null) {
+            telaPrincipal.atualizarInformacoesTela();
+        }
     }
 
     /**
