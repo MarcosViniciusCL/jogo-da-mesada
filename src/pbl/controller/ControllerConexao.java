@@ -283,7 +283,10 @@ public class ControllerConexao {
         if (isMinhaVez() && isMinhaVezNaoRegular(str[0].trim())) { //Verifica se foi este cliente que iniciou o bolão e se todos ja escolheram o numero
             /*Todos os jogadores ja escolheram, deve-se chamar o metodo para jogar o dado e ver o ganhador*/
             controllerJogo.getTelaPrincipal().abrirJanelaJogarDadoBolaEsporte();
-        } else if (isMinhaVezNaoRegular(str[0].trim())) { //Verifica se é sua vez não regular
+            passarVez();
+            return;
+        }
+        if (isMinhaVezNaoRegular(str[0].trim())) { //Verifica se é sua vez não regular
             controllerJogo.getTelaPrincipal().escolheParticiparBolaoEsportes(); //Caso seja, abre a janela para escolher se quer participar. 
         }
 

@@ -94,7 +94,6 @@ public class BolaoDeEsportes extends javax.swing.JDialog {
             JOptionPane.showConfirmDialog(null, "Numero Já escolhido");
         }else{
             controllerConexao.participarBolaoEsportes(numero);
-            
             this.dispose();
         }
 
