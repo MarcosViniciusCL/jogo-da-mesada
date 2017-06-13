@@ -174,7 +174,7 @@ public class ControllerConexao {
 
     }
 
-    public void cadastrarJogadores(String[] str) {
+    public void cadastrarJogadoresR(String[] str) {
         int i = Integer.parseInt(str[2]); //Numero de jogadores
         int iId = 3, iNome = 4;
         for (int j = 0; j < i; j++) {
@@ -292,7 +292,7 @@ public class ControllerConexao {
 
     }
 
-    private void finalizarBolaoEsportesR(String[] str) {
+    private void encerrarBolaoEsportesR(String[] str) {
         int idGanhador = Integer.parseInt(str[2].trim());
         try {
             controllerJogo.finalizarBolao(idGanhador);
@@ -374,7 +374,7 @@ public class ControllerConexao {
                 break;
             case 111: //Informando que a sala está cheia.
                 controllerJogo.adicionarMensChat(0, "SALA CHEIA"); //Adiciona a mensagem no chat;
-                cadastrarJogadores(str);
+                cadastrarJogadoresR(str);
                 controllerJogo.setMinhaVez(isMinhaVez());
                 break;
             case protPassaVez: //Informa que algum jogador jogou o dado.
@@ -419,7 +419,7 @@ public class ControllerConexao {
                 participarBolaoEsportesR(str);
                 break;
             case protFinalizarPartida:
-                finalizarBolaoEsportesR(str);
+                encerrarBolaoEsportesR(str);
                 break;
             default:
                 break;
@@ -598,7 +598,7 @@ public class ControllerConexao {
             if (this.idJogAtual > this.maxJogadores) {
                 this.idJogAtual = 1;
             }
-        }while(controllerJogo.jogadorFinalizou(idJogAtual));
+        }while(controllerJogo.jogadorFinalizou(idJogAtual) || !controllerJogo.todosFinalizaram());
     }
 
     private boolean isMinhaVez() {
