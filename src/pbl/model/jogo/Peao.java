@@ -270,6 +270,7 @@ public class Peao extends javax.swing.JLabel {
 
     public void setPosicao(int posicao) {
         this.posicao = posicao;
+        andarCasas(0);
     }
 
     /**
@@ -277,15 +278,15 @@ public class Peao extends javax.swing.JLabel {
      */
     public void irParaProximaCasaAcheiComprador() {
         if (posicao < 9) {
-            andarCasas(9);
+            setPosicao(9);
         } else if (posicao < 17) {
-            andarCasas(17);
+            setPosicao(17);
         } else if (posicao < 23) {
-            andarCasas(23);
+            setPosicao(23);
         } else if (posicao < 26) {
-            andarCasas(26);
+            setPosicao(26);
         } else if (posicao < 29) {
-            andarCasas(29);
+            setPosicao(29);
         }
     }
 
@@ -294,13 +295,13 @@ public class Peao extends javax.swing.JLabel {
      */
     public void irParaProximaCasaComprasEntretenimento() {
         if (posicao < 4) {
-            andarCasas(4);
+            setPosicao(4);
         } else if (posicao < 12) {
-            andarCasas(12);
+            setPosicao(12);
         } else if (posicao < 15) {
-            andarCasas(15);
+            setPosicao(15);
         } else if (posicao < 25) {
-            andarCasas(25);
+            setPosicao(25);
         }
     }
 

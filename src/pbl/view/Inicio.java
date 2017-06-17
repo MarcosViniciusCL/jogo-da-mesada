@@ -17,6 +17,7 @@ import pbl.exception.ErroComunicacaoServidorException;
 public class Inicio extends javax.swing.JFrame {
 
     ControllerJogo controllerJogo;
+
     /**
      * Creates new form Inicio
      */
@@ -126,13 +127,13 @@ public class Inicio extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            controllerJogo.entrarSala(jTextFieldNome.getText().trim(),Integer.parseInt((String) jComboBoxQuantJog.getSelectedItem()),Integer.parseInt((String) jComboBoxQuantMes.getSelectedItem()));
+            controllerJogo.entrarSala(jTextFieldNome.getText().trim().toUpperCase(), Integer.parseInt((String) jComboBoxQuantJog.getSelectedItem()), Integer.parseInt((String) jComboBoxQuantMes.getSelectedItem()));
             Principal fp = new Principal("Jogo da Mesada");
             controllerJogo.setTelaPrincipal(fp);
             fp.setLocationRelativeTo(null);
             fp.setResizable(false);
-            fp.atualizarInformacoesTela();
             fp.setVisible(true);
+            fp.atualizarInformacoesTela();
             dispose();
         } catch (ErroComunicacaoServidorException | IOException ex) {
             JOptionPane.showMessageDialog(null, "Não foi possivel conectar ao servidor.\nVerifique se o servidor está disponivel.");

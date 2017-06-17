@@ -187,12 +187,18 @@ public class ControllerConexao {
             iId += 2;
             iNome += 2;
         }
+        
+        controllerJogo.setPartidaAndamento(true);
     }
 
     private void passarVezR(String[] str) {
-        int idJogador = Integer.parseInt(str[0]);
         incrementarJogador();
         controllerJogo.setMinhaVez(isMinhaVez());
+        if(isMinhaVez() && controllerJogo.getJogador().getPeao().chegouNoFim()){
+            if (controllerJogo.isPartidaAndamento()) {
+                passarVez();
+            }
+        }
     }
 
     private void pagueUmVizinhoAgoraR(String[] str) {
@@ -336,8 +342,10 @@ public class ControllerConexao {
             indexNome += 3;
             indexSaldo += 3;
         }
-
-        controllerJogo.finalGeralPartida(ids, nomes, saldos);
+       
+        controllerJogo.setPartidaAndamento(false);
+        controllerJogo.setMinhaVez(false);
+        controllerJogo.finalGeralPartida(ids, nomes, saldos);     
     }
 
     private void adicionarMensChatR(String str[]) {

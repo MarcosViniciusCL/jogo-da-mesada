@@ -43,6 +43,7 @@ public class ControllerJogo {
     private int qntMeses;
     private Jogador jogadorPrincipal;
     private List<BilheteBolao> bilhetesBolao;
+    private boolean partidaAndamento;
     private Chat chat;
     private final SorteGrande sorteGrande;
 
@@ -68,6 +69,7 @@ public class ControllerJogo {
         this.dado = new Dado();
         this.jogadores = new ArrayList<>();
         this.chat = new Chat();
+        this.partidaAndamento = false;
         this.jogadoresFinalizaram = new ArrayList<>();
     }
 
@@ -901,6 +903,16 @@ public class ControllerJogo {
     public Principal getTelaPrincipal() {
         return this.telaPrincipal;
     }
+
+    public boolean isPartidaAndamento() {
+        return partidaAndamento;
+    }
+
+    public void setPartidaAndamento(boolean partidaAndamento) {
+        this.partidaAndamento = partidaAndamento;
+    }
+    
+    
 
     private void novaMensagemConsole(Jogador jogador, String mensagem) {
         String nome = jogador.getNome() + ": ";
